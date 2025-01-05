@@ -1,3 +1,7 @@
+using ApiShared.middlewares.request_validation;
+using AuthenticationService.Api.Endpoints;
+using AuthenticationService.Application;
+using AuthenticationService.Infrastructure;
 
 namespace AuthenticationService.Api
 {
@@ -10,6 +14,11 @@ namespace AuthenticationService.Api
 
             builder.Services.AddOpenApi();
 
+
+            builder.Services
+                .AddApplication()
+                .AddInfrastructure(builder.Configuration);
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment()) {
@@ -20,8 +29,15 @@ namespace AuthenticationService.Api
 
             app.UseAuthorization();
 
+            app.UseMiddleware<RequestValidationMiddleware>();
+
+            MapHandlers(app);
 
             app.Run();
+        }
+        private static void MapHandlers(WebApplication app) {
+            app.MapRootHandlers();
+            app.MapGroup("/resetPassword").MapResetPasswordHandlers();
         }
     }
 }

@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Endpoints\" />
+    <ProjectReference Include="..\..\..\ApiShared\ApiShared.csproj" />
+    <ProjectReference Include="..\AuthenticationService.Application\AuthenticationService.Application.csproj" />
+    <ProjectReference Include="..\AuthenticationService.Infrastructure\AuthenticationService.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\UnconfirmedAppUsers\responses\" />
   </ItemGroup>
 
 </Project>

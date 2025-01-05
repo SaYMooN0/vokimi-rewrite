@@ -56,13 +56,8 @@ public class ErrListOr<T>
         throw new InvalidOperationException("No success value available.");
     }
 
-    public void Match(Action<T> successAction, Action<ErrList> errorAction) {
-        if (IsSuccess()) {
-            successAction(_successValue);
-        } else {
-            errorAction(_errList);
-        }
-    }
+    public TResult Match<TResult>(Func<T, TResult> successAction, Func<ErrList, TResult> errorAction) =>
+        IsSuccess() ? successAction(_successValue) : errorAction(_errList);
 
     public static implicit operator ErrListOr<T>(ErrList errList) => new ErrListOr<T>(errList);
     public static implicit operator ErrListOr<T>(T successValue) => new ErrListOr<T>(successValue);

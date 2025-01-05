@@ -13,13 +13,13 @@ public class ErrList
     public void Add(Err err) =>
         _errList.Add(err);
     public void AddPossibleErr<ErrOrT>(ErrOr<ErrOrT> possibleErr) {
-        if (possibleErr.IsErr(out var err) && err.NotNone()) {
+        if (possibleErr.IsErr(out var err)) {
             _errList.Add(err);
         }
     }
-    public void AddPossibleErr(Err possibleErr) {
-        if (possibleErr.NotNone()) {
-            _errList.Add(possibleErr);
+    public void AddPossibleErr(ErrOrNothing possibleErr) {
+        if (possibleErr.IsErr(out var err)) {
+            _errList.Add(err);
         }
     }
 
@@ -33,12 +33,14 @@ public class ErrList
     }
     public bool Any() => _errList.Count > 0;
     public bool Any(Func<Err, bool> predicate) => _errList.Any(predicate);
+    public bool All(Func<Err, bool> predicate) => _errList.All(predicate);
 
     public int Count() => _errList.Count;
-    public Err FirstOrNone() => Any() ? _errList[0] : Err.None();
+    public Err? FirstOrNull() => Any() ? _errList[0] : null;
     public static implicit operator ErrList(Err err) {
         return new ErrList(err);
     }
+    public Err[] ToArray() => _errList.ToArray();
     public override string ToString() {
         if (_errList.Count == 0) { return "No errors"; }
         if (_errList.Count == 1) { return _errList[0].ToString(); }

@@ -1,3 +1,5 @@
+using SharedKernel.Common.interfaces;
+
 namespace SharedKernel.Common;
 
 public abstract class AggregateRoot : Entity

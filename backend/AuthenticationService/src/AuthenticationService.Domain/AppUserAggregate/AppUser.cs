@@ -1,11 +1,12 @@
 ﻿using AuthenticationService.Domain.Common.value_objects;
+using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.interfaces;
 
-namespace AuthenticationService.Domain.Entities;
+namespace AuthenticationService.Domain.AppUserAggregate;
 
-internal class AppUser : Entity
+public class AppUser : AggregateRoot
 {
     protected override EntityId EntityId => Id;
     private AppUser() { }

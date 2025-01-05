@@ -6,7 +6,7 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 
-namespace AuthenticationService.Domain.Entities;
+namespace AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 
 public class UnconfirmedAppUser : Entity
 {

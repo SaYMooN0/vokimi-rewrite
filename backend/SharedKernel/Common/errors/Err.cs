@@ -1,5 +1,4 @@
-﻿using OneOf.Types;
-using System.Text;
+﻿using System.Text;
 
 namespace SharedKernel.Common.errors;
 
@@ -9,7 +8,6 @@ public class Err
     public ushort Code { get; init; }
     public string? Details { get; init; }
     public ErrorSource Source { get; init; }
-
 
     public Err(
         string message,
@@ -35,11 +33,12 @@ public class Err
 
         return sb.ToString();
     }
-    public static Err None() => new Err(string.Empty);
-    public bool NotNone() => !string.IsNullOrEmpty(Message);
 
     public static class ErrFactory
     {
+
+        public static Err NotImplemented(string message = "Not Implemented", string details = "", ErrorSource source = ErrorSource.Server) =>
+            new Err(message, ErrCodes.NotImplemented, details, source);
         public static Err NotFound(string message = "Not Found", string details = "", ErrorSource source = ErrorSource.Server) =>
             new Err(message, ErrCodes.NotFound, details, source);
 
@@ -51,6 +50,7 @@ public class Err
     public static class ErrCodes
     {
         public const ushort Unspecified = 0;
+        public const ushort NotImplemented = 1;
 
         public const ushort NotFound = 1001;
         public const ushort UnauthorizedAccess = 1002;

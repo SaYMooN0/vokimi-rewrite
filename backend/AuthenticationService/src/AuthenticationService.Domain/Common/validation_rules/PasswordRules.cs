@@ -12,7 +12,7 @@ public static class PasswordRules
     public static readonly string MustContainLetterMessage = "Password must contain at least one letter.";
     public static readonly string MustContainNumberMessage = "Password must contain at least one number.";
 
-    public static Err CheckForErr(string password) {
+    public static ErrOrNothing CheckForErr(string password) {
         if (password.Length < MinLength || password.Length > MaxLength)
             return Err.ErrFactory.InvalidData(message: MinLengthMessage);
 
@@ -24,6 +24,6 @@ public static class PasswordRules
             return Err.ErrFactory.InvalidData(message: MustContainNumberMessage);
         }
 
-        return Err.None();
+        return ErrOrNothing.Nothing;
     }
 }

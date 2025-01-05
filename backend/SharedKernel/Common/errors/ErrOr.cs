@@ -11,7 +11,7 @@ public class ErrOr<T>
     public static ErrOr<T> Success(T value) => new ErrOr<T>(value);
     public static ErrOr<T> Error(Err err) => new ErrOr<T>(err);
 
-    public void Match<TResult>(Func<T, TResult> successAction, Func<Err, TResult> errorAction) =>
+    public TResult Match<TResult>(Func<T, TResult> successAction, Func<Err, TResult> errorAction) =>
         value.Match(successAction, errorAction);
     public bool IsErr() => value.IsT1;
     public bool IsErr(out Err err) {
@@ -20,7 +20,7 @@ public class ErrOr<T>
             return true;
         }
 
-        err = Err.None();
+        err = new Err("No error");
         return false;
     }
     public bool IsSuccess() => value.IsT0;
@@ -39,7 +39,7 @@ public class ErrOr<T>
 
     public static implicit operator ErrOr<T>(T value) => new ErrOr<T>(value);
 
-    public Err GetErr() => value.IsT1 ? value.AsT1 : Err.None();
+    public Err GetErr() => value.IsT1 ? value.AsT1 : new Err("No error");
     public T GetValue() {
         if (value.IsT0) {
             return value.AsT0;

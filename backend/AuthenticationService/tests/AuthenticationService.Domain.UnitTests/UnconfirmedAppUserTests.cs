@@ -1,5 +1,5 @@
 ﻿using AuthenticationService.Domain.Common.validation_rules;
-using AuthenticationService.Domain.Entities;
+using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using SharedKernel.Common;
 using SharedKernel.Common.errors;
 
