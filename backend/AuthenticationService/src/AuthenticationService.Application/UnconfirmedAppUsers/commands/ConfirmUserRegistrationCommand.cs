@@ -3,10 +3,11 @@ using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
 
-public record class ConfirmUserRegistrationCommand : IRequest<ErrOrNothing>;
-public class ConfirmUserRegistrationCommandHandler : IRequestHandler<ConfirmUserRegistrationCommand, ErrOrNothing>
+public record class ConfirmUserRegistrationCommand : IRequest<ErrOr<string>>;
+public class ConfirmUserRegistrationCommandHandler : IRequestHandler<ConfirmUserRegistrationCommand, ErrOr<string>>
 {
-    public async Task<ErrOrNothing> Handle(ConfirmUserRegistrationCommand request, CancellationToken cancellationToken) {
+    public async Task<ErrOr<string>> Handle(ConfirmUserRegistrationCommand request, CancellationToken cancellationToken) {
+        //return auth token in case of success
         return Err.ErrFactory.NotImplemented();
     }
 }

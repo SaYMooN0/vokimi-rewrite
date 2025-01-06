@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Common\entities\" />
-    <Folder Include="Common\interfaces\" />
+    <Folder Include="Common\interfaces\repositories\" />
   </ItemGroup>
 
 </Project>

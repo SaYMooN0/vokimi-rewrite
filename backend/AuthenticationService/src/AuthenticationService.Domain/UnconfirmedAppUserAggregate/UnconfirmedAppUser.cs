@@ -14,8 +14,8 @@ public class UnconfirmedAppUser : Entity
     private UnconfirmedAppUser() { }
 
     public UnconfirmedAppUserId Id { get; init; }
-    internal string PasswordHash { get; private set; }
-    internal Email Email { get; init; }
+    public string PasswordHash { get; private set; }
+    public Email Email { get; init; }
     public DateTime CreationTime { get; init; }
     public string ConfirmationString { get; init; }
 

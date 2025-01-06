@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AuthenticationService.Infrastructure.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace AuthenticationService.Infrastructure;
 public static class DependencyInjection
@@ -11,7 +11,7 @@ public static class DependencyInjection
             .AddMediatR()
             .AddConfigurations(configuration)
             .AddBackgroundServices()
-            .AddPersistence();
+            .AddPersistence(configuration);
 
         return services;
     }
@@ -47,7 +47,10 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services) {
+    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+        string dbConnetionString = configuration.GetConnectionString("AuthServiceDb")
+            ?? throw new Exception("Database connection string is not provided.");
+        services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(dbConnetionString));
         //services.AddDbContext<GymManagementDbContext>(options =>
         //    options.UseSqlite("Data Source = GymManagement.db"));
 

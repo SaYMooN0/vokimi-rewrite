@@ -1,11 +1,7 @@
 ﻿using ApiShared.interfaces;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using System.Globalization;
 
 namespace ApiShared.middlewares.request_validation;
-
-
 public class RequestValidationMiddleware
 {
     private readonly RequestDelegate _next;
@@ -36,6 +32,8 @@ public class RequestValidationMiddleware
                         return;
                     }
                 }
+                context.Items["ValidatedRequest"] = request;
+
             }
         }
 

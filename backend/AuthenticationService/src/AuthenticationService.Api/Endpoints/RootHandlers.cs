@@ -1,5 +1,6 @@
 ﻿using ApiShared;
-using ApiShared.middlewares.request_validation;
+using ApiShared.extensions;
+using ApiShared.extensions.endpoints_extensions;
 using AuthenticationService.Api.Contracts.AppUsers.requests;
 using AuthenticationService.Api.Contracts.UnconfirmedAppUsers.requests;
 using AuthenticationService.Application.UnconfirmedAppUsers.commands;
@@ -14,7 +15,7 @@ internal static class RootHandlers
 {
     internal static IEndpointRouteBuilder MapRootHandlers(this IEndpointRouteBuilder endpoints) {
 
-        endpoints.MapGet("hello", () => "Hello World!");
+        endpoints.MapGet(".hello", () => "Hello World!");
 
         endpoints.MapPost("/register", Register)
             .WithRequestValidationMetaData<RegisterUserRequest>();
@@ -27,9 +28,10 @@ internal static class RootHandlers
     }
 
     private static async Task<IResult> Register(
-        [FromBody] RegisterUserRequest request,
-        ISender mediator
-    ) {
+            HttpContext httpContext,
+            ISender mediator
+        ) {
+        RegisterUserRequest request = httpContext.GetValidatedRequest<RegisterUserRequest>();
         var command = new AddNewUnconfirmedAppUserCommand(request.Email, request.Password);
         ErrOrNothing result = await mediator.Send(command);
 
@@ -40,23 +42,32 @@ internal static class RootHandlers
     }
 
     private static async Task<IResult> Login(
-        [FromBody] LoginRequest request,
+        HttpContext httpContext,
         ISender mediator
     ) {
+        LoginUserRequest request = httpContext.GetValidatedRequest<LoginUserRequest>();
         var command = new AuthenticateUserCommand(request.Email, request.Password);
         var result = await mediator.Send(command);
 
-        throw new NotImplementedException();
+        return CustomResults.FromErrOr(
+            result,
+            (success) => {
+                //write jwt
+                throw new NotImplementedException();
+            }
+        );
     }
 
     private static async Task<IResult> ConfirmRegistration(
-        [FromBody] ConfirmRegistrationRequest request,
+        HttpContext httpContext,
         ISender mediator
     ) {
+        ConfirmRegistrationRequest request = httpContext.GetValidatedRequest<ConfirmRegistrationRequest>();
         var command = new ConfirmUserRegistrationCommand();
-        ErrOrNothing result = await mediator.Send(command);
-
+        ErrOr<string> result = await mediator.Send(command);
         throw new NotImplementedException();
+
+        
     }
 
 }
