@@ -29,6 +29,8 @@ public class CustomResults
         ErrorResponse(new Err(message: "Not implemented", Err.ErrCodes.NotImplemented, details, ErrorSource.Server));
     public static IResult FromErrOrNothing(ErrOrNothing possibleErr, Func<IResult> successFunc) =>
         possibleErr.IsErr(out var err) ? ErrorResponse(err) : successFunc();
+    public static IResult FromErrListOrNothing(ErrListOrNothing possibleErrList, Func<IResult> successFunc) =>
+        possibleErrList.IsErr(out var errs) ? ErrorResponse(errs) : successFunc();
     public static IResult FromErrOr<T>(ErrOr<T> errOrValue, Func<T, IResult> successFunc) =>
         errOrValue.Match(successFunc, ErrorResponse);
     public static IResult FromErrListOr<T>(ErrListOr<T> errListOrValue, Func<T, IResult> successFunc) =>

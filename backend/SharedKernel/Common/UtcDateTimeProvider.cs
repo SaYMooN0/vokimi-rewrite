@@ -6,5 +6,6 @@ public class UtcDateTimeProvider : IDateTimeProvider
 {
     public DateTime Now => DateTime.UtcNow;
     public DateOnly NowDateOnly => DateOnly.FromDateTime(DateTime.UtcNow);
+    public static readonly UtcDateTimeProvider Instance = new();
 
 }

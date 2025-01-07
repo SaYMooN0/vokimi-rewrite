@@ -4,6 +4,6 @@ namespace AuthenticationService.Domain.Common;
 
 public class UnconfirmedAppUserId : EntityId
 {
-    private UnconfirmedAppUserId(Guid value) { Value = value; }
+    public UnconfirmedAppUserId(Guid value) : base(value) { }
     public static UnconfirmedAppUserId CreateNew() => new(Guid.CreateVersion7());
 }

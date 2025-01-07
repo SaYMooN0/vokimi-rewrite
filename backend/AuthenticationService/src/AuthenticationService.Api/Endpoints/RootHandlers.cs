@@ -30,12 +30,13 @@ internal static class RootHandlers
     private static async Task<IResult> Register(
             HttpContext httpContext,
             ISender mediator
-        ) {
+    ) {
+
         RegisterUserRequest request = httpContext.GetValidatedRequest<RegisterUserRequest>();
         var command = new AddNewUnconfirmedAppUserCommand(request.Email, request.Password);
-        ErrOrNothing result = await mediator.Send(command);
+        ErrListOrNothing result = await mediator.Send(command);
 
-        return CustomResults.FromErrOrNothing(
+        return CustomResults.FromErrListOrNothing(
             result,
             () => Results.Ok()
         );
@@ -67,7 +68,7 @@ internal static class RootHandlers
         ErrOr<string> result = await mediator.Send(command);
         throw new NotImplementedException();
 
-        
+
     }
 
 }

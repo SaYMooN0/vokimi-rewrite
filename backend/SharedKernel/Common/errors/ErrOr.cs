@@ -40,7 +40,7 @@ public class ErrOr<T>
     public static implicit operator ErrOr<T>(T value) => new ErrOr<T>(value);
 
     public Err GetErr() => value.IsT1 ? value.AsT1 : new Err("No error");
-    public T GetValue() {
+    public T GetSuccess() {
         if (value.IsT0) {
             return value.AsT0;
         }

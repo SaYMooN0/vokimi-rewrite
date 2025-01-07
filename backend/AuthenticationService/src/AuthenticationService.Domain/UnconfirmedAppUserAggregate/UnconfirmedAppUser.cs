@@ -41,7 +41,7 @@ public class UnconfirmedAppUser : Entity
         return new UnconfirmedAppUser() {
             Id = UnconfirmedAppUserId.CreateNew(),
             PasswordHash = passwordHash,
-            Email = emailResult.GetValue(),
+            Email = emailResult.GetSuccess(),
             CreationTime = dateTimeProvider.Now,
             ConfirmationString = Guid.NewGuid().ToString()
         };

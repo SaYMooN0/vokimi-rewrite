@@ -1,4 +1,4 @@
-﻿using AuthenticationService.Application.Common.interfaces;
+﻿using AuthenticationService.Application.Common.interfaces.repositories;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 

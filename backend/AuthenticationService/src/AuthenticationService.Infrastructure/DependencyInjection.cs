@@ -1,6 +1,14 @@
-﻿using AuthenticationService.Infrastructure.Persistence;
+﻿using AuthenticationService.Application.Common.interfaces;
+using AuthenticationService.Application.Common.interfaces.repositories;
+using AuthenticationService.Domain.Common;
+using AuthenticationService.Infrastructure.Configs;
+using AuthenticationService.Infrastructure.Persistence;
+using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
+using AuthenticationService.Infrastructure.Persistence.repositories;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Common.EntityIds;
 
 namespace AuthenticationService.Infrastructure;
 public static class DependencyInjection
@@ -8,15 +16,20 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services
             .AddAuth(configuration)
-            .AddMediatR()
             .AddConfigurations(configuration)
             .AddBackgroundServices()
-            .AddPersistence(configuration);
+            .AddPersistence(configuration)
+            .AddEmailService(configuration)
+            .AddMediatR()
+            ;
 
         return services;
     }
 
+
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+        services.AddSingleton<IPasswordHasher>(new PasswordHasher());
+
         // todo: add auth
 
         return services;
@@ -54,10 +67,21 @@ public static class DependencyInjection
         //services.AddDbContext<GymManagementDbContext>(options =>
         //    options.UseSqlite("Data Source = GymManagement.db"));
 
-        //services.AddScoped<IAdminsRepository, AdminsRepository>();
-        //services.AddScoped<IGymsRepository, GymsRepository>();
-        //services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
+        services.AddSingleton<IAppUsersRepository, AppUsersRepository>();
+        services.AddSingleton<IUnconfirmedAppUsersRepository, UnconfirmedAppUsersRepository>();
+        services.AddSingleton<IPasswordUpdateRequestsRepository, PasswordResetRequestsRepository>();
 
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+        SqlMapper.AddTypeHandler(new EmailTypeHandler());
+        SqlMapper.AddTypeHandler(typeof(AppUserId), new GuidEntityIdTypeHandler<AppUserId>());
+        SqlMapper.AddTypeHandler(typeof(UnconfirmedAppUserId), new GuidEntityIdTypeHandler<UnconfirmedAppUserId>());
+
+
+        return services;
+    }
+    private static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration) {
+        //.GetSection("EmailService")
+        services.AddTransient<IEmailService, EmailService>();
         return services;
     }
 }

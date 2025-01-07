@@ -16,7 +16,7 @@ namespace AuthenticationService.Api
 
 
             builder.Services
-                .AddApplication()
+                .AddApplication(builder.Configuration)
                 .AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();

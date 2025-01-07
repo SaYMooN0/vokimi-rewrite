@@ -1,7 +1,7 @@
 ﻿using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 
-namespace AuthenticationService.Application.Common.interfaces;
+namespace AuthenticationService.Application.Common.interfaces.repositories;
 
 public interface IPasswordUpdateRequestsRepository
 {
