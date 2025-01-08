@@ -4,10 +4,8 @@ using ApiShared.extensions.endpoints_extensions;
 using AuthenticationService.Api.Contracts.AppUsers.requests;
 using AuthenticationService.Api.Contracts.UnconfirmedAppUsers.requests;
 using AuthenticationService.Application.UnconfirmedAppUsers.commands;
+using AuthenticationService.Domain.Common;
 using MediatR;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
-using OneOf.Types;
 using SharedKernel.Common.errors;
 namespace AuthenticationService.Api.Endpoints;
 
@@ -23,6 +21,7 @@ internal static class RootHandlers
             .WithRequestValidationMetaData<LoginUserRequest>();
         endpoints.MapPost("/confirm", ConfirmRegistration)
             .WithRequestValidationMetaData<ConfirmRegistrationRequest>();
+        endpoints.MapPost("/logout", Logout);
 
         return endpoints;
     }
@@ -42,6 +41,23 @@ internal static class RootHandlers
         );
     }
 
+
+
+    private static async Task<IResult> ConfirmRegistration(
+        HttpContext httpContext,
+        ISender mediator
+    ) {
+        ConfirmRegistrationRequest request = httpContext.GetValidatedRequest<ConfirmRegistrationRequest>();
+        UnconfirmedAppUserId unconfirmedUserId = new(new(request.UserId));
+        var command = new ConfirmUserRegistrationCommand(unconfirmedUserId, request.ConfirmationString);
+        ErrOr<string> result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(
+            result,
+            (token) => CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("login is not implemented"))
+            //Results.Ok().Cookies.Append(AuthCookieName, token, AuthCookieOptions())
+        );
+    }
     private static async Task<IResult> Login(
         HttpContext httpContext,
         ISender mediator
@@ -52,23 +68,28 @@ internal static class RootHandlers
 
         return CustomResults.FromErrOr(
             result,
-            (success) => {
-                //write jwt
-                throw new NotImplementedException();
-            }
+            (token) => CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("login is not implemented"))
         );
     }
+    private static async Task<IResult> Logout(
+       HttpContext httpContext,
+       ISender mediator
+   ) {
+        var cookieOptions = new CookieOptions {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(-1)
+        };
 
-    private static async Task<IResult> ConfirmRegistration(
-        HttpContext httpContext,
-        ISender mediator
-    ) {
-        ConfirmRegistrationRequest request = httpContext.GetValidatedRequest<ConfirmRegistrationRequest>();
-        var command = new ConfirmUserRegistrationCommand();
-        ErrOr<string> result = await mediator.Send(command);
-        throw new NotImplementedException();
-
-
+        //Cookies.Append("AuthToken", "", cookieOptions);
+        return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("logout is not implemented"));
     }
-
+    private static CookieOptions AuthCookieOptions() => new CookieOptions {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.Strict,
+        Expires = DateTime.UtcNow.AddDays(30)
+    };
+    private const string AuthCookieName = "VokimiToken";
 }

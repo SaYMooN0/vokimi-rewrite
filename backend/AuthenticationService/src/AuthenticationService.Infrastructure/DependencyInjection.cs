@@ -5,6 +5,7 @@ using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 using AuthenticationService.Infrastructure.Persistence.repositories;
+using AuthenticationService.Infrastructure.Services;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

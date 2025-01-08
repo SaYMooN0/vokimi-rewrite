@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using AuthenticationService.Domain.Common;
+using MediatR;
 using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
 
-public record class ConfirmUserRegistrationCommand : IRequest<ErrOr<string>>;
+public record class ConfirmUserRegistrationCommand(UnconfirmedAppUserId unconfirmedUserId, string ConfirmationString) : IRequest<ErrOr<string>>;
 public class ConfirmUserRegistrationCommandHandler : IRequestHandler<ConfirmUserRegistrationCommand, ErrOr<string>>
 {
     public async Task<ErrOr<string>> Handle(ConfirmUserRegistrationCommand request, CancellationToken cancellationToken) {
