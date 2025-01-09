@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Application.Common.models;
+using AuthenticationService.Domain.AppUserAggregate;
 using AuthenticationService.Infrastructure.Configs;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Options;
@@ -31,7 +32,9 @@ internal class JwtTokenService : IJwtTokenService
         };
     }
 
-    public string GenerateToken(JwtTokenUserInfo tokenInfo) {
+    public string GenerateToken(AppUser user) {
+        JwtTokenUserInfo tokenInfo = new JwtTokenUserInfo(user.Id, user.Email);
+
         var claims = tokenInfo.ToClaims();
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));

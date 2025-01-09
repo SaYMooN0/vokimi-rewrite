@@ -17,7 +17,7 @@ internal class EmailService : IEmailService
     public EmailService(IOptions<EmailServiceConfig> options) {
         _host = options.Value.Host;
         _port = options.Value.Port;
-        _username = options.Value.User;
+        _username = options.Value.Username;
         _password = options.Value.Password;
     }
     public async Task<ErrOrNothing> SendRegistrationConfirmationLink(Email email, string link) {

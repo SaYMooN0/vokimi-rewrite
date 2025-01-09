@@ -30,6 +30,7 @@ namespace AuthenticationService.Api
             app.UseAuthorization();
 
             app.UseMiddleware<RequestValidationMiddleware>();
+            app.AddInfrastructureMiddleware();
 
             MapHandlers(app);
 

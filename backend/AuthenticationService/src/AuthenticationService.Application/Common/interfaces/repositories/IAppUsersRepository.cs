@@ -5,7 +5,7 @@ namespace AuthenticationService.Application.Common.interfaces.repositories;
 
 public interface IAppUsersRepository
 {
-    Task<ErrOrNothing> AddUser(AppUser appUser);
-    Task<ErrOr<bool>> AnyUserWithEmail(string email);
-    Task<ErrOr<AppUser>> GetUserByEmailAndPasswordHash(string email, string passwordHash);
+    Task AddUser(AppUser appUser);
+    Task<bool> AnyUserWithEmail(string email);
+    Task<AppUser?> GetUserByEmailAndPasswordHash(string email, string passwordHash);
 }

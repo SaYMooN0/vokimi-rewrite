@@ -1,47 +1,43 @@
-﻿using Microsoft.AspNetCore.Connections;
-using Npgsql;
-using SharedKernel.Common.errors;
-using System.Data;
+﻿using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
+using Dapper;
+using SharedKernel.Common;
 
 namespace AuthenticationService.Infrastructure.Persistence;
 
 internal abstract class BaseRepository
 {
-    protected readonly IDbConnectionFactory _connectionFactory;
+    protected readonly UnitOfWork _unitOfWork;
 
-    protected BaseRepository(IDbConnectionFactory connectionFactory) {
-        _connectionFactory = connectionFactory;
+    protected BaseRepository(UnitOfWork unitOfWork) {
+        _unitOfWork = unitOfWork;
     }
-    protected async Task<ErrOrNothing> SafeExecute(
-        Err errorToReturn,
-        Func<IDbConnection, Task<ErrOrNothing>> action
-    ) {
-        try {
-            using var connection = await _connectionFactory.CreateConnectionAsync();
-            return await action(connection);
-        } catch (NpgsqlException npgsqlEx) {
-            //logger.LogError($"Database error: {npgsqlEx.Message}", npgsqlEx);
-        } catch (InvalidOperationException invalidOpEx) {
-            //logger.LogError($"Invalid operation: {invalidOpEx.Message}", invalidOpEx);
-        } catch (Exception ex) {
-            //logger.LogError($"Unexpected error: {ex.Message}", ex);
+
+
+    protected async Task<int> ExecuteAsync(string sql, object? param = null) {
+        int affectedRows = await _unitOfWork.Connection.ExecuteAsync(sql, param, _unitOfWork.Transaction);
+        if (param is AggregateRoot aggregateRoot) {
+            _unitOfWork.TrackAggregate(aggregateRoot);
         }
-        return errorToReturn;
+
+        return affectedRows;
     }
-    protected async Task<ErrOr<T>> SafeExecute<T>(
-        Err errorToReturn,
-        Func<IDbConnection, Task<ErrOr<T>>> action
-    ) {
-        try {
-            using var connection = await _connectionFactory.CreateConnectionAsync();
-            return await action(connection);
-        } catch (NpgsqlException npgsqlEx) {
-            //logger.LogError($"Database error: {npgsqlEx.Message}", npgsqlEx);
-        } catch (InvalidOperationException invalidOpEx) {
-            //logger.LogError($"Invalid operation: {invalidOpEx.Message}", invalidOpEx);
-        } catch (Exception ex) {
-            //logger.LogError($"Unexpected error: {ex.Message}", ex);
+
+
+    protected async Task<T?> QuerySingleOrDefaultAsync<T>(string sql, object? param = null) {
+        var result = await _unitOfWork.Connection.QuerySingleOrDefaultAsync<T>(sql, param, _unitOfWork.Transaction);
+        if (result is AggregateRoot aggregateRoot) {
+            _unitOfWork.TrackAggregate(aggregateRoot);
         }
-        return errorToReturn;
+        return result;
+    }
+
+    protected async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null) {
+        var result = await _unitOfWork.Connection.QueryAsync<T>(sql, param, _unitOfWork.Transaction);
+        foreach (var item in result) {
+            if (item is AggregateRoot aggregateRoot) {
+                _unitOfWork.TrackAggregate(aggregateRoot);
+            }
+        }
+        return result;
     }
 }

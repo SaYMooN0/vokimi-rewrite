@@ -2,6 +2,9 @@
 using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Domain.Common;
 using AuthenticationService.Infrastructure.Configs;
+using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
+using AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
+using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 using AuthenticationService.Infrastructure.Persistence.repositories;
@@ -54,9 +57,9 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddBackgroundServices(this IServiceCollection services) {
-        //services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
-        //services.AddHostedService<PublishIntegrationEventsBackgroundService>();
-        //services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
+        services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
+        services.AddHostedService<PublishIntegrationEventsBackgroundService>();
+        services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
 
         return services;
     }
@@ -64,13 +67,13 @@ public static class DependencyInjection
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         string dbConnetionString = configuration.GetConnectionString("AuthServiceDb")
             ?? throw new Exception("Database connection string is not provided.");
-        services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(dbConnetionString));
-        //services.AddDbContext<GymManagementDbContext>(options =>
-        //    options.UseSqlite("Data Source = GymManagement.db"));
 
-        services.AddSingleton<IAppUsersRepository, AppUsersRepository>();
-        services.AddSingleton<IUnconfirmedAppUsersRepository, UnconfirmedAppUsersRepository>();
-        services.AddSingleton<IPasswordUpdateRequestsRepository, PasswordResetRequestsRepository>();
+        services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(dbConnetionString));
+        services.AddScoped<UnitOfWork>();
+
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+        services.AddScoped<IUnconfirmedAppUsersRepository, UnconfirmedAppUsersRepository>();
+        services.AddScoped<IPasswordUpdateRequestsRepository, PasswordResetRequestsRepository>();
 
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         SqlMapper.AddTypeHandler(new EmailTypeHandler());
@@ -81,7 +84,7 @@ public static class DependencyInjection
         return services;
     }
     private static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration) {
-        //.GetSection("EmailService")
+        services.Configure<EmailServiceConfig>(options => configuration.GetSection("EmailServiceConfig").Bind(options));
         services.AddTransient<IEmailService, EmailService>();
         return services;
     }

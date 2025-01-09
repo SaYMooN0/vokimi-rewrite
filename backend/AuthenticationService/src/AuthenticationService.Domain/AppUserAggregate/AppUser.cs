@@ -12,17 +12,20 @@ public class AppUser : AggregateRoot
     private AppUser() { }
 
     public AppUserId Id { get; init; }
+    public Email Email { get; init; }
     internal string PasswordHash { get; private set; }
-    internal Email Email { get; init; }
     public DateOnly RegistrationDate { get; init; }
+    public AppUserRole Role { get; private set; }
 
-    public static AppUser FromUnconfirmed(
-        UnconfirmedAppUser unconfirmedUser,
+    public static AppUser CreateNew(
+        Email email,
+        string passwordHash,
         IDateTimeProvider dateTimeProvider
     ) => new() {
         Id = AppUserId.CreateNew(),
-        PasswordHash = unconfirmedUser.PasswordHash,
-        Email = unconfirmedUser.Email,
-        RegistrationDate = dateTimeProvider.NowDateOnly
+        Email = email,
+        PasswordHash = passwordHash,
+        RegistrationDate = dateTimeProvider.NowDateOnly,
+        Role = AppUserRole.Member
     };
 }

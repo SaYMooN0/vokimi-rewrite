@@ -16,7 +16,7 @@ internal class NpgsqlConnectionFactory : IDbConnectionFactory
     }
 }
 
-internal interface IDbConnectionFactory
+public interface IDbConnectionFactory
 {
     Task<IDbConnection> CreateConnectionAsync(CancellationToken cancellationToken = default);
 }

@@ -48,14 +48,13 @@ internal static class RootHandlers
         ISender mediator
     ) {
         ConfirmRegistrationRequest request = httpContext.GetValidatedRequest<ConfirmRegistrationRequest>();
+        
         UnconfirmedAppUserId unconfirmedUserId = new(new(request.UserId));
-        var command = new ConfirmUserRegistrationCommand(unconfirmedUserId, request.ConfirmationString);
-        ErrOr<string> result = await mediator.Send(command);
+        ErrOrNothing err = await mediator.Send(new ConfirmUserRegistrationCommand(unconfirmedUserId, request.ConfirmationString));
 
-        return CustomResults.FromErrOr(
-            result,
-            (token) => CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("login is not implemented"))
-            //Results.Ok().Cookies.Append(AuthCookieName, token, AuthCookieOptions())
+        return CustomResults.FromErrOrNothing(
+            err,
+            () => Results.Ok()
         );
     }
     private static async Task<IResult> Login(

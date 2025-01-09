@@ -10,7 +10,7 @@ namespace AuthenticationService.Api.Contracts.UnconfirmedAppUsers.requests
     ) : IRequestWithValidationNeeded
     {
         public RequestValidationResult Validate() {
-            if (Guid.TryParse(UserId, out var _)) {
+            if (!Guid.TryParse(UserId, out var _)) {
                 return new Err("Incorrect confirmation string");
             }
             if (string.IsNullOrWhiteSpace(ConfirmationString)) {

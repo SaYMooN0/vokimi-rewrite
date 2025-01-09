@@ -34,46 +34,32 @@ public class AddNewUnconfirmedAppUserCommandHandler : IRequestHandler<AddNewUnco
     }
 
     public async Task<ErrListOrNothing> Handle(AddNewUnconfirmedAppUserCommand request, CancellationToken cancellationToken) {
-        var newUserCreation = UnconfirmedAppUser.Create(
+        var userToAddCreationRes = UnconfirmedAppUser.Create(
             request.email,
             request.password,
             _passwordHasher.HashPassword,
             UtcDateTimeProvider.Instance
         );
-        if (newUserCreation.AnyErr(out var errs)) {
-            return errs;
+        if (userToAddCreationRes.AnyErr(out var errs)) { return errs; }
+
+        var userToAdd = userToAddCreationRes.GetSuccess();
+
+        bool anyConfirmedWithThisEmail = await _appUsersRepository.AnyUserWithEmail(request.email);
+        if (anyConfirmedWithThisEmail) { return new Err(message: "User with this email already exists", source: ErrorSource.Client); }
+
+
+        UnconfirmedAppUser? existingUnconfirmedUser = await _unconfirmedAppUsersRepository.GetByEmail(request.email);
+        if (existingUnconfirmedUser is null) {
+            await _unconfirmedAppUsersRepository.AddNew(userToAdd);
+        } else {
+            await _unconfirmedAppUsersRepository.OverrideExistingWithEmail(userToAdd);
         }
 
-
-        var anyConfirmedWithThisEmail = await _appUsersRepository.AnyUserWithEmail(request.email);
-        if (anyConfirmedWithThisEmail.IsErr(out var err)) {
+        string link = _frontendConfig.ConfirmRegistrationUrl + $"/{userToAdd.Id}/{userToAdd.ConfirmationString}";
+        var sendingErr = await _emailService.SendRegistrationConfirmationLink(userToAdd.Email, link);
+        if (sendingErr.IsErr(out var err)) {
             return err;
         }
-        bool confirmedUserExists = anyConfirmedWithThisEmail.GetSuccess();
-        if (confirmedUserExists) { return new Err(message: "User with this email already exists", source: ErrorSource.Client); }
-
-        UnconfirmedAppUser unconfirmedAppUser;
-
-        var existingUnconfirmedUser = await _unconfirmedAppUsersRepository.GetByEmail(request.email);
-        if (existingUnconfirmedUser.IsErr(out var existingUnconfirmedUserErr)) {
-            if (existingUnconfirmedUserErr.Code != Err.ErrCodes.NotFound) {
-                return existingUnconfirmedUserErr;
-            }
-
-            var addingErr = await _unconfirmedAppUsersRepository.AddNew(newUserCreation.GetSuccess());
-            if (addingErr.IsErr(out err)) { return err; }
-            
-            unconfirmedAppUser = newUserCreation.GetSuccess();
-        } else {
-            unconfirmedAppUser = existingUnconfirmedUser.GetSuccess();
-            
-            var overridingErr = await _unconfirmedAppUsersRepository.OverrideUserWithEmail(newUserCreation.GetSuccess());
-            if (overridingErr.IsErr(out err)) { return err; }
-        }
-
-        string link = _frontendConfig.ConfirmRegistrationUrl + $"/{unconfirmedAppUser.Id}/{unconfirmedAppUser.ConfirmationString}";
-        var sendingErr = await _emailService.SendRegistrationConfirmationLink(unconfirmedAppUser.Email, link);
-        if (sendingErr.IsErr(out err)) { return err; }
 
         return ErrListOrNothing.Nothing;
     }

@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Domain.Common;
 using AuthenticationService.Domain.Common.validation_rules;
 using AuthenticationService.Domain.Common.value_objects;
+using AuthenticationService.Domain.Events;
 using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
@@ -8,7 +9,7 @@ using SharedKernel.Common.interfaces;
 
 namespace AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 
-public class UnconfirmedAppUser : Entity
+public class UnconfirmedAppUser : AggregateRoot
 {
     protected override EntityId EntityId => Id;
     private UnconfirmedAppUser() { }
@@ -45,5 +46,12 @@ public class UnconfirmedAppUser : Entity
             CreationTime = dateTimeProvider.Now,
             ConfirmationString = Guid.NewGuid().ToString()
         };
+    }
+    public ErrOrNothing Confirm(string confirmationString) {
+        if (confirmationString != this.ConfirmationString) {
+            return new Err(message: "Unable to confirm user. Incorrect confirmation string was provided");
+        }
+        _domainEvents.Add(new UserConfirmedEvent(Id, Email, PasswordHash));
+        return ErrOrNothing.Nothing;
     }
 }
