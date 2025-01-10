@@ -5,6 +5,7 @@ using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.exceptions;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
 
@@ -56,10 +57,9 @@ public class AddNewUnconfirmedAppUserCommandHandler : IRequestHandler<AddNewUnco
         }
 
         string link = _frontendConfig.ConfirmRegistrationUrl + $"/{userToAdd.Id}/{userToAdd.ConfirmationString}";
+        
         var sendingErr = await _emailService.SendRegistrationConfirmationLink(userToAdd.Email, link);
-        if (sendingErr.IsErr(out var err)) {
-            return err;
-        }
+        sendingErr.ThrowIfErr();
 
         return ErrListOrNothing.Nothing;
     }

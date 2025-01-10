@@ -1,4 +1,6 @@
 ﻿
+using SharedKernel.Common.exceptions;
+
 namespace SharedKernel.Common.errors;
 
 public class ErrOrNothing
@@ -14,6 +16,11 @@ public class ErrOrNothing
 
         err = new Err("No error");
         return false;
+    }
+    public void ThrowIfErr() {
+        if (_err != null) {
+            throw new ErrCausedException(_err);
+        }
     }
     public static implicit operator ErrOrNothing(Err err) {
         return new ErrOrNothing(err);

@@ -13,7 +13,7 @@ public class AppUser : AggregateRoot
 
     public AppUserId Id { get; init; }
     public Email Email { get; init; }
-    internal string PasswordHash { get; private set; }
+    public string PasswordHash { get; private set; }
     public DateOnly RegistrationDate { get; init; }
     public AppUserRole Role { get; private set; }
 
@@ -28,4 +28,7 @@ public class AppUser : AggregateRoot
         RegistrationDate = dateTimeProvider.NowDateOnly,
         Role = AppUserRole.Member
     };
+    public bool IsPasswordCorrect(Func<string, bool> passwordHashFunc) {
+        return passwordHashFunc(PasswordHash);
+    }
 }

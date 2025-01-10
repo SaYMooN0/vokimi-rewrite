@@ -19,6 +19,6 @@ internal class UserConfirmedEventHandler : INotificationHandler<UserConfirmedEve
     public async Task Handle(UserConfirmedEvent notification, CancellationToken cancellationToken) {
         var appUser = AppUser.CreateNew(notification.Email, notification.PasswordHash, UtcDateTimeProvider.Instance);
         await _unconfirmedAppUsersRepository.RemoveById(notification.UnconfirmedAppUserId);
-        await _appUsersRepository.AddUser(appUser);
+        await _appUsersRepository.Add(appUser);
     }
 }

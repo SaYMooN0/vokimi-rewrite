@@ -1,10 +1,7 @@
-﻿using AuthenticationService.Application.Common.interfaces;
-using AuthenticationService.Application.Common.interfaces.repositories;
-using AuthenticationService.Domain.AppUserAggregate;
+﻿using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Domain.Common;
 using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using MediatR;
-using SharedKernel.Common;
 using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
@@ -26,9 +23,7 @@ public class ConfirmUserRegistrationCommandHandler : IRequestHandler<ConfirmUser
             );
         }
         var confirmationRes = unconfirmedAppUser.Confirm(request.ConfirmationString);
-        if (confirmationRes.IsErr(out var err)) {
-            return err;
-        }
+        confirmationRes.ThrowIfErr();
 
         return ErrOrNothing.Nothing;
     }

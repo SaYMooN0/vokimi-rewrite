@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Application.Common.interfaces.repositories;
+using AuthenticationService.Domain.AppUserAggregate;
 using AuthenticationService.Domain.Common;
 using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
@@ -9,6 +10,7 @@ using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 using AuthenticationService.Infrastructure.Persistence.repositories;
 using AuthenticationService.Infrastructure.Services;
+using AuthenticationService.Infrastructure.Services.jwt_service;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,8 +36,9 @@ public static class DependencyInjection
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<IPasswordHasher>(new PasswordHasher());
 
-        // todo: add auth
-
+        services.Configure<JwtTokenServiceConfig>(options => configuration.GetSection("JwtTokenServiceConfig").Bind(options));
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        
         return services;
     }
 
@@ -77,8 +80,11 @@ public static class DependencyInjection
 
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         SqlMapper.AddTypeHandler(new EmailTypeHandler());
+        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+
         SqlMapper.AddTypeHandler(typeof(AppUserId), new GuidEntityIdTypeHandler<AppUserId>());
         SqlMapper.AddTypeHandler(typeof(UnconfirmedAppUserId), new GuidEntityIdTypeHandler<UnconfirmedAppUserId>());
+
 
 
         return services;

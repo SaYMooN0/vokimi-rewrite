@@ -1,5 +1,6 @@
 ﻿using ApiShared.interfaces;
 using Microsoft.AspNetCore.Http;
+using SharedKernel.Common.EntityIds;
 
 namespace ApiShared.extensions;
 
@@ -13,5 +14,12 @@ public static class HttpContextExtensions
             return request;
         }
         throw new InvalidCastException("Request type mismatch");
+    }
+    public static AppUserId GetAuthenticatedUserId(this HttpContext context) {
+        if (!context.Items.TryGetValue("AppUserId", out var userIdObj) || userIdObj is not AppUserId userId) {
+            throw new UnauthorizedAccessException("User is not authenticated or AppUserId is missing");
+        }
+
+        return userId;
     }
 }

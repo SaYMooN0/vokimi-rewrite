@@ -8,15 +8,32 @@ internal class AppUsersRepository : BaseRepository, IAppUsersRepository
 {
     public AppUsersRepository(UnitOfWork unitOfWork) : base(unitOfWork) { }
 
-    public async Task AddUser(AppUser appUser) {
-        return;
+    public async Task Add(AppUser appUser) {
+        const string sql = @"
+        INSERT INTO app_users (id, email, password_hash, role, registration_date)
+        VALUES (@Id, @Email, @PasswordHash, @Role, @RegistrationDate);";
+
+        await ExecuteAsync(sql, appUser);
     }
 
     public async Task<bool> AnyUserWithEmail(string email) {
-        return false;
+        const string sql = @"
+        SELECT COUNT(*)
+        FROM app_users
+        WHERE email = @Email
+        LIMIT 1;";
+
+        var count = await QuerySingleOrDefaultAsync<int>(sql, new { Email = email });
+        return count > 0;
     }
 
-    public async Task<AppUser?> GetUserByEmailAndPasswordHash(string email, string passwordHash) {
-        return null;
+    public async Task<AppUser?> GetByEmail(string email) {
+        const string sql = @"
+        SELECT id, email, password_hash, role, registration_date
+        FROM app_users
+        WHERE email = @Email
+        LIMIT 1;";
+
+        return await QuerySingleOrDefaultAsync<AppUser>(sql, new { Email = email });
     }
 }

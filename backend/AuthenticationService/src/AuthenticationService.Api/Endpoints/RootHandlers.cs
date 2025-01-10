@@ -19,7 +19,7 @@ internal static class RootHandlers
             .WithRequestValidationMetaData<RegisterUserRequest>();
         endpoints.MapPost("/login", Login)
             .WithRequestValidationMetaData<LoginUserRequest>();
-        endpoints.MapPost("/confirm", ConfirmRegistration)
+        endpoints.MapPost("/confirm-registration", ConfirmRegistration)
             .WithRequestValidationMetaData<ConfirmRegistrationRequest>();
         endpoints.MapPost("/logout", Logout);
 
@@ -40,15 +40,12 @@ internal static class RootHandlers
             () => Results.Ok()
         );
     }
-
-
-
     private static async Task<IResult> ConfirmRegistration(
         HttpContext httpContext,
         ISender mediator
     ) {
         ConfirmRegistrationRequest request = httpContext.GetValidatedRequest<ConfirmRegistrationRequest>();
-        
+
         UnconfirmedAppUserId unconfirmedUserId = new(new(request.UserId));
         ErrOrNothing err = await mediator.Send(new ConfirmUserRegistrationCommand(unconfirmedUserId, request.ConfirmationString));
 
@@ -67,10 +64,13 @@ internal static class RootHandlers
 
         return CustomResults.FromErrOr(
             result,
-            (token) => CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("login is not implemented"))
+            (token) => {
+                httpContext.Response.Cookies.Append(AuthCookieName, token, AuthCookieOptions());
+                return Results.Ok();
+            }
         );
     }
-    private static async Task<IResult> Logout(
+    private static IResult Logout(
        HttpContext httpContext,
        ISender mediator
    ) {
@@ -81,8 +81,8 @@ internal static class RootHandlers
             Expires = DateTime.UtcNow.AddDays(-1)
         };
 
-        //Cookies.Append("AuthToken", "", cookieOptions);
-        return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("logout is not implemented"));
+        httpContext.Response.Cookies.Append(AuthCookieName, "", cookieOptions);
+        return Results.Ok();
     }
     private static CookieOptions AuthCookieOptions() => new CookieOptions {
         HttpOnly = true,
