@@ -1,6 +1,5 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
-using ApiShared.extensions.endpoints_extensions;
 using AuthenticationService.Api.Contracts.AppUsers.requests;
 using AuthenticationService.Api.Contracts.UnconfirmedAppUsers.requests;
 using AuthenticationService.Application.UnconfirmedAppUsers.commands;
@@ -16,11 +15,11 @@ internal static class RootHandlers
         endpoints.MapGet(".hello", () => "Hello World!");
 
         endpoints.MapPost("/register", Register)
-            .WithRequestValidationMetaData<RegisterUserRequest>();
+            .WithRequestValidation<RegisterUserRequest>();
         endpoints.MapPost("/login", Login)
-            .WithRequestValidationMetaData<LoginUserRequest>();
+            .WithRequestValidation<LoginUserRequest>();
         endpoints.MapPost("/confirm-registration", ConfirmRegistration)
-            .WithRequestValidationMetaData<ConfirmRegistrationRequest>();
+            .WithRequestValidation<ConfirmRegistrationRequest>();
         endpoints.MapPost("/logout", Logout);
 
         return endpoints;

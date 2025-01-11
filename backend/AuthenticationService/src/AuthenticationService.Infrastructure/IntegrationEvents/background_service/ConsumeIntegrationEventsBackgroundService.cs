@@ -6,99 +6,102 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
+using MediatR;
+using SharedKernel.IntegrationEvents;
 
 namespace AuthenticationService.Infrastructure.IntegrationEvents.background_service;
-
 internal class ConsumeIntegrationEventsBackgroundService : IHostedService
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<ConsumeIntegrationEventsBackgroundService> _logger;
-    private readonly CancellationTokenSource _cts;
-    private readonly IConnection _connection;
-
     private readonly MessageBrokerSettings _messageBrokerSettings;
-
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private IConnection connection;
+    private IChannel channel;
     public ConsumeIntegrationEventsBackgroundService(
         ILogger<ConsumeIntegrationEventsBackgroundService> logger,
         IServiceScopeFactory serviceScopeFactory,
-        IOptions<MessageBrokerSettings> messageBrokerOptions) {
+        IOptions<MessageBrokerSettings> messageBrokerOptions
+    ) {
         _logger = logger;
-        _cts = new CancellationTokenSource();
         _serviceScopeFactory = serviceScopeFactory;
-
         _messageBrokerSettings = messageBrokerOptions.Value;
+    }
+    public async Task StartAsync(CancellationToken cancellationToken) {
+        _logger.LogInformation("Starting integration event consumer background service.");
 
-        IConnectionFactory connectionFactory = new ConnectionFactory {
+        var connectionFactory = new ConnectionFactory {
             HostName = _messageBrokerSettings.HostName,
             Port = _messageBrokerSettings.Port,
             UserName = _messageBrokerSettings.UserName,
             Password = _messageBrokerSettings.Password
         };
+        connection = await connectionFactory.CreateConnectionAsync();
+        channel = await connection.CreateChannelAsync();
+        await SetupMessageBrokerAsync(cancellationToken);
 
-        //_connection = connectionFactory.CreateConnection();
-
-        //_channel = _connection.CreateModel();
-
-        //_channel.ExchangeDeclare(_messageBrokerSettings.ExchangeName, ExchangeType.Fanout, durable: true);
-
-        //_channel.QueueDeclare(
-        //    queue: _messageBrokerSettings.QueueName,
-        //    durable: false,
-        //    exclusive: false,
-        //    autoDelete: false);
-
-        //_channel.QueueBind(
-        //    _messageBrokerSettings.QueueName,
-        //    _messageBrokerSettings.ExchangeName,
-        //    routingKey: string.Empty);
-
-        //var consumer = new EventingBasicConsumer(_channel);
-
-        //consumer.Received += PublishIntegrationEvent;
-
-        //_channel.BasicConsume(_messageBrokerSettings.QueueName, autoAck: false, consumer);
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (sender, eventArgs) => await HandleEventAsync(sender, eventArgs, cancellationToken);
+        await channel.BasicConsumeAsync(_messageBrokerSettings.QueueName, autoAck: false, consumer: consumer);
     }
+    private async Task SetupMessageBrokerAsync(CancellationToken cancellationToken) {
+        await channel.ExchangeDeclareAsync(_messageBrokerSettings.ExchangeName, ExchangeType.Fanout, durable: true);
 
-    private async void PublishIntegrationEvent(object? sender, BasicDeliverEventArgs eventArgs) {
-        if (_cts.IsCancellationRequested) {
+        var queueDeclareResult = await channel.QueueDeclareAsync(
+            queue: _messageBrokerSettings.QueueName,
+            durable: false,
+            exclusive: false,
+            autoDelete: false
+        );
+
+        await channel.QueueBindAsync(_messageBrokerSettings.QueueName, _messageBrokerSettings.ExchangeName, routingKey: string.Empty);
+    }
+    private async Task HandleEventAsync(object sender, BasicDeliverEventArgs eventArgs, CancellationToken cancellationToken) {
+        if (cancellationToken.IsCancellationRequested) {
             _logger.LogInformation("Cancellation requested, not consuming integration event.");
             return;
         }
 
         try {
-            //_logger.LogInformation("Received integration event. Reading message from queue.");
+            _logger.LogInformation("Received integration event. Reading message from queue.");
 
-            //using var scope = _serviceScopeFactory.CreateScope();
+            using var scope = _serviceScopeFactory.CreateScope();
 
-            //var body = eventArgs.Body.ToArray();
-            //var message = Encoding.UTF8.GetString(body);
+            var body = eventArgs.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
 
-            //var integrationEvent = JsonSerializer.Deserialize<IIntegrationEvent>(message);
-            //integrationEvent.ThrowIfNull();
+            var integrationEvent = JsonSerializer.Deserialize<IIntegrationEvent>(message);
+            if (integrationEvent == null) {
+                throw new Exception("Integration event is null.");
+            }
 
-            //_logger.LogInformation(
-            //    "Received integration event of type: {IntegrationEventType}. Publishing event.",
-            //    integrationEvent.GetType().Name);
+            _logger.LogInformation(
+                "Received integration event of type: {IntegrationEventType}. Publishing event.",
+                integrationEvent.GetType().Name);
 
-            //var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
-            //await publisher.Publish(integrationEvent);
+            var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+            await publisher.Publish(integrationEvent);
 
-            //_logger.LogInformation("Integration event published in Gym Management service successfully. Sending ack to message broker.");
-
-            //_channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
+            _logger.LogInformation("Integration event published successfully. Sending ack to message broker.");
+            await channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false);
         } catch (Exception e) {
-            _logger.LogError(e, "Exception occurred while consuming integration event");
+            _logger.LogError(e, "Exception occurred while consuming integration event.");
+            await channel.BasicNackAsync(eventArgs.DeliveryTag, false, true);
         }
     }
 
-    public Task StartAsync(CancellationToken cancellationToken) {
-        _logger.LogInformation("Starting integration event consumer background service.");
-        return Task.CompletedTask;
-    }
+    public async Task StopAsync(CancellationToken cancellationToken) {
+        try {
+            if (channel is not null && connection is not null) {
+                await channel.CloseAsync();
+                channel.Dispose();
 
-    public Task StopAsync(CancellationToken cancellationToken) {
-        _cts.Cancel();
-        _cts.Dispose();
-        return Task.CompletedTask;
+                await connection.CloseAsync();
+                connection.Dispose();
+            }
+        } catch (Exception e) {
+            _logger.LogError(e, "Error while stopping the consumer service.");
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
-namespace AuthenticationService.Infrastructure.Configs;
+namespace SharedKernel.Authentication;
 
-internal class JwtTokenServiceConfig
+public class JwtTokenConfig
 {
     public string SecretKey { get; init; }
     public string Issuer { get; init; }

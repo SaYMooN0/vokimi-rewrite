@@ -1,5 +1,5 @@
 ﻿using AuthenticationService.Domain.Common.value_objects;
-using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
+using AuthenticationService.Domain.Events;
 using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.interfaces;
@@ -21,13 +21,17 @@ public class AppUser : AggregateRoot
         Email email,
         string passwordHash,
         IDateTimeProvider dateTimeProvider
-    ) => new() {
-        Id = AppUserId.CreateNew(),
-        Email = email,
-        PasswordHash = passwordHash,
-        RegistrationDate = dateTimeProvider.NowDateOnly,
-        Role = AppUserRole.Member
-    };
+    ) {
+        AppUser user = new() {
+            Id = AppUserId.CreateNew(),
+            Email = email,
+            PasswordHash = passwordHash,
+            RegistrationDate = dateTimeProvider.NowDateOnly,
+            Role = AppUserRole.Member
+        };
+        user._domainEvents.Add(new NewAppUserCreated(user.Id));
+        return user;
+    }
     public bool IsPasswordCorrect(Func<string, bool> passwordHashFunc) {
         return passwordHashFunc(PasswordHash);
     }

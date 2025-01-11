@@ -1,16 +1,15 @@
 ﻿using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Application.Common.interfaces.repositories;
-using AuthenticationService.Domain.AppUserAggregate;
 using AuthenticationService.Domain.Common;
 using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
 using AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
+using AuthenticationService.Infrastructure.IntegrationEvents.settings;
 using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 using AuthenticationService.Infrastructure.Persistence.repositories;
 using AuthenticationService.Infrastructure.Services;
-using AuthenticationService.Infrastructure.Services.jwt_service;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +20,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services
-            .AddAuth(configuration)
+            .AddAuthRelatedServices()
             .AddConfigurations(configuration)
             .AddBackgroundServices()
             .AddPersistence(configuration)
@@ -33,12 +32,10 @@ public static class DependencyInjection
     }
 
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddAuthRelatedServices(this IServiceCollection services) {
         services.AddSingleton<IPasswordHasher>(new PasswordHasher());
-
-        services.Configure<JwtTokenServiceConfig>(options => configuration.GetSection("JwtTokenServiceConfig").Bind(options));
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
-        
+
         return services;
     }
 
@@ -49,10 +46,8 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration) {
-        //services.AddOptions();
+        services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
 
-        //var messageBrokerSettings = new MessageBrokerSettings();
-        //configuration.Bind(MessageBrokerSettings.Section, messageBrokerSettings);
 
         //services.AddSingleton(Options.Create(messageBrokerSettings));
 
@@ -61,7 +56,6 @@ public static class DependencyInjection
 
     private static IServiceCollection AddBackgroundServices(this IServiceCollection services) {
         services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
-        services.AddHostedService<PublishIntegrationEventsBackgroundService>();
         services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
 
         return services;

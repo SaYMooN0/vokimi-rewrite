@@ -1,21 +1,17 @@
-
-using ApiShared.middlewares.exceptions_handling;
-using ApiShared.middlewares.request_validation;
+using ApiShared;
 using TestCreationService.Api.Endpoints.test_creation;
 using TestCreationService.Application;
 using TestCreationService.Infrastructure;
+
 namespace TestCreationService.Api
 {
     public class Program
     {
         public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddAuthorization();
-
             builder.Services.AddOpenApi();
             builder.Services
+                .AddAuthTokenConfig(builder.Configuration)
                 .AddApplication(builder.Configuration)
                 .AddInfrastructure(builder.Configuration);
             var app = builder.Build();
@@ -24,9 +20,9 @@ namespace TestCreationService.Api
                 app.MapOpenApi();
             }
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.AddExceptionHandlingMiddleware();
+            app.AddRequestValidationMiddleware();
             app.UseHttpsRedirection();
-            app.UseMiddleware<RequestValidationMiddleware>();
 
             MapHandlers(app);
 

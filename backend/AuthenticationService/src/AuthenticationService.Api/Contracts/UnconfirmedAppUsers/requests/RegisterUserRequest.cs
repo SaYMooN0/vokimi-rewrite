@@ -1,6 +1,5 @@
-﻿using ApiShared;
-using ApiShared.interfaces;
-using AuthenticationService.Domain.Common.validation_rules;
+﻿using ApiShared.interfaces;
+using AuthenticationService.Domain.Rules;
 using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Api.Contracts.UnconfirmedAppUsers.requests;

@@ -1,5 +1,4 @@
-﻿using ApiShared;
-using ApiShared.interfaces;
+﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Api.Contracts.AppUsers.requests;

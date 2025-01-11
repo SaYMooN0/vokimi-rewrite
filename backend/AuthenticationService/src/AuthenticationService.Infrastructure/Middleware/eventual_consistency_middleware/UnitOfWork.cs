@@ -33,10 +33,13 @@ public class UnitOfWork : IDisposable
         var domainEvents = _trackedAggregates
             .SelectMany(aggregate => aggregate.PopDomainEvents())
             .ToList();
-
+        if (domainEvents.Count == 0) {
+            return;
+        }
         foreach (var domainEvent in domainEvents) {
             await publisher.Publish(domainEvent);
         }
+        await PublishDomainEventsAsync(publisher);
     }
 
     public void Commit() {

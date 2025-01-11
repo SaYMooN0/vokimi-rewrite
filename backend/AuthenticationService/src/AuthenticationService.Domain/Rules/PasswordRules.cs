@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.errors;
 
-namespace AuthenticationService.Domain.Common.validation_rules;
+namespace AuthenticationService.Domain.Rules;
 
 public static class PasswordRules
 {

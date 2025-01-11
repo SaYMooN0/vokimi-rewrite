@@ -1,7 +1,7 @@
 ﻿using AuthenticationService.Domain.Common;
-using AuthenticationService.Domain.Common.validation_rules;
 using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Domain.Events;
+using AuthenticationService.Domain.Rules;
 using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;

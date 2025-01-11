@@ -5,6 +5,5 @@ namespace AuthenticationService.Infrastructure.IntegrationEvents.integration_eve
 
 internal interface IIntegrationEventsPublisher
 {
-    public void PublishEvent(IIntegrationEvent integrationEvent);
-
+    public Task PublishEvent(IIntegrationEvent integrationEvent);
 }

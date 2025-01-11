@@ -57,7 +57,7 @@ public class AddNewUnconfirmedAppUserCommandHandler : IRequestHandler<AddNewUnco
         }
 
         string link = _frontendConfig.ConfirmRegistrationUrl + $"/{userToAdd.Id}/{userToAdd.ConfirmationString}";
-        
+
         var sendingErr = await _emailService.SendRegistrationConfirmationLink(userToAdd.Email, link);
         sendingErr.ThrowIfErr();
 
