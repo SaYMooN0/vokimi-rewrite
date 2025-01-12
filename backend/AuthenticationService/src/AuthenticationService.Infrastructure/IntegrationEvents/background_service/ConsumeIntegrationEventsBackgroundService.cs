@@ -1,5 +1,4 @@
-﻿
-using AuthenticationService.Infrastructure.IntegrationEvents.settings;
+﻿using AuthenticationService.Infrastructure.IntegrationEvents.settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

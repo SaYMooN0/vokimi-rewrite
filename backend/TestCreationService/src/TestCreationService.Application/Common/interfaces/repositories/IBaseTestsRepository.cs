@@ -1,8 +1,10 @@
 ﻿using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.errors;
 
 namespace TestCreationService.Application.Common.interfaces.repositories;
 
 public interface IBaseTestsRepository
 {
-    public Task<bool> DoesUserHavePermissionToEdit(TestId testId, AppUserId appUserId);
+    //rethink this
+    public Task<ErrOr<HashSet<AppUserId>>> GetUserIdsWithPermissionToEditTest(TestId testId);
 }

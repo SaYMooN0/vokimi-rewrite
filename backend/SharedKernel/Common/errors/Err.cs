@@ -46,6 +46,8 @@ public class Err
             new Err(message, ErrCodes.UnauthorizedAccess, details, source);
         public static Err InvalidData(string message = "Invalid Data", string details = "", ErrorSource source = ErrorSource.Client) =>
             new Err(message, ErrCodes.InvalidData, details, source);
+        public static Err NoAccess(string message = "Access is denied", string details = "", ErrorSource source = ErrorSource.Client) =>
+            new Err(message, ErrCodes.NoAccess, details, source);
     }
     public static class ErrCodes
     {
@@ -55,6 +57,7 @@ public class Err
         public const ushort NotFound = 1001;
         public const ushort UnauthorizedAccess = 1002;
         public const ushort InvalidData = 1003;
+        public const ushort NoAccess = 1004;
     }
 
 }

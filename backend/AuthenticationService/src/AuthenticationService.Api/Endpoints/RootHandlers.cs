@@ -26,8 +26,8 @@ internal static class RootHandlers
     }
 
     private static async Task<IResult> Register(
-            HttpContext httpContext,
-            ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
 
         RegisterUserRequest request = httpContext.GetValidatedRequest<RegisterUserRequest>();

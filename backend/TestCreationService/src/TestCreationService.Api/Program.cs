@@ -21,7 +21,6 @@ namespace TestCreationService.Api
             }
 
             app.AddExceptionHandlingMiddleware();
-            app.AddRequestValidationMiddleware();
             app.UseHttpsRedirection();
 
             MapHandlers(app);

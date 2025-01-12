@@ -6,4 +6,6 @@ public static class TestRules
         MinNameLength = 8,
         MaxNameLength = 255;
     public const int MaxTestEditorsCount = 10;
+
+    public const int MaxTestDescriptionLength = 511;
 }

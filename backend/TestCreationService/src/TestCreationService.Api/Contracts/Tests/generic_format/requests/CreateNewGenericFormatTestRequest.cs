@@ -1,11 +1,10 @@
 ﻿using ApiShared.interfaces;
-using ApiShared.middlewares.request_validation;
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Rules;
 
-namespace TestCreationService.Api.Contracts.Tests.generic_format;
+namespace TestCreationService.Api.Contracts.Tests.generic_format.requests;
 
-public record class CreateNewGenericFormatTest(
+public record class CreateNewGenericFormatTestRequest(
     string Name,
     string[] EditorIds
 ) : IRequestWithValidationNeeded
@@ -22,6 +21,7 @@ public record class CreateNewGenericFormatTest(
                 $"Test name is too short. Minimum length of the test name cannot be less than {TestRules.MinNameLength}. Current length is {nameLength}"
             );
         }
+        //check if editor ids is null
         if (EditorIds.Any(eId => !Guid.TryParse(eId, out var _))) {
             return Err.ErrFactory.InvalidData(
                 "Editors was not saved correctly. Please try again.",

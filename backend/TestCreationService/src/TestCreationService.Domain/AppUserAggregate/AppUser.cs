@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharedKernel.Common;
+using SharedKernel.Common.EntityIds;
 
-namespace TestCreationService.Domain.AppUserAggregate
+namespace TestCreationService.Domain.AppUserAggregate;
+
+public class AppUser : AggregateRoot
 {
-    public class AppUser
-    {
-    }
+    protected override EntityId EntityId => Id;
+
+    public AppUserId Id { get; init; }
+
 }

@@ -4,6 +4,8 @@ using RabbitMQ.Client;
 using SharedKernel.IntegrationEvents;
 using System.Text.Json;
 using System.Text;
+using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
+using Microsoft.Extensions.Logging;
 
 
 namespace AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
@@ -11,6 +13,7 @@ namespace AuthenticationService.Infrastructure.IntegrationEvents.integration_eve
 internal class IntegrationEventsPublisher : IIntegrationEventsPublisher
 {
     private readonly MessageBrokerSettings _messageBrokerSettings;
+    private readonly ILogger<IntegrationEventsPublisher> _logger;
 
     public IntegrationEventsPublisher(IOptions<MessageBrokerSettings> messageBrokerOptions) {
         _messageBrokerSettings = messageBrokerOptions.Value;
@@ -37,9 +40,9 @@ internal class IntegrationEventsPublisher : IIntegrationEventsPublisher
             await channel.BasicPublishAsync(exchange: exchangeName, routingKey: string.Empty, body: body);
 
 
-            Console.WriteLine($"Event of type {integrationEvent.GetType().Name} published to exchange {exchangeName}.");
+            _logger.LogInformation($"Event of type {integrationEvent.GetType().Name} published to exchange {exchangeName}.");
         } catch (Exception ex) {
-            Console.WriteLine($"Error occurred while publishing event: {ex.Message}");
+            _logger.LogError($"Error occurred while publishing event: {ex.Message}");
             throw;
         }
     }
