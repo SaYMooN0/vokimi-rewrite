@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,11 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <Compile Remove="Contracts\Tests\test_creation\general_format\**" />
+    <Compile Remove="Endpoints\test_publication\**" />
+    <Content Remove="Contracts\Tests\test_creation\general_format\**" />
+    <Content Remove="Endpoints\test_publication\**" />
+    <EmbeddedResource Remove="Contracts\Tests\test_creation\general_format\**" />
+    <EmbeddedResource Remove="Endpoints\test_publication\**" />
+    <None Remove="Contracts\Tests\test_creation\general_format\**" />
+    <None Remove="Endpoints\test_publication\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Endpoints\test_publication\" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

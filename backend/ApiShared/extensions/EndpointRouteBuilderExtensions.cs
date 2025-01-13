@@ -10,11 +10,6 @@ public static class EndpointRouteBuilderExtensions
     public static RouteHandlerBuilder WithRequestValidation<T>(this RouteHandlerBuilder builder) where T : class, IRequestWithValidationNeeded {
         return builder.AddEndpointFilter<RequestValidationRequiredEndpointFilter<T>>();
     }
-    //public static IEndpointConventionBuilder WithRequestValidationMetaData<T>(
-    //    this IEndpointConventionBuilder builder
-    //) where T : class, IRequestWithValidationNeeded {
-    //    return builder.WithMetadata(new BodyToValidateTypeMetaData(typeof(T)));
-    //}
     public static RouteHandlerBuilder AuthenticationRequired(this RouteHandlerBuilder builder) {
         return builder.AddEndpointFilter<AuthenticationRequiredEndpointFilter>();
     }

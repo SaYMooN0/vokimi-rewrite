@@ -2,9 +2,9 @@
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Rules;
 
-namespace TestCreationService.Api.Contracts.Tests.generic_format.requests;
+namespace TestCreationService.Api.Contracts.Tests.test_initialization;
 
-public record class CreateNewGenericFormatTestRequest(
+public record class InitNewTestRequest(
     string Name,
     string[] EditorIds
 ) : IRequestWithValidationNeeded

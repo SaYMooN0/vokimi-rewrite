@@ -2,6 +2,6 @@
 
 public enum TestFormat
 {
-    Generic,
+    General,
     Scoring
 }

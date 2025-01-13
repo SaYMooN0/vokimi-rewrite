@@ -21,7 +21,7 @@ namespace TestCatalogService.Api
 
             app.UseHttpsRedirection();
 
-            
+            app.MapGet("/hello", () => "Hello World!");
             app.Run();
         }
     }

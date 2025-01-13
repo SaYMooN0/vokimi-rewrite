@@ -2,8 +2,9 @@
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Rules;
+using TestCreationService.Domain.TestAggregate.formats_shared;
 
-namespace TestCreationService.Domain.TestAggregate.formats_shared;
+namespace TestCreationService.Domain.TestAggregate;
 
 public abstract class BaseTest : AggregateRoot
 {

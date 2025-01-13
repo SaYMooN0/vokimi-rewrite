@@ -2,17 +2,17 @@
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 
-namespace TestCreationService.Domain.TestAggregate.generic_format;
+namespace TestCreationService.Domain.TestAggregate.general_format;
 
-public class GenericFormatTest : BaseTest
+public class GeneralFormatTest : BaseTest
 {
-    public static ErrOr<GenericFormatTest> CreateNew(AppUserId creatorId, string testName, AppUserId[] editorIds) {
+    public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, AppUserId[] editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
         }
         List<AppUserId> editorIdsList = editorIds is null ? [] : editorIds.ToList();
-        return new GenericFormatTest() {
+        return new GeneralFormatTest() {
             Id = TestId.CreateNew(),
             CreatorId = creatorId,
             EditorIds = editorIdsList,

@@ -1,4 +1,5 @@
 using ApiShared;
+using TestCreationService.Api.Endpoints;
 using TestCreationService.Api.Endpoints.test_creation;
 using TestCreationService.Application;
 using TestCreationService.Infrastructure;
@@ -28,7 +29,10 @@ namespace TestCreationService.Api
             app.Run();
         }
         private static void MapHandlers(WebApplication app) {
-            app.MapGroup("/generic_tests").MapGenericFormatTestCreationHandlers();
+            app.MapGroup("/newTestInitialization").MapNewTestInitializationHandlers();
+            app.MapGroup("/testCreation/{testId}").MapFormatsSharedTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/general").MapGeneralFormatTestCreationHandlers();
+            //app.MapGroup("/testCreation/{testId}/scoring").MapScoringFormatTestCreationHandlers();
         }
     }
 }

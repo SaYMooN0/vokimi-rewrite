@@ -12,7 +12,7 @@ internal static class RootHandlers
 {
     internal static IEndpointRouteBuilder MapRootHandlers(this IEndpointRouteBuilder endpoints) {
 
-        endpoints.MapGet(".hello", () => "Hello World!");
+        endpoints.MapGet("/hello", () => "Hello World!");
 
         endpoints.MapPost("/register", Register)
             .WithRequestValidation<RegisterUserRequest>();

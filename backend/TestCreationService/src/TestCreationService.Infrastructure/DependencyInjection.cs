@@ -1,5 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Infrastructure.Persistence;
+using TestCreationService.Infrastructure.Persistence.repositories;
 
 namespace TestCreationService.Infrastructure;
 
@@ -7,18 +12,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services
-            .AddAuth(configuration)
             .AddConfigurations(configuration)
             .AddBackgroundServices()
             .AddPersistence(configuration)
             .AddMediatR();
-
-        return services;
-    }
-
-
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
-
 
         return services;
     }
@@ -50,8 +47,11 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
-        //string dbConnetionString = configuration.GetConnectionString("TestCreationServiceDb")
-        //    ?? throw new Exception("Database connection string is not provided.");
+        string dbConnetionString = configuration.GetConnectionString("TestCreationServiceDb")
+            ?? throw new Exception("Database connection string is not provided.");
+        services.AddDbContext<TestCreationDbContext>(options => options.UseNpgsql(dbConnetionString));
+
+        services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
 
         return services;
     }

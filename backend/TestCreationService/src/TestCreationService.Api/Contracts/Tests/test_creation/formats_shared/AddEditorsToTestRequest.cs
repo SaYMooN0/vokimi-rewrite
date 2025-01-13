@@ -1,7 +1,7 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
 
-namespace TestCreationService.Api.Contracts.Tests.formats_shared;
+namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 
 public record class AddEditorsToTestRequest(
     string[] EditorIds

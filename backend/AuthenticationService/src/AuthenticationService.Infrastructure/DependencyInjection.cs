@@ -47,10 +47,6 @@ public static class DependencyInjection
 
     private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration) {
         services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
-
-
-        //services.AddSingleton(Options.Create(messageBrokerSettings));
-
         return services;
     }
 
