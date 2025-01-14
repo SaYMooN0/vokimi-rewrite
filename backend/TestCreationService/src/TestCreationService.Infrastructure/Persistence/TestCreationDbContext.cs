@@ -7,7 +7,7 @@ using TestCreationService.Domain.TestAggregate;
 
 namespace TestCreationService.Infrastructure.Persistence;
 
-internal class TestCreationDbContext : DbContext
+public class TestCreationDbContext : DbContext
 {
     private readonly IPublisher _publisher;
 

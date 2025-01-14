@@ -16,11 +16,7 @@ public class TestEditPermissionFilter : IEndpointFilter
     }
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
-        var testIdString = context.HttpContext.Request.RouteValues["testId"]?.ToString() ?? "";
-        if (!Guid.TryParse(testIdString, out var testGuid)) {
-            throw new ErrCausedException(Err.ErrFactory.InvalidData("Unknown test id"));
-        }
-        TestId testId = new(testGuid);
+        TestId testId = context.HttpContext.GetTestIdFromRoute();
         var usersWithPermissionGetResult = await _baseTestsRepository.GetUserIdsWithPermissionToEditTest(testId);
         if (usersWithPermissionGetResult.IsErr(out var err)) {
             return CustomResults.ErrorResponse(err);

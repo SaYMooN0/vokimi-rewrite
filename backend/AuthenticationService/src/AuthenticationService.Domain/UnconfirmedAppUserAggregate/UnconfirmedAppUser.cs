@@ -1,6 +1,6 @@
-﻿using AuthenticationService.Domain.Common;
+﻿using AuthenticationService.Domain.AppUserAggregate.events;
+using AuthenticationService.Domain.Common;
 using AuthenticationService.Domain.Common.value_objects;
-using AuthenticationService.Domain.Events;
 using AuthenticationService.Domain.Rules;
 using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;

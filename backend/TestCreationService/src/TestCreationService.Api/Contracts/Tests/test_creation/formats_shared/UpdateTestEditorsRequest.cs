@@ -3,7 +3,7 @@ using SharedKernel.Common.errors;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 
-public record class AddEditorsToTestRequest(
+public record class UpdateTestEditorsRequest(
     string[] EditorIds
 ) : IRequestWithValidationNeeded
 {
@@ -13,8 +13,8 @@ public record class AddEditorsToTestRequest(
         }
         if (EditorIds.Any(id => !Guid.TryParse(id, out var _))) {
             return Err.ErrFactory.InvalidData(
-                "Unable to add editors to test. Please try again later",
-                details: "Invalid editor id format. If you are trying to add multiple editors at once, please try to add them one by one."
+                "Unable to update test editors. Please try again later",
+                details: "Invalid editor id format. If you are trying to change multiple editors at once, please try to change them one by one."
             );
         }
         return RequestValidationResult.Success;

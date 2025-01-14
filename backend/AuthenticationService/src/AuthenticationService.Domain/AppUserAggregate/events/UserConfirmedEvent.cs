@@ -2,7 +2,7 @@
 using AuthenticationService.Domain.Common.value_objects;
 using SharedKernel.Common;
 
-namespace AuthenticationService.Domain.Events;
+namespace AuthenticationService.Domain.AppUserAggregate.events;
 
 public record class UserConfirmedEvent(
     UnconfirmedAppUserId UnconfirmedAppUserId,

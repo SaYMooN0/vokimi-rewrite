@@ -7,7 +7,7 @@ public class ResourceAvailabilitySetting : ValueObject
     public bool IsEnabled { get; init; }
     public AccessLevel Access { get; init; }
 
-    private ResourceAvailabilitySetting(bool isEnabled, AccessLevel access) {
+    public ResourceAvailabilitySetting(bool isEnabled, AccessLevel access) {
         IsEnabled = isEnabled;
         Access = access;
     }

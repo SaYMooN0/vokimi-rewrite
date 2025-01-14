@@ -1,6 +1,8 @@
 ﻿using ApiShared.interfaces;
 using Microsoft.AspNetCore.Http;
 using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.errors;
+using SharedKernel.Common.exceptions;
 
 namespace ApiShared.extensions;
 
@@ -21,5 +23,13 @@ public static class HttpContextExtensions
         }
 
         return userId;
+    }
+    public static TestId GetTestIdFromRoute(this HttpContext context) {
+        var testIdString = context.Request.RouteValues["testId"]?.ToString() ?? "";
+        if (!Guid.TryParse(testIdString, out var testGuid)) {
+            throw new ErrCausedException(Err.ErrFactory.InvalidData("Invalid test id"));
+        }
+
+        return new TestId(testGuid);
     }
 }

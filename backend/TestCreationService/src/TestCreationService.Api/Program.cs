@@ -1,8 +1,10 @@
 using ApiShared;
+using System;
 using TestCreationService.Api.Endpoints;
 using TestCreationService.Api.Endpoints.test_creation;
 using TestCreationService.Application;
 using TestCreationService.Infrastructure;
+using TestCreationService.Infrastructure.Persistence;
 
 namespace TestCreationService.Api
 {
@@ -20,11 +22,12 @@ namespace TestCreationService.Api
             if (app.Environment.IsDevelopment()) {
                 app.MapOpenApi();
             }
-
+                
             app.AddExceptionHandlingMiddleware();
             app.UseHttpsRedirection();
 
             MapHandlers(app);
+
 
             app.Run();
         }

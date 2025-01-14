@@ -26,9 +26,9 @@ public static class NewTestInitializationHandlers
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
         var command = new InitGeneralFormatTestCommand(
-            testName: request.Name,
-            creatorId: httpContext.GetAuthenticatedUserId(),
-            editorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
+            TestName: request.Name,
+            CreatorId: httpContext.GetAuthenticatedUserId(),
+            EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
         );
         ErrOr<TestId> result = await mediator.Send(command);
 
@@ -42,6 +42,11 @@ public static class NewTestInitializationHandlers
         ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
+        //var command = new InitScoringFormatTestCommand(
+        //    TestName: request.Name,
+        //    CreatorId: httpContext.GetAuthenticatedUserId(),
+        //    EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
+        //);
         return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("Scoring test format is not implemented yet"));
     }
 }

@@ -17,11 +17,7 @@ internal class UserIsTestCreatorFilter : IEndpointFilter
     }
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
-        var testIdString = context.HttpContext.Request.RouteValues["testId"]?.ToString() ?? "";
-        if (!Guid.TryParse(testIdString, out var testGuid)) {
-            throw new ErrCausedException(Err.ErrFactory.InvalidData("Unknown test id"));
-        }
-        TestId testId = new(testGuid);
+        TestId testId = context.HttpContext.GetTestIdFromRoute();
         AppUserId userId = context.HttpContext.GetAuthenticatedUserId();
         var isCreatorResult = await _baseTestsRepository.CheckIfUserIsTestCreator(testId, userId);
 

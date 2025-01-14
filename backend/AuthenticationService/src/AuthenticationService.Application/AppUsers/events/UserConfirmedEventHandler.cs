@@ -1,6 +1,6 @@
 ﻿using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Domain.AppUserAggregate;
-using AuthenticationService.Domain.Events;
+using AuthenticationService.Domain.AppUserAggregate.events;
 using MediatR;
 using SharedKernel.Common;
 
