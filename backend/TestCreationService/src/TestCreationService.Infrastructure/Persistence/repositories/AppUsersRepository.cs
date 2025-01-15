@@ -6,7 +6,16 @@ namespace TestCreationService.Infrastructure.Persistence.repositories;
 
 internal class AppUsersRepository : IAppUsersRepository
 {
-    public Task<AppUser?> GetById(AppUserId id) {
-        throw new NotImplementedException();
+    private readonly TestCreationDbContext _db;
+
+    public AppUsersRepository(TestCreationDbContext db) { _db = db; }
+
+    public async Task Add(AppUser appUser) {
+        _db.AppUsers.Add(appUser);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<AppUser?> GetById(AppUserId id) {
+        return await _db.AppUsers.FindAsync(id);
     }
 }

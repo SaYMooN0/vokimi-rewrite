@@ -6,8 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Configs;
 
-
-namespace AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
+namespace TestCreationService.Infrastructure.IntegrationEvents.integration_events_publisher;
 
 internal class IntegrationEventsPublisher : IIntegrationEventsPublisher
 {
@@ -35,8 +34,8 @@ internal class IntegrationEventsPublisher : IIntegrationEventsPublisher
             await channel.QueueDeclareAsync(queue: _messageBrokerSettings.QueueName, durable: false, exclusive: false, autoDelete: false);
             await channel.QueueBindAsync(
                 queue: _messageBrokerSettings.QueueName,
-                exchange: exchangeName,
-                routingKey: string.Empty
+                exchange: exchangeName,                 
+                routingKey: string.Empty                
             );
             var message = JsonSerializer.Serialize(integrationEvent);
             var body = Encoding.UTF8.GetBytes(message);

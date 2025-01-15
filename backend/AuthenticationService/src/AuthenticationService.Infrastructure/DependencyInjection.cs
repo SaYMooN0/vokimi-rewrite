@@ -4,7 +4,6 @@ using AuthenticationService.Domain.Common;
 using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
 using AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
-using AuthenticationService.Infrastructure.IntegrationEvents.settings;
 using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
@@ -14,6 +13,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Common.EntityIds;
+using SharedKernel.Configs;
 
 namespace AuthenticationService.Infrastructure;
 public static class DependencyInjection
@@ -21,8 +21,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services
             .AddAuthRelatedServices()
-            .AddConfigurations(configuration)
-            .AddBackgroundServices()
+            .AddMessageBrokerIntegration(configuration)
             .AddPersistence(configuration)
             .AddEmailService(configuration)
             .AddMediatR()
@@ -45,12 +44,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services, IConfiguration configuration) {
         services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
-        return services;
-    }
-
-    private static IServiceCollection AddBackgroundServices(this IServiceCollection services) {
         services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
         services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
 

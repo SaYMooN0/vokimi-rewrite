@@ -29,7 +29,7 @@ internal class AppUsersRepository : BaseRepository, IAppUsersRepository
 
     public async Task<AppUser?> GetByEmail(string email) {
         const string sql = @"
-        SELECT id, email, password_hash, role, registration_date
+        SELECT *
         FROM app_users
         WHERE email = @Email
         LIMIT 1;";

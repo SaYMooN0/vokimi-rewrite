@@ -18,7 +18,7 @@ public abstract class BaseTest : AggregateRoot
     public TestId Id { get; init; }
     protected AppUserId CreatorId { get; init; }
     private readonly HashSet<AppUserId> _editorIds = new();
-    public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
+    public IReadOnlyCollection<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
     public abstract TestFormat Format { get; }
     public TestMainInfo MainInfo { get; init; }
     public TestSettings Settings { get; protected set; }
@@ -54,7 +54,7 @@ public abstract class BaseTest : AggregateRoot
                 details: "You can't add more than " + TestRules.MaxTestEditorsCount + " editors to this test"
             );
         }
-        EditorIds.Add(editorId);
+        _editorIds.Add(editorId);
         return ErrOrNothing.Nothing;
     }
     public bool IsUserCreator(AppUserId userId) => userId == CreatorId;

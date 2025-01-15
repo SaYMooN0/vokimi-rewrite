@@ -1,6 +1,6 @@
-﻿namespace AuthenticationService.Infrastructure.IntegrationEvents.settings;
+﻿namespace SharedKernel.Configs;
 
-internal class MessageBrokerSettings
+public class MessageBrokerSettings
 {
     public string HostName { get; init; } = null!;
     public int Port { get; init; }

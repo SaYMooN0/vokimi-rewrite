@@ -35,5 +35,8 @@ public class CustomResults
         errOrValue.Match(successFunc, ErrorResponse);
     public static IResult FromErrListOr<T>(ErrListOr<T> errListOrValue, Func<T, IResult> successFunc) =>
         errListOrValue.Match(successFunc, ErrorResponse);
-    public static IResult Unauthorized() => Results.Unauthorized();
+    public static IResult Unauthorized(Err error) => Results.Json(
+        new ErrorResponseObject([error]), 
+        statusCode: StatusCodes.Status401Unauthorized
+    );
 }

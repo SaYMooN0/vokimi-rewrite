@@ -10,7 +10,7 @@ using MediatR;
 using SharedKernel.IntegrationEvents;
 using SharedKernel.Configs;
 
-namespace AuthenticationService.Infrastructure.IntegrationEvents.background_service;
+namespace TestCreationService.Infrastructure.IntegrationEvents.background_service;
 internal class ConsumeIntegrationEventsBackgroundService : IHostedService
 {
     private readonly ILogger<ConsumeIntegrationEventsBackgroundService> _logger;

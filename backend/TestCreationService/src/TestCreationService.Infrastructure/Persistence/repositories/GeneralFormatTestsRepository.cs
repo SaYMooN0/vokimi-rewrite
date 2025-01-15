@@ -5,7 +5,12 @@ namespace TestCreationService.Infrastructure.Persistence.repositories;
 
 internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 {
-    public Task AddNew(GeneralFormatTest test) {
-        throw new NotImplementedException();
+    private readonly TestCreationDbContext _db;
+
+    public GeneralFormatTestsRepository(TestCreationDbContext db) { _db = db; }
+    public async Task AddNew(GeneralFormatTest test) {
+        await _db.GeneralFormatTests.AddAsync(test);
+        await _db.SaveChangesAsync();
+
     }
 }

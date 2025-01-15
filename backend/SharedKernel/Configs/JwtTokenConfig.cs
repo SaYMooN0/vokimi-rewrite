@@ -1,5 +1,5 @@
 ﻿
-namespace SharedKernel.Authentication;
+namespace SharedKernel.Configs;
 
 public class JwtTokenConfig
 {

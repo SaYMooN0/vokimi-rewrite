@@ -20,10 +20,10 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 
         builder
             .Property(u => u.CreatedTestIds)
-            .HasEntityIdsHashSetConversion();
+            .HasEntityIdsCollectionConversion();
 
         builder
             .Property(u => u.EditorAssignedTests)
-            .HasEntityIdsHashSetConversion();
+            .HasEntityIdsCollectionConversion();
     }
 }

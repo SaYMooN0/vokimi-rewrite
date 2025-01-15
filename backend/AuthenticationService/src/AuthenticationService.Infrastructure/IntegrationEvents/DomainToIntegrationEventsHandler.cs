@@ -16,7 +16,7 @@ internal class DomainToIntegrationEventsHandler :
     }
 
     public async Task Handle(NewAppUserCreatedEvent notification, CancellationToken cancellationToken) {
-        var integrationEvent = new NewAppUserCreatedIntegrationEvent(notification.CreateUserId);
+        var integrationEvent = new NewAppUserCreatedIntegrationEvent(notification.CreatedUserId);
         await _integrationEventsPublisher.PublishEvent(integrationEvent);
     }
 }

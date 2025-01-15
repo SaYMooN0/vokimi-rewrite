@@ -3,4 +3,4 @@ using SharedKernel.Common.EntityIds;
 
 namespace AuthenticationService.Domain.AppUserAggregate.events;
 
-public record NewAppUserCreatedEvent(AppUserId CreateUserId) : IDomainEvent;
+public record NewAppUserCreatedEvent(AppUserId CreatedUserId) : IDomainEvent;

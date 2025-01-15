@@ -24,7 +24,7 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
 
         builder
             .Property(t => t.EditorIds)
-            .HasEntityIdsHashSetConversion();
+            .HasEntityIdsCollectionConversion();
 
         builder.OwnsOne(x => x.MainInfo,
             mi => {
