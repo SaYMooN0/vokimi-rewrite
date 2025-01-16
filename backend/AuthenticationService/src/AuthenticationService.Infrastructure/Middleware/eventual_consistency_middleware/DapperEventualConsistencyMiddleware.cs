@@ -2,6 +2,7 @@ using AuthenticationService.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Transactions;
 
 namespace AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 
@@ -22,20 +23,24 @@ public class DapperEventualConsistencyMiddleware
 
         var connection = await _dbConnectionFactory.CreateConnectionAsync();
         unitOfWork.BeginTransaction(connection);
+        context.Response.OnCompleted(async () => {
+            try {
 
-        try {
-            await _next(context);
+                var publisher = context.RequestServices.GetRequiredService<IPublisher>();
+                await unitOfWork.PublishDomainEventsAsync(publisher);
+                unitOfWork.Commit();
+            } catch (Exception) {
+                unitOfWork.Rollback();
 
-            var publisher = context.RequestServices.GetRequiredService<IPublisher>();
-            await unitOfWork.PublishDomainEventsAsync(publisher);
-            unitOfWork.Commit();
+            } finally {
+                connection.Close();
+            }
+        });
+        await _next(context);
 
-        } catch (Exception) {
-            unitOfWork.Rollback();
-            throw;
-        } finally {
-            connection.Close();
-        }
+        //catch (EventualConsistencyException) {
+        //    // handle eventual consistency exception
+        //}
     }
 
 }

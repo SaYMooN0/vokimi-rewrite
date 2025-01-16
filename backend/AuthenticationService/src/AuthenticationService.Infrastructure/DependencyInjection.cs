@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Domain.Common;
+using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
 using AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
@@ -64,8 +65,9 @@ public static class DependencyInjection
         services.AddScoped<IPasswordUpdateRequestsRepository, PasswordResetRequestsRepository>();
 
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-        SqlMapper.AddTypeHandler(new EmailTypeHandler());
-        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+        
+        SqlMapper.AddTypeHandler(typeof(Email), new EmailTypeHandler());
+        SqlMapper.AddTypeHandler(typeof(DateOnly), new DateOnlyTypeHandler());
 
         SqlMapper.AddTypeHandler(typeof(AppUserId), new GuidEntityIdTypeHandler<AppUserId>());
         SqlMapper.AddTypeHandler(typeof(UnconfirmedAppUserId), new GuidEntityIdTypeHandler<UnconfirmedAppUserId>());

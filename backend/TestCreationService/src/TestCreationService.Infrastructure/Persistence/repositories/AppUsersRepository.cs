@@ -18,4 +18,13 @@ internal class AppUsersRepository : IAppUsersRepository
     public async Task<AppUser?> GetById(AppUserId id) {
         return await _db.AppUsers.FindAsync(id);
     }
+
+    public async Task Update(AppUser appUser) {
+        _db.Update(appUser);
+        await _db.SaveChangesAsync();
+    }
+    public async Task UpdateRange(IEnumerable<AppUser> appUsers) {
+        _db.UpdateRange(appUsers);
+        await _db.SaveChangesAsync();
+    }
 }

@@ -10,13 +10,13 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-    public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, IEnumerable<AppUserId> editorIds) {
+    public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
         }
 
-        var editorIdsList = editorIds.ToList();
+        var editorIdsList = editorIds.ToHashSet();
         if (editorIdsList.Any()) {
             if (editorIdsList.Contains(creatorId)) {
                 editorIdsList.Remove(creatorId);
@@ -27,7 +27,8 @@ public class GeneralFormatTest : BaseTest
             editorIdsList.ToHashSet(),
             mainInfoCreation.GetSuccess()
         );
-        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIdsList));
+        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIdsList, []));
+        newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }
     private GeneralFormatTest(

@@ -18,12 +18,23 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .ValueGeneratedNever()
             .HasEntityIdConversion();
 
+        builder.Ignore(x => x.CreatedTestIds);
         builder
-            .Property(u => u.CreatedTestIds)
-            .HasEntityIdsCollectionConversion();
+            .Property<HashSet<TestId>>("_createdTestIds")
+            .HasColumnName("CreatedTestIds")
+            .HasEntityIdsHashSetConversion();
+        //builder
+        //    .Property(u => u.CreatedTestIds)
+        //    .HasEntityIdsHashSetConversion();
 
+        //builder
+        //    .Property(u => u.EditorAssignedTests)
+        //    .HasEntityIdsHashSetConversion();
+
+        builder.Ignore(x => x.EditorAssignedTests);
         builder
-            .Property(u => u.EditorAssignedTests)
-            .HasEntityIdsCollectionConversion();
+            .Property<HashSet<TestId>>("_editorAssignedTests")
+            .HasColumnName("EditorAssignedTests")
+            .HasEntityIdsHashSetConversion();
     }
 }

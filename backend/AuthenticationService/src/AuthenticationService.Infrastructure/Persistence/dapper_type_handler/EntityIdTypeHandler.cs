@@ -13,7 +13,6 @@ internal class GuidEntityIdTypeHandler<T> : SqlMapper.TypeHandler<T> where T : E
         if (value is Guid guidValue) {
             return (T)Activator.CreateInstance(typeof(T), guidValue);
         }
-
         throw new ArgumentException($"Invalid GUID value for {typeof(T).Name}", nameof(value));
     }
 }

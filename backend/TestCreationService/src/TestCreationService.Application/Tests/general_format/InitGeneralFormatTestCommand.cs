@@ -10,7 +10,7 @@ namespace TestCreationService.Application.Tests.general_format;
 public record class InitGeneralFormatTestCommand(
     string TestName,
     AppUserId CreatorId,
-    AppUserId[] EditorIds
+    HashSet<AppUserId> EditorIds
 ) : IRequest<ErrOr<TestId>>;
 
 
@@ -28,15 +28,32 @@ public class InitGeneralFormatTestCommandHandler : IRequestHandler<InitGeneralFo
     }
 
     public async Task<ErrOr<TestId>> Handle(InitGeneralFormatTestCommand request, CancellationToken cancellationToken) {
-        var newTestCreationRes = GeneralFormatTest.CreateNew(request.CreatorId, request.TestName, request.EditorIds);
+        var newTestCreationRes = GeneralFormatTest.CreateNew(
+            request.CreatorId,
+            request.TestName,
+            request.EditorIds
+        );
         if (newTestCreationRes.IsErr(out var err)) { return err; }
+
+        var newTest = newTestCreationRes.GetSuccess();
+
         AppUser? creator = await _appUsersRepository.GetById(request.CreatorId);
         if (creator is null) {
-            return Err.ErrFactory.NotFound(message: "Unknown user", details: "User not found. Try log out and log in again.");
+            return Err.ErrFactory.NotFound(
+                message: "Unknown creator user",
+                details: "User not found. Try log out and log in again."
+            );
         }
-        var newTest = newTestCreationRes.GetSuccess();
+        foreach (var editorId in newTest.EditorIds) {
+            AppUser? editor = await _appUsersRepository.GetById(editorId);
+            if (editor is null) {
+                return Err.ErrFactory.NotFound(
+                    message: "Unknown editor user",
+                    details: $"Creator with id {editorId} not found. Try to this user later"
+                );
+            }
+        }
         await _generalFormatTestsRepository.AddNew(newTest);
-        creator.AddCreatedTest(newTest.Id);
         return newTest.Id;
     }
 }

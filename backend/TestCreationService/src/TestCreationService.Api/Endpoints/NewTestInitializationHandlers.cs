@@ -25,16 +25,19 @@ public static class NewTestInitializationHandlers
         ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
-        var command = new InitGeneralFormatTestCommand(
-            TestName: request.Name,
-            CreatorId: httpContext.GetAuthenticatedUserId(),
-            EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
-        );
+        var creator = httpContext.GetAuthenticatedUserId();
+        var editors = request.EditorIds
+            .Select(id => new AppUserId(new(id)))
+            .Where(id => id != creator)
+            .ToHashSet()
+            .ToArray();
+
+        var command = new InitGeneralFormatTestCommand(request.TestName, creator, editors);
         ErrOr<TestId> result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(
             result,
-            (id) => Results.Ok(new NewTestInitializedResponse(id))
+            (id) => Results.Json(new NewTestInitializedResponse(id), statusCode: 201)
         );
     }
     private async static Task<IResult> CreateNewScoringFormatTest(

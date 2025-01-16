@@ -35,5 +35,6 @@ internal class AppUsersRepository : BaseRepository, IAppUsersRepository
         LIMIT 1;";
 
         return await QuerySingleOrDefaultAsync<AppUser>(sql, new { Email = email });
+
     }
 }

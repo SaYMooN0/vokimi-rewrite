@@ -13,10 +13,10 @@ public class TestCreationDbContext : DbContext
     private readonly IPublisher _publisher;
 
 
-    public DbSet<AppUser> AppUsers{ get; set; } = null!;
-    public DbSet<BaseTest> BaseTests{ get; set; } = null!;
-    public DbSet<GeneralFormatTest> GeneralFormatTests{ get; set; } = null!;
-    public TestCreationDbContext(DbContextOptions options,IPublisher publisher) : base(options) {
+    public DbSet<AppUser> AppUsers { get; set; } = null!;
+    public DbSet<BaseTest> BaseTests { get; set; } = null!;
+    public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
+    public TestCreationDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

@@ -1,12 +1,38 @@
 ﻿using MediatR;
-using SharedKernel.Common;
+using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
 
 namespace TestCreationService.Application.Tests.formats_shared.events;
 
 internal class TestEditorsListChangedEventHandler : INotificationHandler<TestEditorsListChangedEvent>
 {
+    private readonly IAppUsersRepository appUsersRepository;
+
+    public TestEditorsListChangedEventHandler(IAppUsersRepository appUsersRepository) {
+        this.appUsersRepository = appUsersRepository;
+    }
+
     public async Task Handle(TestEditorsListChangedEvent notification, CancellationToken cancellationToken) {
-       
+        var editorsToAdd = notification.newEditors.Except(notification.oldEditors);
+        var editorsToRemove = notification.oldEditors.Except(notification.newEditors);
+        List<AppUser> updateList = new List<AppUser>(editorsToAdd.Count() + editorsToRemove.Count());
+        
+        foreach (var editorIdToAdd in editorsToAdd) {
+            var userToAdd = await appUsersRepository.GetById(editorIdToAdd);
+            if (userToAdd is not null) {
+                userToAdd.AddEditorRoleForTest(notification.TestId);
+                updateList.Add(userToAdd);
+            }
+        }
+
+        foreach (var editorIdToRemove in editorsToRemove) {
+            var userToRemove = await appUsersRepository.GetById(editorIdToRemove);
+            if (userToRemove is not null) {
+                userToRemove.RemoveEditorRoleForTest(notification.TestId);
+                updateList.Add(userToRemove);
+            }
+        }
+        await appUsersRepository.UpdateRange(updateList);
     }
 }

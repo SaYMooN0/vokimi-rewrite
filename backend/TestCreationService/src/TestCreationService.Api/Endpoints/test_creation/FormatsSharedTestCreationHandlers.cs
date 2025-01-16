@@ -17,6 +17,9 @@ internal static class FormatsSharedTestCreationHandlers
             .WithRequestValidation<UpdateTestEditorsRequest>()
             .AuthenticationRequired()
             .OnlyByTestCreator();
+        group.MapPost("/deleteTest", DeleteTest)
+            .AuthenticationRequired()
+            .OnlyByTestCreator();
         return group;
     }
     private async static Task<IResult> UpdateTestEditors(
@@ -26,7 +29,7 @@ internal static class FormatsSharedTestCreationHandlers
         var request = httpContext.GetValidatedRequest<UpdateTestEditorsRequest>();
         var command = new UpdateTestEditorsCommand(
             TestId: httpContext.GetTestIdFromRoute(),
-            EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
+            EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToHashSet()
         );
         ErrOr<HashSet<AppUserId>> result = await mediator.Send(command);
 
@@ -34,5 +37,11 @@ internal static class FormatsSharedTestCreationHandlers
             result,
             (ids) => Results.Ok(new TestEditorsUpdatedResponse(ids))
         );
+    }
+    private async static Task<IResult> DeleteTest(
+       HttpContext httpContext,
+       ISender mediator
+    ) {
+        throw new NotImplementedException();
     }
 }

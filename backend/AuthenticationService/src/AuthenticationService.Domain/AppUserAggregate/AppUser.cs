@@ -14,7 +14,7 @@ public class AppUser : AggregateRoot
     public AppUserId Id { get; init; }
     public Email Email { get; init; }
     public string PasswordHash { get; private set; }
-    public DateTime RegistrationDate { get; init; }
+    public DateOnly RegistrationDate { get; init; }
     public AppUserRole Role { get; private set; }
 
     public static AppUser CreateNew(
@@ -26,7 +26,7 @@ public class AppUser : AggregateRoot
             Id = AppUserId.CreateNew(),
             Email = email,
             PasswordHash = passwordHash,
-            RegistrationDate = dateTimeProvider.Now,
+            RegistrationDate = dateTimeProvider.NowDateOnly,
             Role = AppUserRole.Member
         };
         user._domainEvents.Add(new NewAppUserCreatedEvent(user.Id));

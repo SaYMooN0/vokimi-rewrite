@@ -1,5 +1,6 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 
@@ -8,8 +9,8 @@ public record class UpdateTestEditorsRequest(
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {
-        if (EditorIds.Length == 0) {
-            return Err.ErrFactory.InvalidData("Editors list is empty");
+        if (EditorIds.Length >TestRules.MaxTestEditorsCount) {
+            return Err.ErrFactory.InvalidData($"Too many editors selected. Maximum number of editors is {TestRules.MaxTestEditorsCount}");
         }
         if (EditorIds.Any(id => !Guid.TryParse(id, out var _))) {
             return Err.ErrFactory.InvalidData(

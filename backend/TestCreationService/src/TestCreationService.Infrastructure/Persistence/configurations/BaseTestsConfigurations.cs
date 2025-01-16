@@ -22,9 +22,11 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property("CreatorId")
             .HasConversion(new EntityIdConverter<AppUserId>());
 
+        builder.Ignore(x=>x.EditorIds);
         builder
-            .Property(t => t.EditorIds)
-            .HasEntityIdsCollectionConversion();
+            .Property<HashSet<AppUserId>>("_editorIds")
+            .HasColumnName("EditorIds")
+            .HasEntityIdsHashSetConversion();
 
         builder.OwnsOne(x => x.MainInfo,
             mi => {

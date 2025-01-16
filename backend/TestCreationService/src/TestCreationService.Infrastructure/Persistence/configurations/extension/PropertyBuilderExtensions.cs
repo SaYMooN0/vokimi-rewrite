@@ -18,14 +18,12 @@ internal static class PropertyBuilderExtensions
         return builder.HasConversion(new EntityIdConverter<TId>());
     }
 
-    public static PropertyBuilder<IReadOnlyCollection<T>> HasEntityIdsCollectionConversion<T>(
-        this PropertyBuilder<IReadOnlyCollection<T>> builder) where T : EntityId {
+    public static PropertyBuilder<HashSet<T>> HasEntityIdsHashSetConversion<T>(
+        this PropertyBuilder<HashSet<T>> builder) where T : EntityId {
         builder.HasConversion(
-            ids => string.Join(',', ids.Select(id => id.ToString())),
-            str => str.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                      .Select(id => (T)Activator.CreateInstance(typeof(T), Guid.Parse(id)!))
-                      .ToImmutableHashSet());
-
+            new EntityIdHashSetConverter<T>(),
+            new HashSetOfEntityIdsComparer<T>()
+        );
         return builder;
     }
 }
