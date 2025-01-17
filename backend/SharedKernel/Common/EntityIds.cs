@@ -22,3 +22,15 @@ public class TestId : EntityId
 
     public static TestId CreateNew() => new(Guid.CreateVersion7());
 }
+public class GeneralTestQuestionId : EntityId
+{
+    private GeneralTestQuestionId(Guid value) : base(value) { }
+
+    public static GeneralTestQuestionId CreateNew() => new(Guid.CreateVersion7());
+}
+public class GeneralTestAnswerId : EntityId
+{
+    private GeneralTestAnswerId(Guid value) : base(value) { }
+
+    public static GeneralTestAnswerId CreateNew() => new(Guid.CreateVersion7());
+}

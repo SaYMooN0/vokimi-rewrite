@@ -5,6 +5,8 @@ using SharedKernel.Common.EntityIds;
 using TestCreationService.Application.Tests.general_format;
 using SharedKernel.Common.errors;
 using TestCreationService.Api.Contracts.Tests.test_initialization;
+using TestCreationService.Application.Tests.scoring_format;
+using OneOf.Types;
 
 namespace TestCreationService.Api.Endpoints;
 
@@ -29,10 +31,9 @@ public static class NewTestInitializationHandlers
         var editors = request.EditorIds
             .Select(id => new AppUserId(new(id)))
             .Where(id => id != creator)
-            .ToHashSet()
-            .ToArray();
+            .ToHashSet();
 
-        var command = new InitGeneralFormatTestCommand(request.TestName, creator, editors);
+        InitGeneralFormatTestCommand command = new(request.TestName, creator, editors);
         ErrOr<TestId> result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(
@@ -45,11 +46,17 @@ public static class NewTestInitializationHandlers
         ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
-        //var command = new InitScoringFormatTestCommand(
-        //    TestName: request.Name,
-        //    CreatorId: httpContext.GetAuthenticatedUserId(),
-        //    EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToArray()
-        //);
-        return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented("Scoring test format is not implemented yet"));
+        var creator = httpContext.GetAuthenticatedUserId();
+        var editors = request.EditorIds
+            .Select(id => new AppUserId(new(id)))
+            .Where(id => id != creator)
+            .ToHashSet();
+
+        InitScoringFormatTestCommand command = new(request.TestName, creator, editors);
+        ErrOr<TestId> result = await mediator.Send(command);
+        return CustomResults.FromErrOr(
+            result,
+            (id) => Results.Json(new NewTestInitializedResponse(id), statusCode: 201)
+        );
     }
 }

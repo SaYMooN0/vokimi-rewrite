@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.value_objects;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 

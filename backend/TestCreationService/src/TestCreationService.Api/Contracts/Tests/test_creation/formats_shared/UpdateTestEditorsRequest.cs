@@ -9,8 +9,10 @@ public record class UpdateTestEditorsRequest(
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {
-        if (EditorIds.Length >TestRules.MaxTestEditorsCount) {
-            return Err.ErrFactory.InvalidData($"Too many editors selected. Maximum number of editors is {TestRules.MaxTestEditorsCount}");
+        if (EditorIds.Length > TestRules.MaxTestEditorsCount) {
+            return Err.ErrFactory.InvalidData(
+                message: $"Too many editors selected. Maximum number of editors is {TestRules.MaxTestEditorsCount}",
+                details: $"Maximum number of editors is {TestRules.MaxTestEditorsCount}. Number of selected is {EditorIds.Length}");
         }
         if (EditorIds.Any(id => !Guid.TryParse(id, out var _))) {
             return Err.ErrFactory.InvalidData(

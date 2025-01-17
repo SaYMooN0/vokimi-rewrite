@@ -10,24 +10,23 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
+
+    public virtual List<GeneralTestQuestion> Questions { get; init; } = [];
+    internal Dictionary<ushort, GeneralTestQuestionId> QuestionsOrderDictionary { get; private set; } = [];
+
     public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
         }
+        if (editorIds.Contains(creatorId)) { editorIds.Remove(creatorId); }
 
-        var editorIdsList = editorIds.ToHashSet();
-        if (editorIdsList.Any()) {
-            if (editorIdsList.Contains(creatorId)) {
-                editorIdsList.Remove(creatorId);
-            }
-        }
         var newTest = new GeneralFormatTest(
             creatorId,
-            editorIdsList.ToHashSet(),
+            editorIds.ToHashSet(),
             mainInfoCreation.GetSuccess()
         );
-        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIdsList, []));
+        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIds, []));
         newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }

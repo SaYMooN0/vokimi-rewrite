@@ -1,34 +1,32 @@
 ﻿using MediatR;
-using SharedKernel.Common.errors;
 using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.errors;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.TestAggregate.general_format;
+using TestCreationService.Application.Tests.general_format;
 using TestCreationService.Domain.AppUserAggregate;
+using TestCreationService.Domain.TestAggregate.general_format;
+using TestCreationService.Domain.TestAggregate.scoring_format;
 
-namespace TestCreationService.Application.Tests.general_format;
+namespace TestCreationService.Application.Tests.scoring_format;
 
-public record class InitGeneralFormatTestCommand(
+public record class InitScoringFormatTestCommand(
     string TestName,
     AppUserId CreatorId,
     HashSet<AppUserId> EditorIds
 ) : IRequest<ErrOr<TestId>>;
 
-
-public class InitGeneralFormatTestCommandHandler : IRequestHandler<InitGeneralFormatTestCommand, ErrOr<TestId>>
+public class InitGeneralFormatTestCommandHandler : IRequestHandler<InitScoringFormatTestCommand, ErrOr<TestId>>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
+    private readonly IScoringFormatTestsRepository _scoringFormatTestsRepository;
 
-    public InitGeneralFormatTestCommandHandler(
-        IAppUsersRepository appUsersRepository,
-        IGeneralFormatTestsRepository generalFormatTestsRepository
-    ) {
+    public InitGeneralFormatTestCommandHandler(IAppUsersRepository appUsersRepository, IScoringFormatTestsRepository scoringFormatTestsRepository) {
         _appUsersRepository = appUsersRepository;
-        _generalFormatTestsRepository = generalFormatTestsRepository;
+        _scoringFormatTestsRepository = scoringFormatTestsRepository;
     }
 
-    public async Task<ErrOr<TestId>> Handle(InitGeneralFormatTestCommand request, CancellationToken cancellationToken) {
-        var newTestCreationRes = GeneralFormatTest.CreateNew(
+    public async Task<ErrOr<TestId>> Handle(InitScoringFormatTestCommand request, CancellationToken cancellationToken) {
+        var newTestCreationRes = ScoringFormatTest.CreateNew(
             request.CreatorId,
             request.TestName,
             request.EditorIds
@@ -53,7 +51,7 @@ public class InitGeneralFormatTestCommandHandler : IRequestHandler<InitGeneralFo
                 );
             }
         }
-        await _generalFormatTestsRepository.AddNew(newTest);
+        await _scoringFormatTestsRepository.AddNew(newTest);
         return newTest.Id;
     }
 }

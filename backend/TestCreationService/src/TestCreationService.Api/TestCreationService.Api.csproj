@@ -7,13 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Contracts\Tests\test_creation\general_format\**" />
     <Compile Remove="Endpoints\test_publication\**" />
-    <Content Remove="Contracts\Tests\test_creation\general_format\**" />
     <Content Remove="Endpoints\test_publication\**" />
-    <EmbeddedResource Remove="Contracts\Tests\test_creation\general_format\**" />
     <EmbeddedResource Remove="Endpoints\test_publication\**" />
-    <None Remove="Contracts\Tests\test_creation\general_format\**" />
     <None Remove="Endpoints\test_publication\**" />
   </ItemGroup>
 

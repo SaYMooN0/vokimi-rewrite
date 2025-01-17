@@ -5,6 +5,7 @@ using System.Reflection;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
+using TestCreationService.Domain.TestAggregate.scoring_format;
 
 namespace TestCreationService.Infrastructure.Persistence;
 
@@ -16,6 +17,7 @@ public class TestCreationDbContext : DbContext
     public DbSet<AppUser> AppUsers { get; set; } = null!;
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
+    public DbSet<ScoringFormatTest> ScoringFormatTests { get; set; } = null!;
     public TestCreationDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;
     }

@@ -34,10 +34,18 @@ internal class AuthenticationRequiredEndpointFilter : IEndpointFilter
             ValidAudience = _jwtConfig.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.SecretKey))
         };
+        string userIdClaim = string.Empty;
+        try {
 
-        var principal = handler.ValidateToken(token, tokenValidationParameters, out _);
-        var userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var principal = handler.ValidateToken(token, tokenValidationParameters, out _);
+            userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+        } catch (Exception ex) {
+            return CustomResults.Unauthorized(new Err(
+                "Access denied. Authentication required",
+                details: "Incorrect authentication token")
+            );
 
+        }
         if (string.IsNullOrEmpty(userIdClaim)) {
             return CustomResults.Unauthorized(new Err("Access denied. Authentication required"));
         }

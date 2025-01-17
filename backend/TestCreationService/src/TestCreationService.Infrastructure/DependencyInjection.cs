@@ -24,7 +24,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMediatR(this IServiceCollection services) {
         services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
-        
+
         return services;
     }
 
@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
+        services.AddScoped<IScoringFormatTestsRepository, ScoringFormatTestsRepository>();
 
         return services;
     }

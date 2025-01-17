@@ -27,21 +27,31 @@ internal static class FormatsSharedTestCreationHandlers
        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateTestEditorsRequest>();
-        var command = new UpdateTestEditorsCommand(
-            TestId: httpContext.GetTestIdFromRoute(),
-            EditorIds: request.EditorIds.Select(id => new AppUserId(new Guid(id))).ToHashSet()
-        );
-        ErrOr<HashSet<AppUserId>> result = await mediator.Send(command);
+        var creator = httpContext.GetAuthenticatedUserId();
+        var editors = request.EditorIds
+            .Select(id => new AppUserId(new(id)))
+            .Where(id => id != creator)
+            .ToHashSet();
+
+        var command = new UpdateTestEditorsCommand(httpContext.GetTestIdFromRoute(), editors);
+        var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(
             result,
-            (ids) => Results.Ok(new TestEditorsUpdatedResponse(ids))
+            (ids) => Results.Json(new TestEditorsUpdatedResponse(ids), statusCode: 200)
         );
     }
     private async static Task<IResult> DeleteTest(
        HttpContext httpContext,
        ISender mediator
     ) {
+        var command = new DeleteTestCommand(httpContext.GetTestIdFromRoute());
+        ErrOrNothing result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(
+            result,
+            () => Results.Ok()
+        );
         throw new NotImplementedException();
     }
 }

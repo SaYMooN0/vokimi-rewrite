@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.common_enums;
 
-namespace SharedKernel.Common.tests;
+namespace SharedKernel.Common.tests.value_objects;
 
 public class ResourceAvailabilitySetting : ValueObject
 {
