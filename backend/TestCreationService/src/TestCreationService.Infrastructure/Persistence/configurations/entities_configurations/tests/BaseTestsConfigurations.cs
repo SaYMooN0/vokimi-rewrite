@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations;
+namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests;
 
 internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
 {
@@ -22,7 +22,7 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property("CreatorId")
             .HasConversion(new EntityIdConverter<AppUserId>());
 
-        builder.Ignore(x=>x.EditorIds);
+        builder.Ignore(x => x.EditorIds);
         builder
             .Property<HashSet<AppUserId>>("_editorIds")
             .HasColumnName("EditorIds")

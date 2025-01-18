@@ -5,7 +5,7 @@ using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Domain.AppUserAggregate;
 
-namespace TestCreationService.Application.Tests.general_format;
+namespace TestCreationService.Application.Tests.general_format.commands;
 
 public record class InitGeneralFormatTestCommand(
     string TestName,

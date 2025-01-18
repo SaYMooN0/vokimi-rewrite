@@ -3,9 +3,7 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations.Schema;
-using TestCreationService.Domain.AppUserAggregate;
-using TestCreationService.Domain.Rules;
+using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
 

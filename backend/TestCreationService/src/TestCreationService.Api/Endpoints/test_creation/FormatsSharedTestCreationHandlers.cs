@@ -33,7 +33,7 @@ internal static class FormatsSharedTestCreationHandlers
             .Where(id => id != creator)
             .ToHashSet();
 
-        var command = new UpdateTestEditorsCommand(httpContext.GetTestIdFromRoute(), editors);
+        UpdateTestEditorsCommand command = new (httpContext.GetTestIdFromRoute(), editors);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(
@@ -45,13 +45,12 @@ internal static class FormatsSharedTestCreationHandlers
        HttpContext httpContext,
        ISender mediator
     ) {
-        var command = new DeleteTestCommand(httpContext.GetTestIdFromRoute());
+        DeleteTestCommand command = new (httpContext.GetTestIdFromRoute());
         ErrOrNothing result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(
             result,
             () => Results.Ok()
         );
-        throw new NotImplementedException();
     }
 }

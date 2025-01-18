@@ -1,4 +1,7 @@
-﻿using TestCreationService.Application.Common.interfaces.repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.errors;
+using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Infrastructure.Persistence.repositories;
@@ -12,5 +15,16 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.GeneralFormatTests.AddAsync(test);
         await _db.SaveChangesAsync();
 
+    }
+
+    public Task<GeneralFormatTest?> GetWithQuestions(TestId testId) {
+        return _db.GeneralFormatTests
+            .Include(t => t.Questions)
+            .FirstOrDefaultAsync(t => t.Id == testId);
+    }
+
+    public async Task Update(GeneralFormatTest test) {
+        _db.GeneralFormatTests.Update(test);
+        await _db.SaveChangesAsync();
     }
 }

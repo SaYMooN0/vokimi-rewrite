@@ -2,7 +2,7 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.constants_store_classes;
 using SharedKernel.Common.errors;
-using TestCreationService.Domain.Rules;
+using TestCreationService.Domain.Common.rules;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 

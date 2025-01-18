@@ -34,3 +34,9 @@ public class GeneralTestAnswerId : EntityId
 
     public static GeneralTestAnswerId CreateNew() => new(Guid.CreateVersion7());
 }
+public class GeneralTestResultId : EntityId
+{
+    private GeneralTestResultId(Guid value) : base(value) { }
+
+    public static GeneralTestResultId CreateNew() => new(Guid.CreateVersion7());
+}

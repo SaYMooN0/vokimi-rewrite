@@ -5,7 +5,7 @@ using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Infrastructure.Persistence.configurations.extension;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations;
+namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.app_users;
 
 internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {

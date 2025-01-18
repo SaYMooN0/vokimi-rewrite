@@ -1,4 +1,4 @@
-﻿namespace TestCreationService.Domain.Rules;
+﻿namespace TestCreationService.Domain.Common.rules;
 
 public static class TestRules
 {

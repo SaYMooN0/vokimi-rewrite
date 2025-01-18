@@ -7,7 +7,7 @@ using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Domain.TestAggregate.scoring_format;
 
-namespace TestCreationService.Application.Tests.scoring_format;
+namespace TestCreationService.Application.Tests.scoring_format.commands;
 
 public record class InitScoringFormatTestCommand(
     string TestName,
