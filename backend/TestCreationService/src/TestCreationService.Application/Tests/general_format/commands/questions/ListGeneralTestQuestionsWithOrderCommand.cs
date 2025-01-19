@@ -1,26 +1,28 @@
 ﻿using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.general_format_tests;
+using System.Collections.Immutable;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands.questions;
 
-public record class AddGeneralTestQuestionCommand(
-    TestId TestId,
-    GeneralTestAnswersType AnswersType
-) : IRequest<ErrOrNothing>;
-public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTestQuestionCommand, ErrOrNothing>
+public record class ListGeneralTestQuestionsWithOrderCommand(
+    TestId TestId
+) : IRequest<ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>>;
+public class ListGeneralTestQuestionsCommandHandler
+    : IRequestHandler<
+        ListGeneralTestQuestionsWithOrderCommand,
+        ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>
+    >
 {
     private readonly IGeneralFormatTestsRepository generalFormatTestsRepository;
 
-    public AddGeneralTestQuestionCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+    public ListGeneralTestQuestionsCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
         this.generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
-    public async Task<ErrOrNothing> Handle(AddGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
+    public async Task<ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>> Handle(ListGeneralTestQuestionsWithOrderCommand request, CancellationToken cancellationToken) {
         GeneralFormatTest? test = await generalFormatTestsRepository.GetWithQuestions(request.TestId);
         if (test is null) {
             return Err.ErrFactory.NotFound(
@@ -28,9 +30,8 @@ public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTe
                 details: $"Cannot find general format test with id {request.TestId}"
             );
         }
-        var addingRes = test.AddNewQuestion(request.AnswersType);
-        if (addingRes.IsErr(out var err)) {return err; }
-        await generalFormatTestsRepository.Update(test);
-        return ErrOrNothing.Nothing;
+        return ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>.Success(
+            test.GetAllQuestionsWithCorrectOrder()
+        );
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Infrastructure.Persistence.configurations.extension;
+using SharedKernel.Common.EntityIds;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
@@ -14,10 +15,12 @@ internal class GeneralTestResultsConfigurations : IEntityTypeConfiguration<Gener
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-        //temp
+        
         builder
-            .Ignore("_answersLeadingToResult");
+            .Ignore(x => x.AnswerLeadingToResultIds);
         builder
-            .Ignore(x => x.AnswersLeadingToResult);
+            .Property<HashSet<GeneralTestAnswerId>>("_answerLeadingToResultIds")
+            .HasColumnName("AnswerLeadingToResultIds")
+            .HasEntityIdsHashSetConversion();
     }
 }

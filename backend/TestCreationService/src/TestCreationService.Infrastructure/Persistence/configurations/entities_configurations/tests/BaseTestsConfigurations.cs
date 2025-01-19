@@ -18,6 +18,7 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
+
         builder
             .Property("CreatorId")
             .HasConversion(new EntityIdConverter<AppUserId>());

@@ -24,19 +24,19 @@ public class TestId : EntityId
 }
 public class GeneralTestQuestionId : EntityId
 {
-    private GeneralTestQuestionId(Guid value) : base(value) { }
+    public GeneralTestQuestionId(Guid value) : base(value) { }
 
     public static GeneralTestQuestionId CreateNew() => new(Guid.CreateVersion7());
 }
 public class GeneralTestAnswerId : EntityId
 {
-    private GeneralTestAnswerId(Guid value) : base(value) { }
+    public GeneralTestAnswerId(Guid value) : base(value) { }
 
     public static GeneralTestAnswerId CreateNew() => new(Guid.CreateVersion7());
 }
 public class GeneralTestResultId : EntityId
 {
-    private GeneralTestResultId(Guid value) : base(value) { }
+    public GeneralTestResultId(Guid value) : base(value) { }
 
     public static GeneralTestResultId CreateNew() => new(Guid.CreateVersion7());
 }

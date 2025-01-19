@@ -6,13 +6,15 @@ namespace TestCreationService.Infrastructure.Persistence.configurations.value_co
 internal class AnswerCountLimitConverter : ValueConverter<AnswerCountLimit, string>
 {
     public AnswerCountLimitConverter() : base(
-        v => v.IsMultipleChoice ? v.MinAnswers.ToString() + '-' + v.MaxAnswers.ToString() : "NoCountLimit",
-        v => v == "NoCountLimit"
-            ? AnswerCountLimit.SingleChoice()
-            : AnswerCountLimit.MultipleChoice(
-                ushort.Parse(v.Split('-', StringSplitOptions.RemoveEmptyEntries)[0]), 
-                ushort.Parse(v.Split('-', StringSplitOptions.RemoveEmptyEntries)[1])
-            )
+        v => v.ToString(),
+        v => FromString(v)
     ) {
+    }
+    private static AnswerCountLimit FromString(string value) {
+        var res = AnswerCountLimit.FromString(value);
+        if (res.IsErr(out var err)) {
+            throw new ArgumentException($"Incorrect time limit value in the data base: {err}");
+        }
+        return res.GetSuccess();
     }
 }

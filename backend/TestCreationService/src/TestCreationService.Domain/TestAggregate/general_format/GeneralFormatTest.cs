@@ -2,6 +2,7 @@
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format_tests;
+using System.Collections.Immutable;
 using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
@@ -59,4 +60,38 @@ public class GeneralFormatTest : BaseTest
         _questionsOrderDictionary.Add(newQuestion.Id, (ushort)(_questionsOrderDictionary.Count + 1));
         return ErrOrNothing.Nothing;
     }
+    public ErrOrNothing RemoveQuestion(GeneralTestQuestionId questionId) {
+        var question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return Err.ErrFactory.NotFound(
+                message: $"Question with id {questionId} was not found in this test",
+                details: $"General format test with id {Id} has no question with id {questionId}. Either it has already been removed or it was never in the test"
+            );
+        }
+        _questions.Remove(question);
+        RemoveQuestionFromOrderDictionary(question.Id);
+        return ErrOrNothing.Nothing;
+    }
+    private void RemoveQuestionFromOrderDictionary(GeneralTestQuestionId questionId) {
+        if (_questionsOrderDictionary.TryGetValue(questionId, out var removedOrder)) {
+            foreach (var (id, order) in _questionsOrderDictionary) {
+                if (removedOrder < order) {
+                    _questionsOrderDictionary[id]--;
+                }
+            }
+            _questionsOrderDictionary.Remove(questionId);
+        }
+    }
+    public IImmutableDictionary<ushort, GeneralTestQuestion> GetAllQuestionsWithCorrectOrder() {
+        ushort currentOrder = 1;
+        Dictionary<ushort, GeneralTestQuestion> orderedQuestions = new(_questions.Count);
+
+        foreach (var question in Questions) {
+            orderedQuestions[currentOrder] = question;
+            currentOrder++;
+        }
+
+        return orderedQuestions.ToImmutableDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
 }

@@ -4,7 +4,7 @@ using TestCreationService.Domain.Common.rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_initialization;
 
-public record class InitNewTestRequest(
+internal record class InitNewTestRequest(
     string TestName,
     string[] EditorIds
 ) : IRequestWithValidationNeeded

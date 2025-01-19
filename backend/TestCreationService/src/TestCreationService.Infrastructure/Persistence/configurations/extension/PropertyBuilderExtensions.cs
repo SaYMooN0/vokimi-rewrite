@@ -48,4 +48,11 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new AnswerCountLimitConverter())
             .HasMaxLength(20);
     }
+    public static PropertyBuilder<TProperty> HasGeneralTestAnswerSpecificDataConversion<TProperty>(
+        this PropertyBuilder<TProperty> builder
+    ) where TProperty : class {
+        return builder
+            .HasConversion(new GeneralTestAnswerSpecificDataConverter())
+            .HasMaxLength(2040);
+    }
 }

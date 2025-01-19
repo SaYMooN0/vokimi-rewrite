@@ -2,6 +2,7 @@
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.general_format_tests;
+using System.Collections.Immutable;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
 
@@ -12,11 +13,10 @@ public class GeneralTestAnswer : Entity
     public GeneralTestAnswerId Id { get; init; }
     public GeneralTestQuestionId QuestionId { get; init; }
     public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; private set; }
-    protected virtual List<GeneralTestResult> _relatedResults { get; init; } = [];
-    public IReadOnlyList<GeneralTestResult> RelatedResults => _relatedResults
-        .OrderBy(r=>r.Id)
-        .ToList()
-        .AsReadOnly();
+    protected virtual HashSet<GeneralTestResultId> _relatedResultIds { get; init; } = [];
+    public ImmutableHashSet<GeneralTestResultId> RelatedResultIds => _relatedResultIds
+        .Order()
+        .ToImmutableHashSet();
 
 
     public ErrOrNothing Update(GeneralTestAnswerTypeSpecificData newData) {
@@ -28,6 +28,14 @@ public class GeneralTestAnswer : Entity
         }
         TypeSpecificData = newData;
         return ErrOrNothing.Nothing;
+    }
+    public ErrOrNothing AddRelatedResult(GeneralTestResultId resultId) {
+        //no more than
+        return ErrOrNothing.Nothing;
+
+    }
+    public void RemoveRelatedResult(GeneralTestResultId resultId) {
+        _relatedResultIds.Remove(resultId);
     }
 
 }

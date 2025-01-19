@@ -16,7 +16,7 @@ public class GeneralTestQuestion : Entity
     public GeneralTestQuestionId Id { get; init; }
     public TestId TestId { get; init; }
     public string Text { get; init; }
-    private List<string> _images { get; init; }
+    private List<string> _images { get; init; } = [];
     public IReadOnlyList<string> Images => _images.AsReadOnly();
     public TimeLimitOption TimeLimit { get; private set; }
     public GeneralTestAnswersType AnswersType { get; init; }
@@ -40,7 +40,6 @@ public class GeneralTestQuestion : Entity
     };
     public static ErrListOrNothing Update(UpdateGeneralTestQuestionDto dto) {
         return Err.ErrFactory.NotImplemented();
-        //foreach answer .Update
     }
     public ErrOrNothing AddTimeLimit(ushort seconds) {
         if (seconds > TestRules.MaxQuestionTimeLimitSeconds) {

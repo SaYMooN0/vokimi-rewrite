@@ -13,21 +13,23 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
         builder.ToTable("GeneralFormatTests");
         builder.HasBaseType<BaseTest>();
 
-        builder.HasMany<GeneralTestQuestion>("_questions")
+        builder
+            .Ignore(x => x.Questions);
+        builder
+            .HasMany<GeneralTestQuestion>("_questions")
             .WithOne()
-            .HasForeignKey(q => q.TestId)
-            .OnDelete(DeleteBehavior.Cascade);
-
+            .HasForeignKey(q => q.TestId);
 
         builder
             .Property<Dictionary<GeneralTestQuestionId, ushort>>("_questionsOrderDictionary")
             .HasColumnName("QuestionsOrder")
             .HasEntityIdsOrderDictionaryConversion();
-
+        
+        builder
+            .Ignore(x => x.Results);
         builder.HasMany<GeneralTestResult>("_results")
             .WithOne()
-            .HasForeignKey(q => q.TestId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(q => q.TestId);
 
 
     }

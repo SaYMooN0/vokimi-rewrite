@@ -6,10 +6,14 @@ namespace TestCreationService.Infrastructure.Persistence.configurations.value_co
 internal class TimeLimitOptionConverter : ValueConverter<TimeLimitOption, int>
 {
     public TimeLimitOptionConverter() : base(
-        v => v.TimeLimitExists ? (int)v.MaxSeconds : -1,
-        v => v == -1
-            ? TimeLimitOption.NoTimeLimit()
-            : new TimeLimitOption(true, (ushort)v)
-    ) {
+        v => v.ToInt(),
+        v => FromInt(v)
+    ) { }
+    private static TimeLimitOption FromInt(int value) {
+        var res = TimeLimitOption.FromInt(value);
+        if (res.IsErr(out var err)) {
+            throw new ArgumentException($"Incorrect time limit value in the data base: {err}");
+        }
+        return res.GetSuccess();
     }
 }

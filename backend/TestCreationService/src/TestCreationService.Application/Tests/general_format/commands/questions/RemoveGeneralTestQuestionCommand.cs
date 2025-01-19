@@ -1,26 +1,24 @@
 ﻿using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.general_format_tests;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands.questions;
 
-public record class AddGeneralTestQuestionCommand(
+public record class RemoveGeneralTestQuestionCommand(
     TestId TestId,
-    GeneralTestAnswersType AnswersType
+    GeneralTestQuestionId QuestionId
 ) : IRequest<ErrOrNothing>;
-public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTestQuestionCommand, ErrOrNothing>
+public class RemoveGeneralTestQuestionCommandHandler : IRequestHandler<RemoveGeneralTestQuestionCommand, ErrOrNothing>
 {
     private readonly IGeneralFormatTestsRepository generalFormatTestsRepository;
 
-    public AddGeneralTestQuestionCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+    public RemoveGeneralTestQuestionCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
         this.generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
-    public async Task<ErrOrNothing> Handle(AddGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
+    public async Task<ErrOrNothing> Handle(RemoveGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
         GeneralFormatTest? test = await generalFormatTestsRepository.GetWithQuestions(request.TestId);
         if (test is null) {
             return Err.ErrFactory.NotFound(
@@ -28,8 +26,8 @@ public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTe
                 details: $"Cannot find general format test with id {request.TestId}"
             );
         }
-        var addingRes = test.AddNewQuestion(request.AnswersType);
-        if (addingRes.IsErr(out var err)) {return err; }
+        var removingRes = test.RemoveQuestion(request.QuestionId);
+        if (removingRes.IsErr(out var err)) { return err; }
         await generalFormatTestsRepository.Update(test);
         return ErrOrNothing.Nothing;
     }

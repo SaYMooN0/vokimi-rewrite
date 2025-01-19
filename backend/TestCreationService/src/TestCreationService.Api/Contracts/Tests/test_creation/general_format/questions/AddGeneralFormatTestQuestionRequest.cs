@@ -2,9 +2,9 @@
 using SharedKernel.Common.tests.general_format_tests;
 using System.Text.Json.Serialization;
 
-namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions.add_question;
+namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 
-public class AddGeneralFormatTestQuestionRequest : IRequestWithValidationNeeded
+internal class AddGeneralFormatTestQuestionRequest : IRequestWithValidationNeeded
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public GeneralTestAnswersType AnswersType { get; init; }

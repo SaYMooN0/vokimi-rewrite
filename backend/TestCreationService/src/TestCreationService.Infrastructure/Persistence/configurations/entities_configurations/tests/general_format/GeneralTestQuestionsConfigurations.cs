@@ -16,17 +16,18 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasEntityIdConversion();
 
         builder
+            .Ignore(x => x.Answers);
+        builder
             .HasMany<GeneralTestAnswer>("_answers")
             .WithOne()
-            .HasForeignKey(q => q.QuestionId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(q => q.QuestionId);
 
         builder
             .Property(x => x.TimeLimit)
             .HasTimeLimitOptionConversion();
 
         builder
-            .Property(x=>x.AnswerCountLimit)
+            .Property(x => x.AnswerCountLimit)
             .HasAnswersCountLimitConversion();
 
     }
