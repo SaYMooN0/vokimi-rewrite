@@ -1,5 +1,4 @@
-﻿
-namespace SharedKernel.Common.EntityIds;
+﻿namespace SharedKernel.Common.EntityIds;
 
 public abstract class EntityId : ValueObject
 {

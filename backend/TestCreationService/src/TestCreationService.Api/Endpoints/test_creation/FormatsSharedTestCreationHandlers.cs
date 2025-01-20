@@ -7,19 +7,33 @@ using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Contracts.Tests.test_initialization;
 using TestCreationService.Application.Tests.general_format;
 using TestCreationService.Application.Tests.formats_shared.commands;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 
 namespace TestCreationService.Api.Endpoints.test_creation;
 
 internal static class FormatsSharedTestCreationHandlers
 {
     internal static RouteGroupBuilder MapFormatsSharedTestCreationHandlers(this RouteGroupBuilder group) {
-        group.MapPost("/updateTestEditors", UpdateTestEditors)
+        group.MapPost("/updateEditors", UpdateTestEditors)
             .WithRequestValidation<UpdateTestEditorsRequest>()
             .AuthenticationRequired()
             .OnlyByTestCreator();
         group.MapPost("/deleteTest", DeleteTest)
             .AuthenticationRequired()
             .OnlyByTestCreator();
+        group.MapPost("/updateMainInfo", UpdateTestMainInfo)
+            .AuthenticationRequired()
+            .WithRequestValidation<UpdateTestMainInfoRequest>()
+            .TestEditPermissionRequired();
+        group.MapPost("/updateInteractionsAccessSettings", UpdateTestInteractionsAccessSettings)
+            .AuthenticationRequired()
+            .WithRequestValidation<UpdateTestInteractionsAccessSettingsRequest>()
+            .TestEditPermissionRequired();
+        group.MapPost("/updateCover", UpdateTestCover)
+            .AuthenticationRequired()
+            .WithRequestValidation<UpdateTestCoverRequest>()
+            .TestEditPermissionRequired();
         return group;
     }
     private async static Task<IResult> UpdateTestEditors(
@@ -33,7 +47,7 @@ internal static class FormatsSharedTestCreationHandlers
             .Where(id => id != creator)
             .ToHashSet();
 
-        UpdateTestEditorsCommand command = new (httpContext.GetTestIdFromRoute(), editors);
+        UpdateTestEditorsCommand command = new(httpContext.GetTestIdFromRoute(), editors);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(
@@ -45,12 +59,63 @@ internal static class FormatsSharedTestCreationHandlers
        HttpContext httpContext,
        ISender mediator
     ) {
-        DeleteTestCommand command = new (httpContext.GetTestIdFromRoute());
+        DeleteTestCommand command = new(httpContext.GetTestIdFromRoute());
         ErrOrNothing result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(
             result,
             () => Results.Ok()
+        );
+    }
+    private async static Task<IResult> UpdateTestMainInfo(
+       HttpContext httpContext,
+       ISender mediator
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateTestMainInfoRequest>();
+        var testId = httpContext.GetTestIdFromRoute();
+
+        UpdateTestMainInfoCommand command = new(testId, request.TestName, request.Description, request.Language);
+        ErrOrNothing result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(
+            result,
+            () => Results.Ok()
+        );
+    }
+    private async static Task<IResult> UpdateTestInteractionsAccessSettings(
+       HttpContext httpContext,
+       ISender mediator
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateTestInteractionsAccessSettingsRequest>();
+        var testId = httpContext.GetTestIdFromRoute();
+
+        UpdateTestInteractionsAccessSettingsCommand command = new(
+            testId,
+            TestAccessLevel: request.TestAccess,
+            RatingsSetting: request.RatingsSetting,
+            DiscussionsSetting: request.DiscussionsSetting,
+            AllowTestTakenPosts: request.AllowTestTakenPosts,
+            TagSuggestionsSetting: request.TagSuggestionsSetting
+        );
+        ErrListOrNothing result = await mediator.Send(command);
+
+        return CustomResults.FromErrListOrNothing(
+            result,
+            () => Results.Ok()
+        );
+    }
+    private async static Task<IResult> UpdateTestCover(
+       HttpContext httpContext,
+       ISender mediator
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateTestCoverRequest>();
+        var testId = httpContext.GetTestIdFromRoute();
+
+        UpdateTestCoverCommand command = new(testId, request.CoverImg);
+        ErrOrNothing result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(
+            result, () => Results.Ok()
         );
     }
 }

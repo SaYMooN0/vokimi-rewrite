@@ -1,5 +1,4 @@
-﻿
-using SharedKernel.Common;
+﻿using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.general_format_tests;
@@ -42,11 +41,11 @@ public class GeneralTestQuestion : Entity
         return Err.ErrFactory.NotImplemented();
     }
     public ErrOrNothing AddTimeLimit(ushort seconds) {
-        if (seconds > TestRules.MaxQuestionTimeLimitSeconds) {
-            return new Err($"Time limit can't be greater than {TestRules.MaxQuestionTimeLimitSeconds} seconds.");
+        if (seconds > GeneralFormatTestRules.MaxQuestionTimeLimitSeconds) {
+            return new Err($"Time limit can't be greater than {GeneralFormatTestRules.MaxQuestionTimeLimitSeconds} seconds.");
         }
-        if (seconds < TestRules.MinQuestionTimeLimitSeconds) {
-            return new Err($"Time limit can't be less than {TestRules.MinQuestionTimeLimitSeconds} seconds.");
+        if (seconds < GeneralFormatTestRules.MinQuestionTimeLimitSeconds) {
+            return new Err($"Time limit can't be less than {GeneralFormatTestRules.MinQuestionTimeLimitSeconds} seconds.");
         }
         TimeLimit = TimeLimitOption.HasTimeLimit(seconds);
         return ErrOrNothing.Nothing;

@@ -17,6 +17,10 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 
     }
 
+    public async Task<GeneralFormatTest?> GetById(TestId testId) {
+        return await _db.GeneralFormatTests.FindAsync(testId);
+    }
+
     public Task<GeneralFormatTest?> GetWithQuestions(TestId testId) {
         return _db.GeneralFormatTests
             .Include(t => EF.Property<List<GeneralTestQuestion>>(t, "_questions"))

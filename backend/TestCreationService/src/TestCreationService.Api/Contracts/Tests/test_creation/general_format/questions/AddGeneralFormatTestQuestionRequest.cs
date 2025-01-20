@@ -6,7 +6,6 @@ namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.q
 
 internal class AddGeneralFormatTestQuestionRequest : IRequestWithValidationNeeded
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public GeneralTestAnswersType AnswersType { get; init; }
     public RequestValidationResult Validate() {
         return RequestValidationResult.Success;

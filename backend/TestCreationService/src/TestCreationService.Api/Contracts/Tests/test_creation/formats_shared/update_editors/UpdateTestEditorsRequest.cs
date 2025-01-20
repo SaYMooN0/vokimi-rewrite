@@ -2,7 +2,7 @@
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Common.rules;
 
-namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
+namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 
 public record class UpdateTestEditorsRequest(
     string[] EditorIds

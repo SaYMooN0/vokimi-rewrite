@@ -33,7 +33,7 @@ public class UpdateTestEditorsCommandHandler : IRequestHandler<UpdateTestEditors
                 );
             }
         }
-        test.UpdateTestEditors(request.EditorIds);
+        test.UpdateEditors(request.EditorIds);
         await _baseTestsRepository.Update(test);
         return test.EditorIds;
     }

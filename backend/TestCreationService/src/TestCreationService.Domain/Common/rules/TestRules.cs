@@ -8,7 +8,5 @@ public static class TestRules
     public const int MaxTestEditorsCount = 10;
 
     public const int MaxTestDescriptionLength = 511;
-    public const int
-        MinQuestionTimeLimitSeconds = 5,
-        MaxQuestionTimeLimitSeconds = 600;
+
 }

@@ -24,12 +24,17 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
             .Property<Dictionary<GeneralTestQuestionId, ushort>>("_questionsOrderDictionary")
             .HasColumnName("QuestionsOrder")
             .HasEntityIdsOrderDictionaryConversion();
-        
+
         builder
             .Ignore(x => x.Results);
         builder.HasMany<GeneralTestResult>("_results")
             .WithOne()
             .HasForeignKey(q => q.TestId);
+
+        builder
+            .HasOne<GeneralTestTakingProcessSettings>("TestTakingProcessSettings")
+            .WithOne()
+            .HasForeignKey<GeneralTestTakingProcessSettings>();
 
 
     }

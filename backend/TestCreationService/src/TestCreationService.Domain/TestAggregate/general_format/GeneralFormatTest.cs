@@ -1,4 +1,5 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.common_enums;
+using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format_tests;
@@ -25,6 +26,7 @@ public class GeneralFormatTest : BaseTest
         .OrderBy(r => r.Id)
         .ToList()
         .AsReadOnly();
+    private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
     public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
@@ -46,7 +48,7 @@ public class GeneralFormatTest : BaseTest
         AppUserId creatorId,
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
-    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo, TestSettings.Deafult, TestStyles.Default) { }
+    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
         if (Questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
@@ -92,6 +94,12 @@ public class GeneralFormatTest : BaseTest
         }
 
         return orderedQuestions.ToImmutableDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+    public void UpdateTestTakingProcessSettings(
+        bool forceSequentialFlow,
+        TestFeedbackOption testFeedback
+    ) {
+        TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
     }
 
 }

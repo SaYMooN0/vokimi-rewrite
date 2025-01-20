@@ -1,6 +1,7 @@
 using ApiShared;
 using SharedKernel.Common.EntityIds;
 using System;
+using System.Text.Json.Serialization;
 using TestCreationService.Api.Endpoints;
 using TestCreationService.Api.Endpoints.test_creation;
 using TestCreationService.Api.Endpoints.test_creation.general;
@@ -19,7 +20,8 @@ namespace TestCreationService.Api
             builder.Services
                 .AddAuthTokenConfig(builder.Configuration)
                 .AddApplication(builder.Configuration)
-                .AddInfrastructure(builder.Configuration);
+                .AddInfrastructure(builder.Configuration)
+                .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment()) {
@@ -30,7 +32,20 @@ namespace TestCreationService.Api
             app.UseHttpsRedirection();
 
             MapHandlers(app);
-            
+            using (var scope = app.Services.CreateScope()) {
+                var services = scope.ServiceProvider;
+                try {
+                    var appDbContext = services.GetRequiredService<TestCreationDbContext>();
+                    appDbContext.Database.EnsureDeleted();
+                    appDbContext.Database.EnsureCreated();
+                    appDbContext.AppUsers.Add(new AppUser(new AppUserId(new("01947086-ae53-7834-8d6c-56cdb1bbb587"))));
+                    appDbContext.SaveChanges();
+                } catch (Exception ex) {
+                    app.Logger.LogError(ex, "An error occurred while initializing the database.");
+                    throw;
+                }
+            }
+
             app.Run();
         }
         private static void MapHandlers(WebApplication app) {

@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.EntityIds;
 
-namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
+namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 
 public class TestEditorsUpdatedResponse
 {

@@ -14,14 +14,14 @@ public record class AddGeneralTestQuestionCommand(
 ) : IRequest<ErrOrNothing>;
 public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTestQuestionCommand, ErrOrNothing>
 {
-    private readonly IGeneralFormatTestsRepository generalFormatTestsRepository;
+    private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
     public AddGeneralTestQuestionCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
-        this.generalFormatTestsRepository = generalFormatTestsRepository;
+        this._generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
     public async Task<ErrOrNothing> Handle(AddGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
-        GeneralFormatTest? test = await generalFormatTestsRepository.GetWithQuestions(request.TestId);
+        GeneralFormatTest? test = await _generalFormatTestsRepository.GetWithQuestions(request.TestId);
         if (test is null) {
             return Err.ErrFactory.NotFound(
                 "Unable to find this general format test",
@@ -30,7 +30,7 @@ public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTe
         }
         var addingRes = test.AddNewQuestion(request.AnswersType);
         if (addingRes.IsErr(out var err)) {return err; }
-        await generalFormatTestsRepository.Update(test);
+        await _generalFormatTestsRepository.Update(test);
         return ErrOrNothing.Nothing;
     }
 }

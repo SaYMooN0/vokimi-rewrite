@@ -15,7 +15,7 @@ public class ScoringFormatTest : BaseTest
        AppUserId creatorId,
        HashSet<AppUserId> editorIds,
        TestMainInfo mainInfo
-   ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo, TestSettings.Deafult, TestStyles.Default) { }
+   ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
     public static ErrOr<ScoringFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {

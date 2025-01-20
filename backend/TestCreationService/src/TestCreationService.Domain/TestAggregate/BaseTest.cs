@@ -1,7 +1,9 @@
 ﻿using SharedKernel.Common;
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
@@ -19,27 +21,24 @@ public abstract class BaseTest : AggregateRoot
     private readonly HashSet<AppUserId> _editorIds = new();
     public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
     public abstract TestFormat Format { get; }
-    public TestMainInfo MainInfo { get; init; }
-    public TestSettings Settings { get; protected set; }
-    public TestStyles Styles { get; init; }
+    protected TestMainInfo MainInfo { get; init; }
+    protected TestInteractionsAccessSettings InteractionsAccessSettings { get; init; }
+    protected TestStyles Styles { get; init; }
 
     protected BaseTest(
         TestId id,
         AppUserId creatorId,
         HashSet<AppUserId> editorIds,
-        TestMainInfo mainInfo,
-        TestSettings settings,
-        TestStyles styles
+        TestMainInfo mainInfo
     ) {
         Id = id;
         CreatorId = creatorId;
         _editorIds = editorIds;
         MainInfo = mainInfo;
-        Settings = settings;
-        Styles = styles;
+        InteractionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
+        Styles = TestStyles.Default;
     }
-    protected void UpdateTestSettings(TestSettings newTestSettings) => Settings = newTestSettings;
-    public ErrOrNothing UpdateTestEditors(HashSet<AppUserId> userIds) {
+    public ErrOrNothing UpdateEditors(HashSet<AppUserId> userIds) {
         if (userIds.Count > TestRules.MaxTestEditorsCount) {
             return new Err(
                 message: "Too many test editors",
@@ -60,4 +59,26 @@ public abstract class BaseTest : AggregateRoot
     }
     public bool IsUserCreator(AppUserId userId) => userId == CreatorId;
     public HashSet<AppUserId> TestEditorsWithCreator() => new HashSet<AppUserId>(EditorIds) { CreatorId };
+    public ErrOrNothing UpdateMainInfo(string testName, string description, Language language) {
+        return MainInfo.Update(testName, description, language);
+    }
+    public ErrOrNothing UpdateCoverImg(string coverImg) {
+        return MainInfo.UpdateCoverImg(coverImg);
+        //domain event for img service...
+    }
+    public ErrListOrNothing UpdateInteractionsAccessSettings(
+        AccessLevel testAccessLevel,
+        ResourceAvailabilitySetting ratingsSetting,
+        ResourceAvailabilitySetting discussionsSetting,
+        bool allowTestTakenPosts,
+        ResourceAvailabilitySetting tagsSuggestionsSetting
+    ) {
+        return InteractionsAccessSettings.Update(
+            testAccessLevel,
+            ratingsSetting,
+            discussionsSetting,
+            allowTestTakenPosts,
+            tagsSuggestionsSetting
+        );
+    }
 }

@@ -18,4 +18,8 @@ public static class GeneralFormatTestRules
         TexOnlyAnswerMaxLength = 500,
         AdditionalTextMinLength = 5,
         AdditionalTextMaxLength = 250;
+
+    public const int
+        MinQuestionTimeLimitSeconds = 5,
+        MaxQuestionTimeLimitSeconds = 600;
 }
