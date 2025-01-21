@@ -34,18 +34,18 @@ internal static class PropertyBuilderExtensions
         );
         return builder;
     }
-    public static PropertyBuilder<TProperty> HasTimeLimitOptionConversion<TProperty>(
+    public static PropertyBuilder<TProperty> HasGeneralTestQuestionTimeLimitOptionConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
         return builder
-            .HasConversion(new TimeLimitOptionConverter())
+            .HasConversion(new GeneralTestQuestionTimeLimitOptionConverter())
             .HasMaxLength(20);
     }
-    public static PropertyBuilder<TProperty> HasAnswersCountLimitConversion<TProperty>(
+    public static PropertyBuilder<TProperty> HasGeneralTestQuestionAnswersCountLimitConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
         return builder
-            .HasConversion(new AnswerCountLimitConverter())
+            .HasConversion(new GeneralTestQuestionAnswersCountLimitConverter())
             .HasMaxLength(20);
     }
     public static PropertyBuilder<TProperty> HasGeneralTestAnswerSpecificDataConversion<TProperty>(

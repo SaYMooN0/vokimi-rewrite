@@ -1,7 +1,7 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.errors;
-using TestCreationService.Domain.Common.rules;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 
@@ -11,24 +11,11 @@ internal class UpdateTestMainInfoRequest : IRequestWithValidationNeeded
     public string Description { get; init; }
     public Language Language { get; init; }
     public RequestValidationResult Validate() {
-        int nameLen = string.IsNullOrWhiteSpace(TestName) ? 0 : TestName.Length;
-        if (nameLen < TestRules.MinNameLength) {
-            return Err.ErrFactory.InvalidData(
-                $"Test name is too short. Minimum test name length is {TestRules.MinNameLength}",
-                details: $"Minimum test name length is {TestRules.MinNameLength}. Current length is {nameLen}"
-            );
-        } else if (nameLen > TestRules.MaxNameLength) {
-            return Err.ErrFactory.InvalidData(
-                $"Test name is too long. Maximum test name length is {TestRules.MaxNameLength}",
-                details: $"Maximum test name length is {TestRules.MaxNameLength}. Current length is {nameLen}"
-            );
+        if (TestRules.CheckTestNameForErrs(TestName).IsErr(out var err)) {
+            return err;
         }
-        int descriptionLen = string.IsNullOrWhiteSpace(Description) ? 0 : Description.Length;
-        if (descriptionLen > TestRules.MaxTestDescriptionLength) {
-            return Err.ErrFactory.InvalidData(
-                $"Test description cannot be longer then {TestRules.MaxTestDescriptionLength}. Current length is {descriptionLen}",
-                details: "Test description is too long"
-            );
+        if (TestRules.CheckDescriptionForErrs(Description).IsErr(out err)) {
+            return err;
         }
         return RequestValidationResult.Success;
     }

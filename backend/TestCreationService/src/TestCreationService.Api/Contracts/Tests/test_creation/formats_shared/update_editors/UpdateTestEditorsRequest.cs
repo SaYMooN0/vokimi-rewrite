@@ -1,6 +1,6 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
-using TestCreationService.Domain.Common.rules;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 

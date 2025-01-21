@@ -4,7 +4,7 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format_tests;
 using System.Collections.Immutable;
-using TestCreationService.Domain.Common.rules;
+using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
 

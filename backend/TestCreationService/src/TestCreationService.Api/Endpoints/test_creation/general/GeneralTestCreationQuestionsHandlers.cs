@@ -4,26 +4,19 @@ using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
+using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.general_format.commands.questions;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 
-internal static class GeneralFormatTestQuestionsCreationHandlers
+internal static class GeneralTestCreationQuestionsHandlers
 {
-    internal static RouteGroupBuilder MapGeneralFormatTestCreationQuestionsHandlers(this RouteGroupBuilder group) {
+    internal static RouteGroupBuilder MapGeneralTestCreationQuestionsHandlers(this RouteGroupBuilder group) {
         group.MapGet("/", ListQuestions)
             .AuthenticationRequired()
             .TestEditPermissionRequired();
         group.MapPost("/add", AddQuestion)
             .WithRequestValidation<AddGeneralFormatTestQuestionRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
-        group.MapDelete("/remove", RemoveQuestion)
-            .WithRequestValidation<RemoveGeneralFormatTestQuestionRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
-        group.MapPost("/update", UpdateQuestion)
-            //.WithRequestValidation<GeneralTestQuestionUpdateRequest>()
             .AuthenticationRequired()
             .TestEditPermissionRequired();
         group.MapPost("/updateOrder", UpdateQuestionsOrder)
@@ -66,28 +59,7 @@ internal static class GeneralFormatTestQuestionsCreationHandlers
             () => Results.Ok()
         );
     }
-    private async static Task<IResult> RemoveQuestion(
-       HttpContext httpContext,
-       ISender mediator
-    ) {
-        var request = httpContext.GetValidatedRequest<RemoveGeneralFormatTestQuestionRequest>();
-        TestId testId = httpContext.GetTestIdFromRoute();
-        GeneralTestQuestionId questionId = request.ParsedQuestionId;
-
-        RemoveGeneralTestQuestionCommand command = new(testId, questionId);
-        var result = await mediator.Send(command);
-
-        return CustomResults.FromErrOrNothing(
-            result,
-            () => Results.Ok()
-        );
-    }
-    private async static Task<IResult> UpdateQuestion(
-       HttpContext httpContext,
-       ISender mediator
-    ) {
-        throw new NotImplementedException();
-    }
+    
     private async static Task<IResult> UpdateQuestionsOrder(
        HttpContext httpContext,
        ISender mediator

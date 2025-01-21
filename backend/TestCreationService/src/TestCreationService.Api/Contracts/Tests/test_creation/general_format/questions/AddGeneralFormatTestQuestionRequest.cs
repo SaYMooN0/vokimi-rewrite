@@ -1,4 +1,5 @@
-﻿using ApiShared.interfaces;
+﻿
+using ApiShared.interfaces;
 using SharedKernel.Common.tests.general_format_tests;
 using System.Text.Json.Serialization;
 

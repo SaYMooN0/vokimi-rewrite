@@ -2,7 +2,9 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.constants_store_classes;
 using SharedKernel.Common.errors;
+using System.Xml.Linq;
 using TestCreationService.Domain.Common.rules;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 
@@ -17,8 +19,8 @@ public class TestMainInfo : ValueObject
     public override IEnumerable<object> GetEqualityComponents() =>
         [Name, CoverImg, Description, Language];
     public static ErrOr<TestMainInfo> CreateNew(string testName) {
-        if (IsStringCorrectTestName(testName).IsErr(out var testNameErr)) {
-            return testNameErr;
+        if (TestRules.CheckTestNameForErrs(testName).IsErr(out var err)) {
+            return err;
         }
         return new TestMainInfo() {
             Name = testName,
@@ -27,14 +29,14 @@ public class TestMainInfo : ValueObject
             Language = Language.Other
         };
     }
-    public ErrOrNothing Update(string name, string description, Language language) {
-        if (IsStringCorrectTestName(name).IsErr(out var testNameErr)) {
-            return testNameErr;
+    public ErrOrNothing Update(string testName, string description, Language language) {
+        if (TestRules.CheckTestNameForErrs(testName).IsErr(out var err)) {
+            return err;
         }
-        if (IsStringCorrectTestDescription(description).IsErr(out var descriptionErr)) {
-            return descriptionErr;
+        if (TestRules.CheckDescriptionForErrs(description).IsErr(out err)) {
+            return err;
         }
-        Name = name;
+        Name = testName;
         Description = description;
         Language = language;
         return ErrOrNothing.Nothing;
@@ -45,21 +47,5 @@ public class TestMainInfo : ValueObject
             return Err.ErrFactory.InvalidData("Cover image cannot be empty");
         }
         return ErrOrNothing.Nothing;
-    }
-    private static ErrOrNothing IsStringCorrectTestName(string str) {
-        int len = string.IsNullOrWhiteSpace(str) ? 0 : str.Length;
-        if (len < TestRules.MinNameLength || len > TestRules.MaxNameLength) {
-            return Err.ErrFactory.InvalidData($"Test name length must be between {TestRules.MinNameLength} and {TestRules.MaxNameLength} characters. Current length: {len}");
-        }
-        return ErrOrNothing.Nothing;
-
-    }
-    private static ErrOrNothing IsStringCorrectTestDescription(string str) {
-        int len = string.IsNullOrWhiteSpace(str) ? 0 : str.Length;
-        if (len > TestRules.MaxTestDescriptionLength) {
-            return Err.ErrFactory.InvalidData($"Test description must be less then {TestRules.MaxTestDescriptionLength} characters. Current length: {len}");
-        }
-        return ErrOrNothing.Nothing;
-
     }
 }

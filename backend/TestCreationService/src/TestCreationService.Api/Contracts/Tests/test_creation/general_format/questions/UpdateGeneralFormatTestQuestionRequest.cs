@@ -1,13 +1,13 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.value_objects;
-using TestCreationService.Domain.Common.rules;
+using SharedKernel.Common.tests.value_objects.answers_count_limit;
+using SharedKernel.Common.tests.value_objects.time_limit_option;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 
 public record class UpdateGeneralFormatTestQuestionRequest(
-    string QuestionId,
-    string Text,
+    string QuestionText,
     string[] Images,
     bool HasTimeLimit,
     int TimeLimitValue,
@@ -17,46 +17,43 @@ public record class UpdateGeneralFormatTestQuestionRequest(
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {
-        if (!Guid.TryParse(QuestionId, out _)) {
-            return new Err(
-                message: "Unable to parse question id",
-                details: "Question id is not a valid format"
-            );
-        }
         ErrList errs = new();
-
-        int textLen = string.IsNullOrWhiteSpace(Text) ? 0 : Text.Length;
-        if (textLen < GeneralFormatTestRules.QuestionTextMinLength) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                $"Text length is too short. It must be at least {GeneralFormatTestRules.QuestionTextMinLength}",
-                details: $"Current text length is {textLen}")
-            );
-        } else if (textLen > GeneralFormatTestRules.QuestionTextMaxLength) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                $"Text length is too long. It must be at most {GeneralFormatTestRules.QuestionTextMaxLength}",
-                details: $"Current text length is {textLen}")
-            );
+        errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionTextForErrs(QuestionText));
+        errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionImagesForErrs(Images));
+        errs.AddPossibleErr(CreateTimeLimit());
+        errs.AddPossibleErr(CreateAnswerCountLimit());
+        return errs;
+    }
+    public ErrOr<GeneralTestQuestionTimeLimitOption> CreateTimeLimit() {
+        if (!HasTimeLimit) {
+            return GeneralTestQuestionTimeLimitOption.NoTimeLimit();
         }
-
-        if (HasTimeLimit && TimeLimitValue < GeneralFormatTestRules.MinQuestionTimeLimitSeconds) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                $"Time limit is too small. It must be at least {GeneralFormatTestRules.MinQuestionTimeLimitSeconds} seconds",
-                details: $"Current time limit is {TimeLimitValue} seconds")
+        if (TimeLimitValue > ushort.MaxValue) {
+            return Err.ErrFactory.InvalidData(
+                $"Incorrect time limit value type",
+                details: $"Time limit cannot be more than {ushort.MaxValue} seconds"
             );
         }
-        if (HasTimeLimit && TimeLimitValue > GeneralFormatTestRules.MaxQuestionTimeLimitSeconds) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                $"Time limit is too big. It must be at most {GeneralFormatTestRules.MaxQuestionTimeLimitSeconds} seconds",
-                details: $"Current time limit is {TimeLimitValue} seconds")
+        return GeneralTestQuestionTimeLimitOption.HasTimeLimit((ushort)TimeLimitValue);
+
+    }
+    public ErrOr<GeneralTestQuestionAnswersCountLimit> CreateAnswerCountLimit() {
+        if (!IsMultipleChoice) {
+            return GeneralTestQuestionAnswersCountLimit.SingleChoice();
+        }
+        if (MinAnswersCount < 0 || MinAnswersCount > ushort.MaxValue) {
+            return Err.ErrFactory.InvalidData(
+                $"Incorrect minimum answers count type",
+                details: $"Minimum answers count cannot be less than 0 or more than {ushort.MaxValue}"
             );
         }
-
-        if (IsMultipleChoice && MinAnswersCount < 1) {
-            errs.Add(Err.ErrFactory.InvalidData($"Incorrect minimum answers count. It must be at least 1"));
+        if (MaxAnswersCount < 0 || MaxAnswersCount > ushort.MaxValue) {
+            return Err.ErrFactory.InvalidData(
+                $"Incorrect maximum answers count type",
+                details: $"Maximum answers count cannot be less than 0 or more than {ushort.MaxValue}"
+            );
         }
-
-        if (errs.Any()) { return errs; }
-        return RequestValidationResult.Success;
+        return GeneralTestQuestionAnswersCountLimit.MultipleChoice((ushort)MinAnswersCount, (ushort)MaxAnswersCount);
     }
 }
 

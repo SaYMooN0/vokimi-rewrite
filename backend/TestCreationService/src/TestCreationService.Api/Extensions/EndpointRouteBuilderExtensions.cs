@@ -1,7 +1,7 @@
 ﻿using ApiShared.interfaces;
 using TestCreationService.Api.EndpointsFilters;
 
-namespace TestCreationService.Api;
+namespace TestCreationService.Api.Extensions;
 
 internal static class EndpointRouteBuilderExtensions
 {

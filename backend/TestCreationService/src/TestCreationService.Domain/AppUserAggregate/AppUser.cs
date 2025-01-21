@@ -1,8 +1,6 @@
 ﻿using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations.Schema;
-using TestCreationService.Domain.TestAggregate;
 
 namespace TestCreationService.Domain.AppUserAggregate;
 

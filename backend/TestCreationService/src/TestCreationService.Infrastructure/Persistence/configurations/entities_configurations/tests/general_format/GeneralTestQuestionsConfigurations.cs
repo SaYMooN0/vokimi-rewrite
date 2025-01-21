@@ -24,11 +24,11 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
 
         builder
             .Property(x => x.TimeLimit)
-            .HasTimeLimitOptionConversion();
+            .HasGeneralTestQuestionTimeLimitOptionConverter();
 
         builder
             .Property(x => x.AnswerCountLimit)
-            .HasAnswersCountLimitConversion();
+            .HasGeneralTestQuestionAnswersCountLimitConverter();
 
     }
 }
