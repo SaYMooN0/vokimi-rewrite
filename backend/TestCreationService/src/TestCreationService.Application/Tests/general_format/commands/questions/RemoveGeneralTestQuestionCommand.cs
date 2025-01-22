@@ -21,10 +21,7 @@ public class RemoveGeneralTestQuestionCommandHandler : IRequestHandler<RemoveGen
     public async Task<ErrOrNothing> Handle(RemoveGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
         GeneralFormatTest? test = await generalFormatTestsRepository.GetWithQuestions(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound(
-                "Unable to find this general format test",
-                details: $"Cannot find general format test with id {request.TestId}"
-            );
+            return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
         var removingRes = test.RemoveQuestion(request.QuestionId);
         if (removingRes.IsErr(out var err)) { return err; }

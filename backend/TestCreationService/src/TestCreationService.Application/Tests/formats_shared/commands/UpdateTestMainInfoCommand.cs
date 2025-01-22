@@ -25,7 +25,7 @@ public class UpdateTestMainInfoCommandHandler : IRequestHandler<UpdateTestMainIn
     public async Task<ErrOrNothing> Handle(UpdateTestMainInfoCommand request, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound("Test not found");
+            return Err.ErrPresets.TestNotFound(request.TestId);
         }
         var updateRes = test.UpdateMainInfo(request.TestName, request.Description, request.Language);
         if (updateRes.IsErr(out var err)) {

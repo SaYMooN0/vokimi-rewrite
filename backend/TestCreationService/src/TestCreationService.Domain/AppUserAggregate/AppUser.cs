@@ -4,14 +4,9 @@ using System.Collections.Immutable;
 
 namespace TestCreationService.Domain.AppUserAggregate;
 
-public class AppUser : AggregateRoot
+public class AppUser : AggregateRoot<AppUserId>
 {
-    protected override EntityId EntityId => Id;
     private AppUser() { }
-
-
-    public AppUserId Id { get; init; }
-
     private readonly HashSet<TestId> _createdTestIds = [];
     public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
 

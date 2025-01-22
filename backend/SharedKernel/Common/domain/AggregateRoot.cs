@@ -1,6 +1,8 @@
+using SharedKernel.Common.EntityIds;
+
 namespace SharedKernel.Common;
 
-public abstract class AggregateRoot : Entity
+public abstract class AggregateRoot<IdType> : Entity<IdType> where IdType : EntityId
 {
     protected readonly List<IDomainEvent> _domainEvents = new();
 

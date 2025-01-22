@@ -20,10 +20,9 @@ internal static class GeneralTestCreationQuestionsHandlers
             .AuthenticationRequired()
             .TestEditPermissionRequired();
         group.MapPost("/updateOrder", UpdateQuestionsOrder)
-            //.WithRequestValidation<UpdateGeneralTestQuestionsOrderRequest>()
+            .WithRequestValidation<UpdateGeneralTestQuestionsOrderRequest>()
             .AuthenticationRequired()
             .TestEditPermissionRequired();
-        //map of order and question id
         return group;
     }
     private async static Task<IResult> ListQuestions(
@@ -39,7 +38,7 @@ internal static class GeneralTestCreationQuestionsHandlers
             result,
             (questions) => Results.Json(new {
                 Questions = questions.Select(
-                    qWithO => GeneralFormatTestQuestionInfoResponse.FromQuestion(qWithO.Value, qWithO.Key)
+                    i => GeneralFormatTestQuestionInfoResponse.FromQuestion(i.Question, i.Order)
                 )
             })
         );
@@ -59,11 +58,19 @@ internal static class GeneralTestCreationQuestionsHandlers
             () => Results.Ok()
         );
     }
-    
     private async static Task<IResult> UpdateQuestionsOrder(
        HttpContext httpContext,
        ISender mediator
     ) {
-        throw new NotImplementedException();
+        var request = httpContext.GetValidatedRequest<UpdateGeneralTestQuestionsOrderRequest>();
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        UpdateGeneralTestQuestionsOrderCommand command = new(testId, request.CreateOrderController().GetSuccess());
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(
+            result,
+            () => Results.Ok()
+        );
     }
 }

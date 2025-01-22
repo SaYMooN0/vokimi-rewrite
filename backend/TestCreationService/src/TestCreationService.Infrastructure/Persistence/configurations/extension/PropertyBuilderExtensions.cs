@@ -55,9 +55,9 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new GeneralTestAnswerSpecificDataConverter())
             .HasMaxLength(2040);
     }
-    public static PropertyBuilder<TProperty> HasTestFeedbackOptionConverter<TProperty>(
+    public static PropertyBuilder<TProperty> HasGeneralTestFeedbackOptionConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
-        return builder.HasConversion(new TestFeedbackOptionConverter());
+        return builder.HasConversion(new GeneralTestFeedbackOptionConverter());
     }
 }

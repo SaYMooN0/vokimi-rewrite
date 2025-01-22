@@ -4,27 +4,21 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.general_format_tests;
 using SharedKernel.Common.tests.value_objects.answers_count_limit;
 using SharedKernel.Common.tests.value_objects.time_limit_option;
+using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
 
-public class GeneralTestQuestion : Entity
+public class GeneralTestQuestion : Entity<GeneralTestQuestionId>
 {
-    protected override EntityId EntityId => Id;
-
-    public GeneralTestQuestionId Id { get; init; }
     public TestId TestId { get; init; }
-    public string Text { get; init; }
-    private List<string> _images { get; init; } = [];
+    public string Text { get; private set; }
+    public string[] _images { get; private set; } = [];
     public IReadOnlyList<string> Images => _images.AsReadOnly();
     public GeneralTestQuestionTimeLimitOption TimeLimit { get; private set; }
     public GeneralTestAnswersType AnswersType { get; init; }
-    protected virtual List<GeneralTestAnswer> _answers { get; set; } = [];
-    public IReadOnlyList<GeneralTestAnswer> Answers => _answers
-        .OrderBy(a => _answersOrderDictionary.TryGetValue(a.Id, out var order) ? order : ushort.MaxValue)
-        .ToList()
-        .AsReadOnly();
-    private Dictionary<GeneralTestAnswerId, ushort> _answersOrderDictionary { get; set; } = [];
+    protected virtual List<GeneralTestAnswer> _answers { get; init; }
+    private EntitiesOrderController<GeneralTestAnswerId> _answersOrderController { get; init; }
     public GeneralTestQuestionAnswersCountLimit AnswerCountLimit { get; private set; }
 
     public static GeneralTestQuestion CreateNew(TestId testId, GeneralTestAnswersType answersType) => new() {
@@ -33,11 +27,10 @@ public class GeneralTestQuestion : Entity
         _images = [],
         TimeLimit = GeneralTestQuestionTimeLimitOption.NoTimeLimit(),
         AnswersType = answersType,
-        _answers = [],
-        _answersOrderDictionary = [],
+        _answers = new(),
         AnswerCountLimit = GeneralTestQuestionAnswersCountLimit.SingleChoice(),
     };
-    public static ErrListOrNothing Update(
+    public ErrListOrNothing Update(
         string text,
         string[] images,
         GeneralTestQuestionTimeLimitOption timeLimit,
@@ -46,12 +39,18 @@ public class GeneralTestQuestion : Entity
         ErrList errs = new();
         errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionTextForErrs(text));
         errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionImagesForErrs(images));
-        if(answerCountLimit.IsMultipleChoice && answerCountLimit.MaxAnswers> GeneralFormatTestRules.MaxAnswersCount) {
+        if (answerCountLimit.IsMultipleChoice && answerCountLimit.MaxAnswers > GeneralFormatTestRules.MaxAnswersCount) {
             errs.Add(Err.ErrFactory.InvalidData(
                 $"Multiple choice question cannot have more than {GeneralFormatTestRules.MaxAnswersCount} answers, because it is the maximum count of answers that question can have")
             );
         }
-        return errs;
-
+        if (errs.Any()) {
+            return errs;
+        }
+        Text = text;
+        _images = images;
+        TimeLimit = timeLimit;
+        AnswerCountLimit = answerCountLimit;
+        return ErrListOrNothing.Nothing;
     }
 }

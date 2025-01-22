@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Common.constants_store_classes
+﻿namespace SharedKernel.Common.constants
 {
     public class ImgOperationsConsts
     {

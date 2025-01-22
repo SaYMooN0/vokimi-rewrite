@@ -28,12 +28,12 @@ public class UpdateTestInteractionsAccessSettingsCommandHandler
     public async Task<ErrListOrNothing> Handle(UpdateTestInteractionsAccessSettingsCommand request, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound("Test not found");
+            return Err.ErrPresets.TestNotFound(request.TestId);
         }
         var updateRes = test.UpdateInteractionsAccessSettings(
             request.TestAccessLevel,
-            request.RatingsSetting,
-            request.DiscussionsSetting,
+            ratingsSetting: request.RatingsSetting,
+            discussionsSetting: request.DiscussionsSetting,
             request.AllowTestTakenPosts,
             request.TagSuggestionsSetting
         );

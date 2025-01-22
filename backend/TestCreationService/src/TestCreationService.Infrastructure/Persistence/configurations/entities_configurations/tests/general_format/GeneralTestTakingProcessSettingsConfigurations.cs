@@ -23,7 +23,7 @@ internal class GeneralTestTakingProcessSettingsConfigurations : IEntityTypeConfi
 
         builder
             .Property(x => x.Feedback)
-            .HasTestFeedbackOptionConverter();
+            .HasGeneralTestFeedbackOptionConverter();
 
     }
 }

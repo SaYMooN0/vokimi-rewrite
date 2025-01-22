@@ -5,21 +5,18 @@ using TestCreationService.Domain.Common;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
 
-public class GeneralTestTakingProcessSettings : Entity
+public class GeneralTestTakingProcessSettings : Entity<GeneralTestTakingProcessSettingsId>
 {
     private GeneralTestTakingProcessSettings() { }
-    protected override EntityId EntityId => Id;
-
-    public GeneralTestTakingProcessSettingsId Id { get; init; }
     protected TestId TestId { get; init; }
     public bool ForceSequentialFlow { get; private set; }
-    public TestFeedbackOption Feedback { get; private set; }
+    public GeneralTestFeedbackOption Feedback { get; private set; }
     public static GeneralTestTakingProcessSettings CreateNew() => new() {
         Id = GeneralTestTakingProcessSettingsId.CreateNew(),
         ForceSequentialFlow = false,
-        Feedback = TestFeedbackOption.Disabled.Instance
+        Feedback = GeneralTestFeedbackOption.Disabled.Instance
     };
-    public void Update(bool forceSequentialFlow, TestFeedbackOption feedback) {
+    public void Update(bool forceSequentialFlow, GeneralTestFeedbackOption feedback) {
         ForceSequentialFlow = forceSequentialFlow;
         Feedback = feedback;
     }

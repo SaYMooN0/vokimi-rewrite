@@ -20,11 +20,11 @@ public class UpdateGeneralTestTakingProcessSettingsRequest : IRequestWithValidat
         }
         return RequestValidationResult.Success;
     }
-    public ErrOr<TestFeedbackOption> CreateFeedbackOption() {
+    public ErrOr<GeneralTestFeedbackOption> CreateFeedbackOption() {
         if (!EnableTestFeedback) {
-            return TestFeedbackOption.Disabled.Instance;
+            return GeneralTestFeedbackOption.Disabled.Instance;
         }
-        var enabledCreatingRes = TestFeedbackOption.Enabled.CreateNew(
+        var enabledCreatingRes = GeneralTestFeedbackOption.Enabled.CreateNew(
             FeedbackAnonymity,
             AccompanyingText,
             MaxFeedbackLength

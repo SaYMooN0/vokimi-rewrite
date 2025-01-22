@@ -6,11 +6,8 @@ using System.Collections.Immutable;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
 
-public class GeneralTestAnswer : Entity
+public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
 {
-    protected override EntityId EntityId => Id;
-
-    public GeneralTestAnswerId Id { get; init; }
     public GeneralTestQuestionId QuestionId { get; init; }
     public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; private set; }
     protected virtual HashSet<GeneralTestResultId> _relatedResultIds { get; init; } = [];
@@ -29,13 +26,13 @@ public class GeneralTestAnswer : Entity
         TypeSpecificData = newData;
         return ErrOrNothing.Nothing;
     }
-    public ErrOrNothing AddRelatedResult(GeneralTestResultId resultId) {
-        //no more than
-        return ErrOrNothing.Nothing;
+    //public ErrOrNothing AddRelatedResult(GeneralTestResultId resultId) {
+    //    //no more than
+    //    return ErrOrNothing.Nothing;
 
-    }
-    public void RemoveRelatedResult(GeneralTestResultId resultId) {
-        _relatedResultIds.Remove(resultId);
-    }
+    //}
+    //public void RemoveRelatedResult(GeneralTestResultId resultId) {
+    //    _relatedResultIds.Remove(resultId);
+    //}
 
 }

@@ -1,9 +1,7 @@
 ﻿using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.constants_store_classes;
+using SharedKernel.Common.constants;
 using SharedKernel.Common.errors;
-using System.Xml.Linq;
-using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
@@ -42,8 +40,7 @@ public class TestMainInfo : ValueObject
         return ErrOrNothing.Nothing;
     }
     public ErrOrNothing UpdateCoverImg(string coverImg) {
-        int len = string.IsNullOrWhiteSpace(coverImg) ? 0 : coverImg.Length;
-        if (len == 0) {
+        if (string.IsNullOrWhiteSpace(coverImg) || coverImg.Length == 0) {
             return Err.ErrFactory.InvalidData("Cover image cannot be empty");
         }
         return ErrOrNothing.Nothing;

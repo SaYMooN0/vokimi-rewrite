@@ -11,16 +11,15 @@ internal class BaseTestsRepository : IBaseTestsRepository
     private readonly TestCreationDbContext _db;
 
     public BaseTestsRepository(TestCreationDbContext db) { _db = db; }
-    private Err TestNotFoungErr(string message = "Unknown test") => Err.ErrFactory.NotFound(message);
     public async Task<ErrOr<bool>> CheckIfUserIsTestCreator(TestId testId, AppUserId userId) {
         BaseTest? t = await _db.BaseTests.FindAsync(testId);
-        if (t is null) { return TestNotFoungErr(); }
+        if (t is null) { return Err.ErrPresets.TestNotFound(testId); }
         return t.IsUserCreator(userId);
     }
 
     public async Task<ErrOr<HashSet<AppUserId>>> GetUserIdsWithPermissionToEditTest(TestId testId) {
         BaseTest? t = await _db.BaseTests.FindAsync(testId);
-        if (t is null) { return TestNotFoungErr(); }
+        if (t is null) { return Err.ErrPresets.TestNotFound(testId); }
         return t.TestEditorsWithCreator();
     }
 

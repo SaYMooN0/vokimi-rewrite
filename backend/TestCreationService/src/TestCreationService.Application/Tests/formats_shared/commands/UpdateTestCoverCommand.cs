@@ -18,7 +18,7 @@ public class UpdateTestCoverCommandHandler : IRequestHandler<UpdateTestCoverComm
     public async Task<ErrOrNothing> Handle(UpdateTestCoverCommand request, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound("Test not found");
+            return Err.ErrPresets.TestNotFound(request.TestId);
         }
         var updateRes = test.UpdateCoverImg(request.NewCoverImg);
         if (updateRes.IsErr(out var err)) {

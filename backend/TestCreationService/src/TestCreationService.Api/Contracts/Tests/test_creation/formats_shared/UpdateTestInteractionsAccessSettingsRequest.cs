@@ -3,6 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.value_objects;
 using System.Text.Json.Serialization;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 
@@ -18,32 +19,10 @@ internal class UpdateTestInteractionsAccessSettingsRequest : IRequestWithValidat
     public AccessLevel TagSuggestionsAccess { get; init; }
     public RequestValidationResult Validate() {
         ErrList errs = new();
-        if (DiscussionsEnabled && TestAccess.IsStricterThan(DiscussionsAccess)) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                message: "Discussions access cannot be less restrictive than the test access",
-                details: $"Test Access: {TestAccess}, Discussions Access: {DiscussionsAccess}"
-            ));
-        }
-
-        if (RatingsEnabled && TestAccess.IsStricterThan(RatingsAccess)) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                message: "Ratings access cannot be less restrictive than the test access",
-                details: $"Test Access: {TestAccess}, Ratings Access: {RatingsAccess}"
-            ));
-        }
-
-        if (AllowTestTakenPosts && TestAccess == AccessLevel.Private) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                message: "TestTakenPosts cannot be enabled when the test is private"
-            ));
-        }
-
-        if (TagSuggestionsEnabled && TestAccess.IsStricterThan(TagSuggestionsAccess)) {
-            errs.Add(Err.ErrFactory.InvalidData(
-                message: "Tag suggestions access cannot be less restrictive than the test access",
-                details: $"Test Access: {TestAccess}, Tag Suggestions Access: {TagSuggestionsAccess}"
-            ));
-        }
+        errs.AddPossibleErr(TestRules.CheckIfDiscussionsAvailabilityIsCorrect(TestAccess, DiscussionsEnabled, DiscussionsAccess));
+        errs.AddPossibleErr(TestRules.CheckIfRatingsAvailabilityIsCorrect(TestAccess, RatingsEnabled, RatingsAccess));
+        errs.AddPossibleErr(TestRules.CheckIfTestTakenPostsAvailabilityIsCorrect(TestAccess, AllowTestTakenPosts));
+        errs.AddPossibleErr(TestRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(TestAccess, TagSuggestionsEnabled, TagSuggestionsAccess));
         return errs;
     }
     public ResourceAvailabilitySetting RatingsSetting => new(RatingsEnabled, RatingsAccess);

@@ -4,15 +4,13 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.value_objects;
 using TestCreationService.Domain.Common;
+using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 
-public class TestInteractionsAccessSettings : Entity
+public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>
 {
-    protected override EntityId EntityId => Id;
     private TestInteractionsAccessSettings() { }
-
-    public TestInteractionsAccessSettingsId Id { get; init; }
     private TestId TestId { get; init; }
     public AccessLevel TestAccess { get; private set; }
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
@@ -36,37 +34,13 @@ public class TestInteractionsAccessSettings : Entity
         bool allowTestTakenPosts,
         ResourceAvailabilitySetting tagsSuggestionsSetting
     ) {
-        ErrList errList = new();
-
-        if (testAccessLevel.IsStricterThan(discussionsSetting.Access)) {
-            errList.Add(Err.ErrFactory.InvalidData(
-                message: "Discussions access cannot be less restrictive than the test access.",
-                details: $"Test Access: {testAccessLevel}, Discussions Access: {discussionsSetting.Access}"
-            ));
-        }
-
-        if (testAccessLevel.IsStricterThan(ratingsSetting.Access)) {
-            errList.Add(Err.ErrFactory.InvalidData(
-                message: "Ratings access cannot be less restrictive than the test access.",
-                details: $"Test Access: {testAccessLevel}, Ratings Access: {ratingsSetting.Access}"
-            ));
-        }
-
-        if (allowTestTakenPosts && TestAccess == AccessLevel.Private) {
-            errList.Add(Err.ErrFactory.InvalidData(
-                message: "TestTakenPosts cannot be enabled when the test is private."
-            ));
-        }
-
-        if (testAccessLevel.IsStricterThan(tagsSuggestionsSetting.Access)) {
-            errList.Add(Err.ErrFactory.InvalidData(
-                message: "Tag suggestions access cannot be less restrictive than the test access.",
-                details: $"Test Access: {testAccessLevel}, Tags Suggestions Access: {tagsSuggestionsSetting.Access}"
-            ));
-        }
-
-        if (errList.Any()) {
-            return errList;
+        ErrList errs = new();
+        errs.AddPossibleErr(TestRules.CheckIfRatingsAvailabilityIsCorrect(testAccessLevel, ratingsSetting.IsEnabled, ratingsSetting.Access));
+        errs.AddPossibleErr(TestRules.CheckIfDiscussionsAvailabilityIsCorrect(testAccessLevel, discussionsSetting.IsEnabled, discussionsSetting.Access));
+        errs.AddPossibleErr(TestRules.CheckIfTestTakenPostsAvailabilityIsCorrect(testAccessLevel, allowTestTakenPosts));
+        errs.AddPossibleErr(TestRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(testAccessLevel, tagsSuggestionsSetting.IsEnabled, tagsSuggestionsSetting.Access));
+        if (errs.Any()) {
+            return errs;
         }
 
         TestAccess = testAccessLevel;

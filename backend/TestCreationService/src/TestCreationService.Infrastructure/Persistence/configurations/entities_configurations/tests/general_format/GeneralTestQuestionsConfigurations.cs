@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Infrastructure.Persistence.configurations.extension;
+using SharedKernel.Common.EntityIds;
+using TestCreationService.Domain.Common;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
@@ -16,11 +18,24 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasEntityIdConversion();
 
         builder
-            .Ignore(x => x.Answers);
+            .Property<string[]>("_images")
+            .HasColumnName("Images");
+
         builder
             .HasMany<GeneralTestAnswer>("_answers")
             .WithOne()
             .HasForeignKey(q => q.QuestionId);
+        builder.OwnsOne<EntitiesOrderController<GeneralTestAnswerId>>("_answersOrderController",
+            controller => {
+                controller
+                    .Property(p => p.IsShuffled)
+                    .HasColumnName("ShuffleAnswers");
+                controller
+                    .Property<Dictionary<GeneralTestAnswerId, ushort>>("_entityOrders")
+                    .HasColumnName("AnswersOrder")
+                    .HasEntityIdsOrderDictionaryConversion();
+            }
+        );
 
         builder
             .Property(x => x.TimeLimit)

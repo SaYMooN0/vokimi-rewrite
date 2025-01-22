@@ -22,7 +22,7 @@ public class UpdateTestEditorsCommandHandler : IRequestHandler<UpdateTestEditors
     public async Task<ErrOr<ISet<AppUserId>>> Handle(UpdateTestEditorsCommand request, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound("Test not found");
+            return Err.ErrPresets.TestNotFound(request.TestId);
         }
         foreach (AppUserId editorId in request.EditorIds) {
             AppUser? editor = await _appUsersRepository.GetById(editorId);

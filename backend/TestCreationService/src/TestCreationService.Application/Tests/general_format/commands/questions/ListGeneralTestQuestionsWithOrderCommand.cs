@@ -9,11 +9,11 @@ namespace TestCreationService.Application.Tests.general_format.commands.question
 
 public record class ListGeneralTestQuestionsWithOrderCommand(
     TestId TestId
-) : IRequest<ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>>;
+) : IRequest<ErrOr<IReadOnlyList<(GeneralTestQuestion Question, ushort Order)>>>;
 public class ListGeneralTestQuestionsCommandHandler
     : IRequestHandler<
         ListGeneralTestQuestionsWithOrderCommand,
-        ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>
+        ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>
     >
 {
     private readonly IGeneralFormatTestsRepository generalFormatTestsRepository;
@@ -22,16 +22,11 @@ public class ListGeneralTestQuestionsCommandHandler
         this.generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
-    public async Task<ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>> Handle(ListGeneralTestQuestionsWithOrderCommand request, CancellationToken cancellationToken) {
+    public async Task<ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>> Handle(ListGeneralTestQuestionsWithOrderCommand request, CancellationToken cancellationToken) {
         GeneralFormatTest? test = await generalFormatTestsRepository.GetWithQuestions(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound(
-                "Unable to find this general format test",
-                details: $"Cannot find general format test with id {request.TestId}"
-            );
+            return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
-        return ErrOr<IImmutableDictionary<ushort, GeneralTestQuestion>>.Success(
-            test.GetAllQuestionsWithCorrectOrder()
-        );
+        return ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>.Success(test.GetQuestionsWithOrder());
     }
 }

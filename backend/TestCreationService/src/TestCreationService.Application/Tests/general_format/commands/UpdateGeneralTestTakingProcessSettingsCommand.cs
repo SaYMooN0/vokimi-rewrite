@@ -9,7 +9,7 @@ namespace TestCreationService.Application.Tests.general_format.commands;
 public record class UpdateGeneralTestTakingProcessSettingsCommand(
     TestId TestId,
     bool ForceSequentialFlow,
-    TestFeedbackOption FeedbackOption
+    GeneralTestFeedbackOption FeedbackOption
 ) : IRequest<ErrOrNothing>;
 public class UpdateGeneralTestTakingProcessSettingsCommandHandler
     : IRequestHandler<UpdateGeneralTestTakingProcessSettingsCommand, ErrOrNothing>
@@ -26,10 +26,7 @@ public class UpdateGeneralTestTakingProcessSettingsCommandHandler
     ) {
         GeneralFormatTest? test = await _generalFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
-            return Err.ErrFactory.NotFound(
-                "Unable to find this general format test",
-                details: $"Cannot find general format test with id {request.TestId}"
-            );
+            return Err.ErrPresets.TestNotFound(request.TestId);
         }
         test.UpdateTestTakingProcessSettings(request.ForceSequentialFlow, request.FeedbackOption);
         await _generalFormatTestsRepository.Update(test);

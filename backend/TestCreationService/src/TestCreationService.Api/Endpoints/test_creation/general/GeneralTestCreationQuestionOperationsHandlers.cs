@@ -4,7 +4,6 @@ using MediatR;
 using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 using TestCreationService.Application.Tests.general_format.commands.questions;
-using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Api.Extensions;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;

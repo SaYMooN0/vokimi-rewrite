@@ -11,12 +11,9 @@ using TestCreationService.Domain.TestAggregate.formats_shared.events;
 
 namespace TestCreationService.Domain.TestAggregate;
 
-public abstract class BaseTest : AggregateRoot
+public abstract class BaseTest : AggregateRoot<TestId>
 {
     protected BaseTest() { }
-
-    protected override EntityId EntityId => Id;
-    public TestId Id { get; init; }
     protected AppUserId CreatorId { get; init; }
     private readonly HashSet<AppUserId> _editorIds = new();
     public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
@@ -72,13 +69,11 @@ public abstract class BaseTest : AggregateRoot
         ResourceAvailabilitySetting discussionsSetting,
         bool allowTestTakenPosts,
         ResourceAvailabilitySetting tagsSuggestionsSetting
-    ) {
-        return InteractionsAccessSettings.Update(
-            testAccessLevel,
-            ratingsSetting,
-            discussionsSetting,
-            allowTestTakenPosts,
-            tagsSuggestionsSetting
-        );
-    }
+    ) => InteractionsAccessSettings.Update(
+        testAccessLevel,
+        ratingsSetting: ratingsSetting,
+        discussionsSetting: discussionsSetting,
+        allowTestTakenPosts,
+        tagsSuggestionsSetting
+    );
 }

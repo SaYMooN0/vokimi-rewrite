@@ -10,4 +10,6 @@ public interface IGeneralFormatTestsRepository
     public Task<GeneralFormatTest?> GetById(TestId testId);
     public Task<GeneralFormatTest?> GetWithQuestions(TestId testId);
     public Task Update(GeneralFormatTest test);
+
+    //public Task<GeneralTestQuestion?> GetTestQuestionById(GeneralTestQuestionId id);
 }

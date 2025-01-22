@@ -4,6 +4,7 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format_tests;
 using System.Collections.Immutable;
+using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
@@ -15,17 +16,10 @@ public class GeneralFormatTest : BaseTest
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
 
-    protected virtual List<GeneralTestQuestion> _questions { get; init; } = [];
-    public IReadOnlyList<GeneralTestQuestion> Questions => _questions
-        .OrderBy(q => _questionsOrderDictionary.TryGetValue(q.Id, out var order) ? order : ushort.MaxValue)
-        .ToList()
-        .AsReadOnly();
-    private Dictionary<GeneralTestQuestionId, ushort> _questionsOrderDictionary = [];
+    protected virtual List<GeneralTestQuestion> _questions { get; init; }
+    private EntitiesOrderController<GeneralTestQuestionId> _questionsOrderController { get; set; }
     protected virtual List<GeneralTestResult> _results { get; init; } = [];
-    public IReadOnlyList<GeneralTestResult> Results => _results
-        .OrderBy(r => r.Id)
-        .ToList()
-        .AsReadOnly();
+    public IReadOnlyList<GeneralTestResult> Results => _results.OrderBy(r => r.Id).ToImmutableList();
     private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
     public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
@@ -51,15 +45,15 @@ public class GeneralFormatTest : BaseTest
     ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
-        if (Questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
+        if (_questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
             return new Err(
                 $"General format test cannot have more than {GeneralFormatTestRules.MaxQuestionsCount} questions",
-                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {Questions.Count} questions."
+                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questions.Count} questions."
             );
         }
         var newQuestion = GeneralTestQuestion.CreateNew(Id, answersType);
         _questions.Add(newQuestion);
-        _questionsOrderDictionary.Add(newQuestion.Id, (ushort)(_questionsOrderDictionary.Count + 1));
+        _questionsOrderController.AddToEnd(newQuestion);
         return ErrOrNothing.Nothing;
     }
     public ErrOrNothing RemoveQuestion(GeneralTestQuestionId questionId) {
@@ -71,35 +65,29 @@ public class GeneralFormatTest : BaseTest
             );
         }
         _questions.Remove(question);
-        RemoveQuestionFromOrderDictionary(question.Id);
+        _questionsOrderController.RemoveEntity(question);
         return ErrOrNothing.Nothing;
     }
-    private void RemoveQuestionFromOrderDictionary(GeneralTestQuestionId questionId) {
-        if (_questionsOrderDictionary.TryGetValue(questionId, out var removedOrder)) {
-            foreach (var (id, order) in _questionsOrderDictionary) {
-                if (removedOrder < order) {
-                    _questionsOrderDictionary[id]--;
-                }
-            }
-            _questionsOrderDictionary.Remove(questionId);
-        }
-    }
-    public IImmutableDictionary<ushort, GeneralTestQuestion> GetAllQuestionsWithCorrectOrder() {
-        ushort currentOrder = 1;
-        Dictionary<ushort, GeneralTestQuestion> orderedQuestions = new(_questions.Count);
-
-        foreach (var question in Questions) {
-            orderedQuestions[currentOrder] = question;
-            currentOrder++;
-        }
-
-        return orderedQuestions.ToImmutableDictionary(kvp => kvp.Key, kvp => kvp.Value);
-    }
+    public IReadOnlyList<(GeneralTestQuestion Question, ushort Order)> GetQuestionsWithOrder() =>
+        _questionsOrderController.GetItemsWithOrders(_questions);
     public void UpdateTestTakingProcessSettings(
         bool forceSequentialFlow,
-        TestFeedbackOption testFeedback
-    ) {
-        TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
-    }
+        GeneralTestFeedbackOption testFeedback
+    ) => TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
+    public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
+        var questionIds = _questions.Select(q => q.Id).ToHashSet();
+        var providedIds = orderController.EntityIds().ToHashSet();
 
+        if (!questionIds.IsSubsetOf(providedIds)) {
+            var missingIds = questionIds.Except(providedIds);
+            return Err.ErrFactory.InvalidData(
+                "Invalid questions order was provided. Not all questions presented",
+                details: $"Missing question Ids: {string.Join(", ", missingIds)}"
+            );
+        }
+
+        var extraIds = providedIds.Except(questionIds);
+        _questionsOrderController = orderController.WithoutEntityIds(extraIds);
+        return ErrOrNothing.Nothing;
+    }
 }

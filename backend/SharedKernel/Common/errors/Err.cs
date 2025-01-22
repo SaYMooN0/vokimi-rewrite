@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using SharedKernel.Common.EntityIds;
+using System.Text;
 
 namespace SharedKernel.Common.errors;
 
@@ -36,7 +37,6 @@ public class Err
 
     public static class ErrFactory
     {
-
         public static Err NotImplemented(string message = "Not Implemented", string details = "", ErrorSource source = ErrorSource.Server) =>
             new Err(message, ErrCodes.NotImplemented, details, source);
         public static Err NotFound(string message = "Not Found", string details = "", ErrorSource source = ErrorSource.Server) =>
@@ -59,5 +59,15 @@ public class Err
         public const ushort InvalidData = 1003;
         public const ushort NoAccess = 1004;
     }
-
+    public static class ErrPresets
+    {
+        public static Err TestNotFound(TestId testId) => ErrFactory.NotFound(
+            "Unable to find the test",
+            details: $"Cannot find test with id {testId}"
+        );
+        public static Err GeneralTestNotFound(TestId testId) => ErrFactory.NotFound(
+            "Unable to find the general format test",
+            details: $"Cannot find general format test with id {testId}"
+        );
+    }
 }

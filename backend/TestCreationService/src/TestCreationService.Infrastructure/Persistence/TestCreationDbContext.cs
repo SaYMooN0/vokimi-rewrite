@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Common.EntityIds;
 using System.Reflection;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
@@ -27,7 +28,7 @@ public class TestCreationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
-        var domainEvents = ChangeTracker.Entries<AggregateRoot>()
+        var domainEvents = ChangeTracker.Entries<AggregateRoot<EntityId>>()
            .Select(entry => entry.Entity.PopDomainEvents())
            .SelectMany(x => x)
            .ToList();
