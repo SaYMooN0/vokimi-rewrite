@@ -6,12 +6,9 @@ using SharedKernel.Common.interfaces;
 
 namespace AuthenticationService.Domain.AppUserAggregate;
 
-public class AppUser : AggregateRoot
+public class AppUser : AggregateRoot<AppUserId>
 {
-    protected override EntityId EntityId => Id;
     private AppUser() { }
-
-    public AppUserId Id { get; init; }
     public Email Email { get; init; }
     public string PasswordHash { get; private set; }
     public DateOnly RegistrationDate { get; init; }

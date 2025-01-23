@@ -32,19 +32,6 @@ namespace TestCreationService.Api
             app.UseHttpsRedirection();
 
             MapHandlers(app);
-            using (var scope = app.Services.CreateScope()) {
-                var services = scope.ServiceProvider;
-                try {
-                    var appDbContext = services.GetRequiredService<TestCreationDbContext>();
-                    appDbContext.Database.EnsureDeleted();
-                    appDbContext.Database.EnsureCreated();
-                    appDbContext.AppUsers.Add(new AppUser(new AppUserId(new("01947086-ae53-7834-8d6c-56cdb1bbb587"))));
-                    appDbContext.SaveChanges();
-                } catch (Exception ex) {
-                    app.Logger.LogError(ex, "An error occurred while initializing the database.");
-                    throw;
-                }
-            }
 
             app.Run();
         }
@@ -54,6 +41,7 @@ namespace TestCreationService.Api
             app.MapGroup("/testCreation/{testId}/general").MapGeneralFormatTestCreationHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions").MapGeneralTestCreationQuestionsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}").MapGeneralTestCreationQuestionOperationsHandlers();
+            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers").MapGeneralTestCreationAnswersHandlers();
             //app.MapGroup("/testCreation/{testId}/scoring").MapScoringFormatTestCreationHandlers();
         }
     }

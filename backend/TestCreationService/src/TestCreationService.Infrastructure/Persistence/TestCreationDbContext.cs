@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using System.Reflection;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
@@ -28,11 +28,10 @@ public class TestCreationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
-        var domainEvents = ChangeTracker.Entries<AggregateRoot<EntityId>>()
+        var domainEvents = ChangeTracker.Entries<IAggregateRoot>()
            .Select(entry => entry.Entity.PopDomainEvents())
            .SelectMany(x => x)
            .ToList();
-
         //if (IsUserWaitingOnline()) {
         //    AddDomainEventsToOfflineProcessingQueue(domainEvents);
         //    return await base.SaveChangesAsync(cancellationToken);

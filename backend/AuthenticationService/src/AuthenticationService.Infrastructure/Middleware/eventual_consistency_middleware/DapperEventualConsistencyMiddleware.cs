@@ -25,7 +25,6 @@ public class DapperEventualConsistencyMiddleware
         unitOfWork.BeginTransaction(connection);
         context.Response.OnCompleted(async () => {
             try {
-
                 var publisher = context.RequestServices.GetRequiredService<IPublisher>();
                 await unitOfWork.PublishDomainEventsAsync(publisher);
                 unitOfWork.Commit();

@@ -6,9 +6,10 @@ namespace TestCreationService.Domain.Common;
 
 public class EntitiesOrderController<T> where T : EntityId
 {
-    private Dictionary<T, ushort> _entityOrders { get; init; } = new();
-    public bool IsShuffled { get; set; }
     private EntitiesOrderController() { }
+    private Dictionary<T, ushort> _entityOrders { get; init; }
+    public bool IsShuffled { get; set; }
+    public static EntitiesOrderController<T> Empty(bool isShuffled) => new() { _entityOrders = new(), IsShuffled = isShuffled };
     public static ErrOr<EntitiesOrderController<T>> CreateNew(
         bool isShuffled,
         Dictionary<T, ushort> entityOrders
@@ -44,7 +45,8 @@ public class EntitiesOrderController<T> where T : EntityId
         }
 
         ushort newOrder = (ushort)(_entityOrders.Count + 1);
-        _entityOrders[entity.Id] = newOrder;
+        //_entityOrders = new();
+        _entityOrders.Add(entity.Id, newOrder);
     }
     public void RemoveEntity(Entity<T> entity) {
         _entityOrders.Remove(entity.Id);

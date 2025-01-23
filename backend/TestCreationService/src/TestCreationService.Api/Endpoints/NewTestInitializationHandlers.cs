@@ -29,10 +29,7 @@ public static class NewTestInitializationHandlers
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
         var creator = httpContext.GetAuthenticatedUserId();
-        var editors = request.EditorIds
-            .Select(id => new AppUserId(new(id)))
-            .Where(id => id != creator)
-            .ToHashSet();
+        var editors = request.GetParsedEditorIdsWithoutCreator(creator);
 
         InitGeneralFormatTestCommand command = new(request.TestName, creator, editors);
         ErrOr<TestId> result = await mediator.Send(command);
@@ -48,10 +45,7 @@ public static class NewTestInitializationHandlers
     ) {
         var request = httpContext.GetValidatedRequest<InitNewTestRequest>();
         var creator = httpContext.GetAuthenticatedUserId();
-        var editors = request.EditorIds
-            .Select(id => new AppUserId(new(id)))
-            .Where(id => id != creator)
-            .ToHashSet();
+        var editors = request.GetParsedEditorIdsWithoutCreator(creator);
 
         InitScoringFormatTestCommand command = new(request.TestName, creator, editors);
         ErrOr<TestId> result = await mediator.Send(command);

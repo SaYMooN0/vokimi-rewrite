@@ -17,8 +17,8 @@ public class GeneralFormatTest : BaseTest
     public override TestFormat Format => TestFormat.General;
 
     protected virtual List<GeneralTestQuestion> _questions { get; init; }
-    private EntitiesOrderController<GeneralTestQuestionId> _questionsOrderController { get; set; }
-    protected virtual List<GeneralTestResult> _results { get; init; } = [];
+    protected EntitiesOrderController<GeneralTestQuestionId> _questionsOrderController { get; set; }
+    protected virtual List<GeneralTestResult> _results { get; init; }
     public IReadOnlyList<GeneralTestResult> Results => _results.OrderBy(r => r.Id).ToImmutableList();
     private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
@@ -42,7 +42,12 @@ public class GeneralFormatTest : BaseTest
         AppUserId creatorId,
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
-    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
+    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
+        _questions = [];
+        _questionsOrderController = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
+        _results = [];
+        TestTakingProcessSettings = GeneralTestTakingProcessSettings.CreateNew();
+    }
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
         if (_questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {

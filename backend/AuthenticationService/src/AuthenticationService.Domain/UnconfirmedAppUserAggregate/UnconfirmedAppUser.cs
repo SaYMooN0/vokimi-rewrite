@@ -9,12 +9,9 @@ using SharedKernel.Common.interfaces;
 
 namespace AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 
-public class UnconfirmedAppUser : AggregateRoot
+public class UnconfirmedAppUser : AggregateRoot<UnconfirmedAppUserId>
 {
-    protected override EntityId EntityId => Id;
     private UnconfirmedAppUser() { }
-
-    public UnconfirmedAppUserId Id { get; init; }
     public string PasswordHash { get; private set; }
     public Email Email { get; init; }
     public DateTime CreationTime { get; init; }

@@ -21,7 +21,7 @@ internal class EntityIdsOrderDictionaryConverter<T> : ValueConverter<Dictionary<
 internal class EntityIdsOrderDictionaryComparer<T> : ValueComparer<Dictionary<T, ushort>> where T : EntityId
 {
     public EntityIdsOrderDictionaryComparer() : base(
-      (t1, t2) => t1!.SequenceEqual(t2!),
+      (t1, t2) => false,
       t => t.Select(x => (x!.Key.GetHashCode() ^ x.Value.GetHashCode())).Aggregate((x, y) => x ^ y),
       t => t
     ) {

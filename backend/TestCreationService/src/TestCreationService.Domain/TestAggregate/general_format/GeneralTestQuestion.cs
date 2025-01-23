@@ -28,6 +28,7 @@ public class GeneralTestQuestion : Entity<GeneralTestQuestionId>
         TimeLimit = GeneralTestQuestionTimeLimitOption.NoTimeLimit(),
         AnswersType = answersType,
         _answers = new(),
+        _answersOrderController = EntitiesOrderController<GeneralTestAnswerId>.Empty(isShuffled: false),
         AnswerCountLimit = GeneralTestQuestionAnswersCountLimit.SingleChoice(),
     };
     public ErrListOrNothing Update(

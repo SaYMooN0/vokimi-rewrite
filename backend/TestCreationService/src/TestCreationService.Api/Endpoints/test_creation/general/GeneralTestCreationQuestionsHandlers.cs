@@ -12,7 +12,7 @@ namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralTestCreationQuestionsHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationQuestionsHandlers(this RouteGroupBuilder group) {
-        group.MapGet("/", ListQuestions)
+        group.MapGet("/list", ListQuestions)
             .AuthenticationRequired()
             .TestEditPermissionRequired();
         group.MapPost("/add", AddQuestion)

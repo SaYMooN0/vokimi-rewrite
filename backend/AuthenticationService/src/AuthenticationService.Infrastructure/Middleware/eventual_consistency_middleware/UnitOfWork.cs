@@ -1,12 +1,14 @@
 ﻿using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Common.domain;
+using SharedKernel.Common.EntityIds;
 using System.Data;
 
 namespace AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 
 public class UnitOfWork : IDisposable
 {
-    private readonly List<AggregateRoot> _trackedAggregates = new();
+    private readonly List<IAggregateRoot> _trackedAggregates = new();
     private IDbTransaction? _transaction;
     private IDbConnection? _connection;
     private bool _isCommitted = false;
@@ -23,7 +25,7 @@ public class UnitOfWork : IDisposable
         _isCommitted = false;
     }
 
-    public void TrackAggregate(AggregateRoot aggregate) {
+    public void TrackAggregate(IAggregateRoot aggregate) {
         if (!_trackedAggregates.Contains(aggregate)) {
             _trackedAggregates.Add(aggregate);
         }
