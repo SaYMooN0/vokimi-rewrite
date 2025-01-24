@@ -3,6 +3,7 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.general_format_tests;
 using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.general_format;
 
@@ -12,12 +13,12 @@ public record class AddGeneralTestQuestionCommand(
     TestId TestId,
     GeneralTestAnswersType AnswersType
 ) : IRequest<ErrOrNothing>;
-public class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTestQuestionCommand, ErrOrNothing>
+internal class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneralTestQuestionCommand, ErrOrNothing>
 {
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
     public AddGeneralTestQuestionCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
-        this._generalFormatTestsRepository = generalFormatTestsRepository;
+        _generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
     public async Task<ErrOrNothing> Handle(AddGeneralTestQuestionCommand request, CancellationToken cancellationToken) {

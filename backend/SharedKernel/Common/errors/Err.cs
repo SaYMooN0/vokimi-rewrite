@@ -69,5 +69,9 @@ public class Err
             "Unable to find the general format test",
             details: $"Cannot find general format test with id {testId}"
         );
+        public static Err GeneralTestQuestionNotFound(GeneralTestQuestionId questionId) => ErrFactory.NotFound(
+            "Unable to find the general format test question",
+            details: $"Cannot find general format test question with id {questionId}"
+        );
     }
 }

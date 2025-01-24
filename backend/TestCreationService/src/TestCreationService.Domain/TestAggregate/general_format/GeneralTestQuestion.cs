@@ -54,4 +54,9 @@ public class GeneralTestQuestion : Entity<GeneralTestQuestionId>
         AnswerCountLimit = answerCountLimit;
         return ErrListOrNothing.Nothing;
     }
+    public IReadOnlyList<(GeneralTestAnswer Question, ushort Order)> GetAnswersWithOrder() =>
+        _answersOrderController.GetItemsWithOrders(_answers);
+    public ErrOrNothing AddNewAnswer() {
+        return Err.ErrFactory.NotImplemented();
+    }
 }

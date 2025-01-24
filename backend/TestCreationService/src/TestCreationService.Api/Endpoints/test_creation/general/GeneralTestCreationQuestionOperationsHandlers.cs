@@ -12,13 +12,16 @@ internal static class GeneralTestCreationQuestionOperationsHandlers
 
 {
     internal static RouteGroupBuilder MapGeneralTestCreationQuestionOperationsHandlers(this RouteGroupBuilder group) {
-        group.MapDelete("/remove", RemoveQuestion)
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+        group
+            .GroupAuthenticationRequired()
+            .GroupTestEditPermissionRequired()
+            .GroupCheckIfGeneralTestQuestionInProvidedTest();
+
+        group.MapDelete("/remove", RemoveQuestion);
+
         group.MapPost("/update", UpdateQuestion)
-            .WithRequestValidation<UpdateGeneralFormatTestQuestionRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+            .WithRequestValidation<UpdateGeneralFormatTestQuestionRequest>();
+
         return group;
     }
     private async static Task<IResult> RemoveQuestion(

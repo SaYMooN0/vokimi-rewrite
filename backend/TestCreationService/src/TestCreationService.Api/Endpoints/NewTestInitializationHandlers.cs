@@ -14,12 +14,13 @@ namespace TestCreationService.Api.Endpoints;
 public static class NewTestInitializationHandlers
 {
     internal static RouteGroupBuilder MapNewTestInitializationHandlers(this RouteGroupBuilder group) {
+        group
+            .GroupAuthenticationRequired();
+        
         group.MapPost("/general", CreateNewGeneralFormatTest)
-            .AuthenticationRequired()
             .WithRequestValidation<InitNewTestRequest>();
 
         group.MapPost("/scoring", CreateNewScoringFormatTest)
-            .AuthenticationRequired()
             .WithRequestValidation<InitNewTestRequest>();
         return group;
     }

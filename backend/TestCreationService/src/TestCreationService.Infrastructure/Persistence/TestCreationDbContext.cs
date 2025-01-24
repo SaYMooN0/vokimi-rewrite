@@ -19,6 +19,8 @@ public class TestCreationDbContext : DbContext
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
     public DbSet<ScoringFormatTest> ScoringFormatTests { get; set; } = null!;
+    public DbSet<GeneralTestQuestion> GeneralTestQuestions { get; set; } = null!;
+    public DbSet<GeneralTestAnswer> GeneralTestAnswers { get; set; } = null!;
     public TestCreationDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;
     }

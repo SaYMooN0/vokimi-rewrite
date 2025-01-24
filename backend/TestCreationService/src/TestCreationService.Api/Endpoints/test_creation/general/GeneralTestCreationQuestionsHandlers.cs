@@ -12,17 +12,15 @@ namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralTestCreationQuestionsHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationQuestionsHandlers(this RouteGroupBuilder group) {
-        group.MapGet("/list", ListQuestions)
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+        group
+            .GroupAuthenticationRequired()
+            .GroupTestEditPermissionRequired();
+
+        group.MapGet("/list", ListQuestions);
         group.MapPost("/add", AddQuestion)
-            .WithRequestValidation<AddGeneralFormatTestQuestionRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+            .WithRequestValidation<AddGeneralFormatTestQuestionRequest>();
         group.MapPost("/updateOrder", UpdateQuestionsOrder)
-            .WithRequestValidation<UpdateGeneralTestQuestionsOrderRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+            .WithRequestValidation<UpdateGeneralTestQuestionsOrderRequest>();
         return group;
     }
     private async static Task<IResult> ListQuestions(

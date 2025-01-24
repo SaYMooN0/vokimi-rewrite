@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.TestAggregate.general_format;
 
@@ -11,7 +11,7 @@ public record class UpdateGeneralTestQuestionsOrderCommand(
     TestId TestId,
     EntitiesOrderController<GeneralTestQuestionId> OrderController
 ) : IRequest<ErrOrNothing>;
-public class UpdateGeneralTestQuestionsOrderCommandHandler : IRequestHandler<UpdateGeneralTestQuestionsOrderCommand, ErrOrNothing>
+internal class UpdateGeneralTestQuestionsOrderCommandHandler : IRequestHandler<UpdateGeneralTestQuestionsOrderCommand, ErrOrNothing>
 {
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
 

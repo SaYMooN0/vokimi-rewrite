@@ -14,7 +14,7 @@ public record class UpdateGeneralTestQuestionCommand(
     GeneralTestQuestionTimeLimitOption TimeLimit,
     GeneralTestQuestionAnswersCountLimit AnswerCountLimit
 ) : IRequest<ErrOrNothing>;
-public class UpdateGeneralTestQuestionCommandHandler : IRequestHandler<UpdateGeneralTestQuestionCommand, ErrOrNothing>
+internal class UpdateGeneralTestQuestionCommandHandler : IRequestHandler<UpdateGeneralTestQuestionCommand, ErrOrNothing>
 {
     public async Task<ErrOrNothing> Handle(UpdateGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
         return Err.ErrFactory.NotImplemented();

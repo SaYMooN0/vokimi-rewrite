@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands.questions;
@@ -10,7 +10,7 @@ public record class RemoveGeneralTestQuestionCommand(
     TestId TestId,
     GeneralTestQuestionId QuestionId
 ) : IRequest<ErrOrNothing>;
-public class RemoveGeneralTestQuestionCommandHandler : IRequestHandler<RemoveGeneralTestQuestionCommand, ErrOrNothing>
+internal class RemoveGeneralTestQuestionCommandHandler : IRequestHandler<RemoveGeneralTestQuestionCommand, ErrOrNothing>
 {
     private readonly IGeneralFormatTestsRepository generalFormatTestsRepository;
 

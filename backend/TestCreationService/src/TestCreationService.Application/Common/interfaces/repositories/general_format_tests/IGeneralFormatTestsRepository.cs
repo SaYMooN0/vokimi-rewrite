@@ -2,7 +2,7 @@
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.TestAggregate.general_format;
 
-namespace TestCreationService.Application.Common.interfaces.repositories;
+namespace TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 
 public interface IGeneralFormatTestsRepository
 {
@@ -10,6 +10,4 @@ public interface IGeneralFormatTestsRepository
     public Task<GeneralFormatTest?> GetById(TestId testId);
     public Task<GeneralFormatTest?> GetWithQuestions(TestId testId);
     public Task Update(GeneralFormatTest test);
-
-    //public Task<GeneralTestQuestion?> GetTestQuestionById(GeneralTestQuestionId id);
 }

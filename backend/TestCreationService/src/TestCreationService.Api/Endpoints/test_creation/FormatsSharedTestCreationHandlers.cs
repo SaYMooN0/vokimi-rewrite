@@ -16,23 +16,22 @@ namespace TestCreationService.Api.Endpoints.test_creation;
 internal static class FormatsSharedTestCreationHandlers
 {
     internal static RouteGroupBuilder MapFormatsSharedTestCreationHandlers(this RouteGroupBuilder group) {
+        group
+            .GroupAuthenticationRequired();
+
         group.MapPost("/updateEditors", UpdateTestEditors)
             .WithRequestValidation<UpdateTestEditorsRequest>()
-            .AuthenticationRequired()
             .OnlyByTestCreator();
         group.MapPost("/deleteTest", DeleteTest)
-            .AuthenticationRequired()
             .OnlyByTestCreator();
+        
         group.MapPost("/updateMainInfo", UpdateTestMainInfo)
-            .AuthenticationRequired()
             .WithRequestValidation<UpdateTestMainInfoRequest>()
             .TestEditPermissionRequired();
         group.MapPost("/updateInteractionsAccessSettings", UpdateTestInteractionsAccessSettings)
-            .AuthenticationRequired()
             .WithRequestValidation<UpdateTestInteractionsAccessSettingsRequest>()
             .TestEditPermissionRequired();
         group.MapPost("/updateCover", UpdateTestCover)
-            .AuthenticationRequired()
             .WithRequestValidation<UpdateTestCoverRequest>()
             .TestEditPermissionRequired();
         return group;

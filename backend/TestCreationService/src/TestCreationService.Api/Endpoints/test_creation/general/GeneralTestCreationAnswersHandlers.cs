@@ -5,22 +5,22 @@ using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;
 using SharedKernel.Common.errors;
+using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
+using TestCreationService.Application.Tests.general_format.commands.answers;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralTestCreationAnswersHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationAnswersHandlers(this RouteGroupBuilder group) {
-        group.MapGet("/list", ListAnswers)
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
-        group.MapPost("/add", AddAnswer)
-            .WithRequestValidation<AddGeneralFormatTestAnswerRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+        group
+            .GroupAuthenticationRequired()
+            .GroupTestEditPermissionRequired()
+            .GroupCheckIfGeneralTestQuestionInProvidedTest();
+
+        group.MapGet("/list", ListAnswers);
+        group.MapPost("/add", AddAnswer);
         group.MapPost("/updateOrder", UpdateAnswersOrder)
-            .WithRequestValidation<UpdateGeneralTestAnswersOrderRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+            .WithRequestValidation<UpdateGeneralTestAnswersOrderRequest>();
         return group;
     }
     private async static Task<IResult> ListAnswers(
@@ -29,21 +29,32 @@ internal static class GeneralTestCreationAnswersHandlers
     ) {
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
 
-        // command = new();
-        //var result = await mediator.Send(command);
-        return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented());
+        ListGeneralTestAnswersWithOrderCommand command = new(questionId);
+        var result = await mediator.Send(command);
+
+        //json derived types serialization
+        return CustomResults.FromErrOr(
+            result,
+            (answers) => Results.Json(new {
+                Answers = answers.Select(
+                    i => GeneralFormatTestAnswerInfoResponse.Create(i.Answer, i.Order)
+                )
+            })
+        );
     }
     private async static Task<IResult> AddAnswer(
        HttpContext httpContext,
        ISender mediator
     ) {
-        var request = httpContext.GetValidatedRequest<AddGeneralFormatTestAnswerRequest>();
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
 
+        AddAnswerForGeneralTestQuestionCommand command = new(questionId);
+        var result = await mediator.Send(command);
 
-        // command = new();
-        //var result = await mediator.Send(command);
-        return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented());
+        return CustomResults.FromErrOrNothing(
+            result,
+            () => Results.Ok()
+        );
     }
     private async static Task<IResult> UpdateAnswersOrder(
        HttpContext httpContext,
@@ -53,7 +64,7 @@ internal static class GeneralTestCreationAnswersHandlers
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
 
 
-        // command = new();
+        //command = new();
         //var result = await mediator.Send(command);
         return CustomResults.ErrorResponse(Err.ErrFactory.NotImplemented());
     }

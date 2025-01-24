@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.EntityIds;
-using SharedKernel.Common.errors;
-using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 using TestCreationService.Domain.TestAggregate.general_format;
 
-namespace TestCreationService.Infrastructure.Persistence.repositories;
+namespace TestCreationService.Infrastructure.Persistence.repositories.general_format_tests;
 
 internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 {
@@ -32,5 +31,5 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         _db.GeneralFormatTests.Update(test);
         await _db.SaveChangesAsync();
     }
- 
+
 }

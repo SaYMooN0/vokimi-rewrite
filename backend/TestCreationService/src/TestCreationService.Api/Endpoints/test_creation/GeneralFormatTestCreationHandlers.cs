@@ -16,7 +16,7 @@ internal static class GeneralFormatTestCreationHandlers
         group.MapPost("/updateTestTakingProcessSettings", UpdateTestTakingProcessSettings)
             .WithRequestValidation<UpdateGeneralTestTakingProcessSettingsRequest>()
             .AuthenticationRequired()
-            .OnlyByTestCreator();
+            .TestEditPermissionRequired();
         return group;
     }
     private async static Task<IResult> UpdateTestTakingProcessSettings(
