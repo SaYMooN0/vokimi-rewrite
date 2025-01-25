@@ -53,7 +53,7 @@ public class GeneralFormatTest : BaseTest
         if (_questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
             return new Err(
                 $"General format test cannot have more than {GeneralFormatTestRules.MaxQuestionsCount} questions",
-                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questions.Count} questions."
+                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questions.Count} questions"
             );
         }
         var newQuestion = GeneralTestQuestion.CreateNew(Id, answersType);

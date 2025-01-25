@@ -14,11 +14,7 @@ public static class GeneralFormatTestRules
         MaxImagesForQuestionCount = 3,
         QuestionTextMinLength = 10,
         QuestionTextMaxLength = 500;
-    public const int
-        TexOnlyAnswerMinLength = 5,
-        TexOnlyAnswerMaxLength = 500,
-        AdditionalTextMinLength = 5,
-        AdditionalTextMaxLength = 250;
+
 
     public static ErrOrNothing CheckQuestionImagesForErrs(IEnumerable<object> images) {
         int count = images?.Count() ?? 0;

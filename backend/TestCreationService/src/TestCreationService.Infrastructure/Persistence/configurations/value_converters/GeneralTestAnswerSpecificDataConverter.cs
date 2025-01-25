@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SharedKernel.Common.errors;
+using SharedKernel.Common.exceptions;
 using SharedKernel.Common.tests.general_format_tests;
+using SharedKernel.Common.tests.general_format_tests.answer_type_specific_data;
 using System.Text.Json;
-using static SharedKernel.Common.tests.general_format_tests.GeneralTestAnswerTypeSpecificData;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 
@@ -12,34 +14,19 @@ internal class GeneralTestAnswerSpecificDataConverter : ValueConverter<GeneralTe
         (str) => DbStringToAnswerSpecificDataConverter(str)
     ) { }
     private static string AnswerSpecificDataConverterToDbString(GeneralTestAnswerTypeSpecificData value) =>
-        value.MatchingEnumType.ToString() + ':' + value.MatchingEnumType switch {
-            GeneralTestAnswersType.TextOnly => JsonSerializer.Serialize(value as TextOnly),
-            GeneralTestAnswersType.ImageOnly => JsonSerializer.Serialize(value as ImageOnly),
-            GeneralTestAnswersType.ImageAndText => JsonSerializer.Serialize(value as ImageAndText),
-            GeneralTestAnswersType.ColorOnly => JsonSerializer.Serialize(value as ColorOnly),
-            GeneralTestAnswersType.ColorAndText => JsonSerializer.Serialize(value as ColorAndText),
-            GeneralTestAnswersType.AudioOnly => JsonSerializer.Serialize(value as AudioOnly),
-            GeneralTestAnswersType.AudioAndText => JsonSerializer.Serialize(value as AudioAndText),
-            _ => throw new ArgumentOutOfRangeException(
-                $"Unsupported enum type: {value.MatchingEnumType} in " +
-                $"{nameof(GeneralTestAnswerSpecificDataConverter)} {nameof(AnswerSpecificDataConverterToDbString)}"
-            )
-        };
+        value.MatchingEnumType.ToString() + ':' + JsonSerializer.Serialize(value.ToDictionary());
     private static GeneralTestAnswerTypeSpecificData DbStringToAnswerSpecificDataConverter(string str) {
         var split = str.Split(':', 2);
         var matchingEnumType = Enum.Parse<GeneralTestAnswersType>(split[0]);
-        return matchingEnumType switch {
-            GeneralTestAnswersType.TextOnly => JsonSerializer.Deserialize<TextOnly>(split[1])!,
-            GeneralTestAnswersType.ImageOnly => JsonSerializer.Deserialize<ImageOnly>(split[1])!,
-            GeneralTestAnswersType.ImageAndText => JsonSerializer.Deserialize<ImageAndText>(split[1])!,
-            GeneralTestAnswersType.ColorOnly => JsonSerializer.Deserialize<ColorOnly>(split[1])!,
-            GeneralTestAnswersType.ColorAndText => JsonSerializer.Deserialize<ColorAndText>(split[1])!,
-            GeneralTestAnswersType.AudioOnly => JsonSerializer.Deserialize<AudioOnly>(split[1])!,
-            GeneralTestAnswersType.AudioAndText => JsonSerializer.Deserialize<AudioAndText>(split[1])!,
-            _ => throw new ArgumentOutOfRangeException(
-                $"Unsupported enum type: {matchingEnumType} in " +
-                $"{nameof(GeneralTestAnswerSpecificDataConverter)} {nameof(DbStringToAnswerSpecificDataConverter)}"
-            )
-        };
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(split[1]);
+        if (dictionary is null) {
+            throw new ErrCausedException(new Err("Unable to parse General Test Answer Type Specific Data from db"));
+        }
+        var parseRes = GeneralTestAnswerTypeSpecificData.CreateFromDictionary(matchingEnumType, dictionary);
+
+        if (parseRes.IsErr(out var err)) {
+            throw new ErrCausedException(err);
+        }
+        return parseRes.GetSuccess();
     }
 }
