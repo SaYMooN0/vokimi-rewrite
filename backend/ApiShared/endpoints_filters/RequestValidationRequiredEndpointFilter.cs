@@ -20,8 +20,14 @@ internal class RequestValidationRequiredEndpointFilter<T> : IEndpointFilter wher
             var err = new Err("Request body cannot be empty when Content-Type is application/json.", source: ErrorSource.Client);
             return CustomResults.ErrorResponse(err);
         }
+        T request = null;
 
-        var request = await httpContext.Request.ReadFromJsonAsync<T>();
+        try {
+            request = await httpContext.Request.ReadFromJsonAsync<T>();
+        } catch (System.Text.Json.JsonException) {
+            return CustomResults.ErrorResponse(new Err("Unable to read from json"));
+        }
+
         if (request is not T validatableRequest) {
             var err = new Err("Invalid request body format.", source: ErrorSource.Client);
             return CustomResults.ErrorResponse(err);

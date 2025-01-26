@@ -3,12 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Configs;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
 using TestCreationService.Infrastructure.IntegrationEvents.background_service;
 using TestCreationService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestCreationService.Infrastructure.Persistence;
 using TestCreationService.Infrastructure.Persistence.repositories;
-using TestCreationService.Infrastructure.Persistence.repositories.general_format_tests;
 
 namespace TestCreationService.Infrastructure;
 
@@ -46,7 +44,6 @@ public static class DependencyInjection
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
         services.AddScoped<IScoringFormatTestsRepository, ScoringFormatTestsRepository>();
         services.AddScoped<IGeneralTestQuestionsRepository, GeneralTestQuestionsRepository>();
-        services.AddScoped<IGeneralTestAnswersRepository, GeneralTestAnswersRepository>();
 
         return services;
     }

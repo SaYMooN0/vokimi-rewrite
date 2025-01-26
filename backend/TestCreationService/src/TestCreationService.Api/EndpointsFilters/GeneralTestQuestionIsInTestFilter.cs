@@ -3,8 +3,8 @@ using ApiShared;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using TestCreationService.Api.Extensions;
-using TestCreationService.Domain.TestAggregate.general_format;
-using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
+using TestCreationService.Domain.GeneralTestQuestionAggregate;
+using TestCreationService.Application.Common.interfaces.repositories;
 
 namespace TestCreationService.Api.EndpointsFilters;
 
@@ -21,11 +21,11 @@ internal class GeneralTestQuestionIsInTestFilter : IEndpointFilter
         if (question is null) {
             return CustomResults.ErrorResponse(Err.ErrPresets.GeneralTestQuestionNotFound(questionId));
         }
-        TestId testId = context.HttpContext.GetTestIdFromRoute();
-        if (question.TestId != testId) {
+        TestId testRouteId = context.HttpContext.GetTestIdFromRoute();
+        if (question.TestId != testRouteId) {
             return CustomResults.ErrorResponse(Err.ErrFactory.NotFound(
-                message: "Unable to find the question",
-                details: $"There is not question with id {questionId} in the test with id {testId}"
+                message: "Incorrect question access request",
+                details: $"Question with id {questionId} is not in the test with id {testRouteId}"
             ));
         }
         return await next(context);

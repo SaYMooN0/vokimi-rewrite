@@ -8,7 +8,7 @@ namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.q
 internal class UpdateGeneralTestQuestionsOrderRequest : IRequestWithValidationNeeded
 {
     public bool ShuffleQuestions { get; init; }
-    public Dictionary<string, int> QuestionOrders { get; init; }
+    public Dictionary<string, int> QuestionOrders { get; init; } = [];
     public RequestValidationResult Validate() {
         if (CreateOrderController().IsErr(out var err)) {
             return err;

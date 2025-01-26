@@ -13,7 +13,6 @@ public abstract class GeneralTestFeedbackOption : ValueObject
         private static Disabled _disabled;
         public static Disabled Instance => _disabled ??= new Disabled();
         private Disabled() { }
-
         public override IEnumerable<object> GetEqualityComponents() {
             yield return nameof(Disabled);
         }

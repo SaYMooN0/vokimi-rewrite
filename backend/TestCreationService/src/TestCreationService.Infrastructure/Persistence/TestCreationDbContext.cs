@@ -4,6 +4,7 @@ using SharedKernel.Common;
 using SharedKernel.Common.domain;
 using System.Reflection;
 using TestCreationService.Domain.AppUserAggregate;
+using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Domain.TestAggregate.scoring_format;
@@ -20,7 +21,6 @@ public class TestCreationDbContext : DbContext
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
     public DbSet<ScoringFormatTest> ScoringFormatTests { get; set; } = null!;
     public DbSet<GeneralTestQuestion> GeneralTestQuestions { get; set; } = null!;
-    public DbSet<GeneralTestAnswer> GeneralTestAnswers { get; set; } = null!;
     public TestCreationDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;
     }

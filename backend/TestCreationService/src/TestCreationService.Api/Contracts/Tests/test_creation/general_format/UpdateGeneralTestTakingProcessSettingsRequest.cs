@@ -6,14 +6,14 @@ using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format;
 
-public class UpdateGeneralTestTakingProcessSettingsRequest : IRequestWithValidationNeeded
+public record class UpdateGeneralTestTakingProcessSettingsRequest(
+    bool ForceSequentialFlow,
+    bool EnableTestFeedback,
+    AnonymityValues FeedbackAnonymity,
+    string AccompanyingText,
+    ushort MaxFeedbackLength
+) : IRequestWithValidationNeeded
 {
-    public bool ForceSequentialFlow { get; init; }
-    public bool EnableTestFeedback { get; init; }
-    public AnonymityValues FeedbackAnonymity { get; init; }
-    public string AccompanyingText { get; init; }
-    public ushort MaxFeedbackLength { get; init; }
-
     public RequestValidationResult Validate() {
         if (CreateFeedbackOption().IsErr(out var feedbackCreationErr)) {
             return feedbackCreationErr;

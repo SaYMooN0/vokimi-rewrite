@@ -1,6 +1,5 @@
 ﻿using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
 
 namespace TestCreationService.Api.Extensions;
 

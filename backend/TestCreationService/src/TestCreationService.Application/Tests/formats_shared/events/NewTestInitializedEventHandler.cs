@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;

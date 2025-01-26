@@ -4,8 +4,7 @@ using MediatR;
 using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;
-using SharedKernel.Common.errors;
-using TestCreationService.Application.Tests.general_format.commands.answers;
+using TestCreationService.Application.GeneralTestQuestions.commands.answers;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralTestCreationAnswersHandlers
@@ -13,8 +12,8 @@ internal static class GeneralTestCreationAnswersHandlers
     internal static RouteGroupBuilder MapGeneralTestCreationAnswersHandlers(this RouteGroupBuilder group) {
         group
             .GroupAuthenticationRequired()
-            .GroupTestEditPermissionRequired()
-            .GroupCheckIfGeneralTestQuestionInProvidedTest();
+            .GroupCheckIfGeneralTestQuestionInProvidedTest()
+            .GroupTestEditPermissionRequired();
 
         group.MapGet("/list", ListAnswers);
         group.MapPost("/add", AddAnswer)
@@ -48,7 +47,11 @@ internal static class GeneralTestCreationAnswersHandlers
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveGeneralTestAnswerRequest>();
 
-        AddAnswerToGeneralTestQuestionCommand command = new(questionId, request.ParsedAnswerData().GetSuccess());
+        AddAnswerToGeneralTestQuestionCommand command = new(
+            questionId, 
+            request.ParsedAnswerData().GetSuccess(),
+            request.ParsedRelatedResultIds().GetSuccess()
+        );
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(

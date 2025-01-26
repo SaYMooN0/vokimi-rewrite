@@ -5,6 +5,7 @@ using TestCreationService.Domain.TestAggregate;
 using SharedKernel.Common.EntityIds;
 using TestCreationService.Infrastructure.Persistence.configurations.extension;
 using TestCreationService.Domain.Common;
+using TestCreationService.Domain.GeneralTestQuestionAggregate;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
@@ -14,11 +15,7 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
         builder.ToTable("GeneralFormatTests");
         builder.HasBaseType<BaseTest>();
 
-        builder
-            .HasMany<GeneralTestQuestion>("_questions")
-            .WithOne()
-            .HasForeignKey(q => q.TestId);
-        builder.OwnsOne<EntitiesOrderController<GeneralTestQuestionId>>("_questionsOrderController",
+        builder.OwnsOne<EntitiesOrderController<GeneralTestQuestionId>>("_questionsList",
             controller => {
                 controller
                     .Property(p => p.IsShuffled)

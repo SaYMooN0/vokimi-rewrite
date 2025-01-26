@@ -3,31 +3,43 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using System.Collections.Immutable;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
+using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands.questions;
 
 public record class ListGeneralTestQuestionsWithOrderCommand(
     TestId TestId
-) : IRequest<ErrOr<IReadOnlyList<(GeneralTestQuestion Question, ushort Order)>>>;
+) : IRequest<ErrOr<ImmutableArray<(GeneralTestQuestion Question, ushort Order)>>>;
 internal class ListGeneralTestQuestionsCommandHandler
     : IRequestHandler<
         ListGeneralTestQuestionsWithOrderCommand,
-        ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>
+        ErrOr<ImmutableArray<(GeneralTestQuestion, ushort)>>
     >
 {
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
+    private readonly IGeneralTestQuestionsRepository _generalTestQuestionsRepository;
 
-    public ListGeneralTestQuestionsCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
-        this._generalFormatTestsRepository = generalFormatTestsRepository;
+    public ListGeneralTestQuestionsCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository, IGeneralTestQuestionsRepository generalTestQuestionsRepository) {
+        _generalFormatTestsRepository = generalFormatTestsRepository;
+        _generalTestQuestionsRepository = generalTestQuestionsRepository;
     }
 
-    public async Task<ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>> Handle(ListGeneralTestQuestionsWithOrderCommand request, CancellationToken cancellationToken) {
-        GeneralFormatTest? test = await _generalFormatTestsRepository.GetWithQuestions(request.TestId);
+    public async Task<ErrOr<ImmutableArray<(GeneralTestQuestion, ushort)>>> Handle(ListGeneralTestQuestionsWithOrderCommand request, CancellationToken cancellationToken) {
+        GeneralFormatTest? test = await _generalFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
-        return ErrOr<IReadOnlyList<(GeneralTestQuestion, ushort)>>.Success(test.GetQuestionsWithOrder());
+        var questionsFetchRes = await _generalTestQuestionsRepository.GetAllWithId(test.GetTestQuestionIds());
+        if (questionsFetchRes.IsErr(out var err)) {
+            return err;
+        }
+        var questionsWithOrderRes = test.GetQuestionsWithOrder(questionsFetchRes.GetSuccess());
+        if (questionsWithOrderRes.IsErr(out err)) {
+            return err;
+        }
+        return ErrOr<ImmutableArray<(GeneralTestQuestion, ushort)>>.Success(
+            questionsWithOrderRes.GetSuccess()
+        );
     }
 }

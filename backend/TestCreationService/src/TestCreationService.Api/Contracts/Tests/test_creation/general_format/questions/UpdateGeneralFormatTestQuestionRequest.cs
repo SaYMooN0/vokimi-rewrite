@@ -1,7 +1,7 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.value_objects.answers_count_limit;
-using SharedKernel.Common.tests.value_objects.time_limit_option;
+using SharedKernel.Common.general_test_questions;
+using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
@@ -18,8 +18,8 @@ public record class UpdateGeneralFormatTestQuestionRequest(
 {
     public RequestValidationResult Validate() {
         ErrList errs = new();
-        errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionTextForErrs(QuestionText));
-        errs.AddPossibleErr(GeneralFormatTestRules.CheckQuestionImagesForErrs(Images));
+        errs.AddPossibleErr(GeneralTestQuestionRules.CheckQuestionTextForErrs(QuestionText));
+        errs.AddPossibleErr(GeneralTestQuestionRules.CheckQuestionImagesForErrs(Images));
         errs.AddPossibleErr(CreateTimeLimit());
         errs.AddPossibleErr(CreateAnswerCountLimit());
         return errs;

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
-using SharedKernel.Common.tests.general_format_tests;
-using SharedKernel.Common.tests.general_format_tests.answer_type_specific_data;
+using SharedKernel.Common.general_test_questions;
+using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using System.Text.Json;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;

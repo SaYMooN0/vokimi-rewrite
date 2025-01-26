@@ -1,13 +1,13 @@
-﻿
-using ApiShared.interfaces;
-using SharedKernel.Common.tests.general_format_tests;
+﻿using ApiShared.interfaces;
+using SharedKernel.Common.general_test_questions;
 using System.Text.Json.Serialization;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 
-internal class AddGeneralFormatTestQuestionRequest : IRequestWithValidationNeeded
+internal record class AddGeneralFormatTestQuestionRequest(
+    GeneralTestAnswersType AnswersType
+) : IRequestWithValidationNeeded
 {
-    public GeneralTestAnswersType AnswersType { get; init; }
     public RequestValidationResult Validate() {
         return RequestValidationResult.Success;
     }

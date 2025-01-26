@@ -42,6 +42,7 @@ namespace TestCreationService.Api
             app.MapGroup("/testCreation/{testId}/general/questions").MapGeneralTestCreationQuestionsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}").MapGeneralTestCreationQuestionOperationsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers").MapGeneralTestCreationAnswersHandlers();
+            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers/{answerId}").MapGeneralTestCreationAnswerOperationsHandlers();
             //app.MapGroup("/testCreation/{testId}/scoring").MapScoringFormatTestCreationHandlers();
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.Common.tests.value_objects.answers_count_limit;
+using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 

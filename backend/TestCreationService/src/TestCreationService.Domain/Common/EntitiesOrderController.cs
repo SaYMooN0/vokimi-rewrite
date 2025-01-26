@@ -1,6 +1,7 @@
 ﻿using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
+using System.Collections.Immutable;
 
 namespace TestCreationService.Domain.Common;
 
@@ -29,6 +30,8 @@ public class EntitiesOrderController<T> where T : EntityId
             IsShuffled = isShuffled
         };
     }
+    public int Count => _entityOrders.Count;
+    public ImmutableHashSet<T> EntityIds() => _entityOrders.Keys.ToImmutableHashSet();
     private void ReevaluateOrders() {
         var orderedKeys = _entityOrders.Keys
             .OrderBy(key => _entityOrders[key])
@@ -39,28 +42,26 @@ public class EntitiesOrderController<T> where T : EntityId
         }
     }
 
-    public void AddToEnd(Entity<T> entity) {
-        if (_entityOrders.ContainsKey(entity.Id)) {
-            throw new InvalidOperationException($"Entity with Id {entity.Id} is already in the controller.");
+    public void AddToEnd(T entityId) {
+        if (_entityOrders.ContainsKey(entityId)) {
+            throw new InvalidOperationException($"Entity with Id {entityId} is already in the controller.");
         }
 
         ushort newOrder = (ushort)(_entityOrders.Count + 1);
-        //_entityOrders = new();
-        _entityOrders.Add(entity.Id, newOrder);
+        _entityOrders.Add(entityId, newOrder);
     }
-    public void RemoveEntity(Entity<T> entity) {
-        _entityOrders.Remove(entity.Id);
+    public void RemoveEntity(T entityId) {
+        _entityOrders.Remove(entityId);
         ReevaluateOrders();
     }
-    public IReadOnlyList<(EntityType Entity, ushort Order)> GetItemsWithOrders<EntityType>(IEnumerable<EntityType> entities) where EntityType : Entity<T> {
+    public ImmutableArray<(EntityType Entity, ushort Order)> GetItemsWithOrders<EntityType>(IEnumerable<EntityType> entities) where EntityType : Entity<T> {
         return entities
             .Select(e => (e, _entityOrders[e.Id]))
             .OrderBy(e => e.Item2)
             .ToList()
-            .AsReadOnly();
+            .ToImmutableArray();
     }
     public bool Contains(T id) => _entityOrders.ContainsKey(id);
-    public T[] EntityIds() => _entityOrders.Keys.ToArray();
     public EntitiesOrderController<T> WithoutEntityIds(IEnumerable<T> idsToRemove) {
         ushort order = 1;
         var newIds = EntityIds()

@@ -2,7 +2,6 @@
 using ApiShared.extensions;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
 using TestCreationService.Application.Common.interfaces.repositories;
 
 namespace TestCreationService.Api.EndpointsFilters;

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
 
 namespace ApiShared.middlewares.exceptions_handling;
 

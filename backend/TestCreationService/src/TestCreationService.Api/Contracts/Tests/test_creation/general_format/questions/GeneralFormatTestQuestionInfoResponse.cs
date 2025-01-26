@@ -1,4 +1,4 @@
-﻿using TestCreationService.Domain.TestAggregate.general_format;
+﻿using TestCreationService.Domain.GeneralTestQuestionAggregate;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 

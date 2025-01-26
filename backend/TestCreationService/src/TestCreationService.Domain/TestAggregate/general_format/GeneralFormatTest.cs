@@ -1,10 +1,11 @@
-﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.tests;
-using SharedKernel.Common.tests.general_format_tests;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
+using TestCreationService.Domain.GeneralTestQuestionAggregate;
+using TestCreationService.Domain.GeneralTestQuestionAggregate.events;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
@@ -15,14 +16,16 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-
-    protected virtual List<GeneralTestQuestion> _questions { get; init; }
-    protected EntitiesOrderController<GeneralTestQuestionId> _questionsOrderController { get; set; }
+    protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
     protected virtual List<GeneralTestResult> _results { get; init; }
     public IReadOnlyList<GeneralTestResult> Results => _results.OrderBy(r => r.Id).ToImmutableList();
     private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
-    public static ErrOr<GeneralFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
+    public static ErrOr<GeneralFormatTest> CreateNew(
+        AppUserId creatorId,
+        string testName,
+        HashSet<AppUserId> editorIds
+    ) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
@@ -43,44 +46,32 @@ public class GeneralFormatTest : BaseTest
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
     ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
-        _questions = [];
-        _questionsOrderController = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
+        _questionsList = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
         _results = [];
         TestTakingProcessSettings = GeneralTestTakingProcessSettings.CreateNew();
     }
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
-        if (_questions.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
+        if (_questionsList.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
             return new Err(
                 $"General format test cannot have more than {GeneralFormatTestRules.MaxQuestionsCount} questions",
-                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questions.Count} questions"
+                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questionsList.Count} questions"
             );
         }
-        var newQuestion = GeneralTestQuestion.CreateNew(Id, answersType);
-        _questions.Add(newQuestion);
-        _questionsOrderController.AddToEnd(newQuestion);
+        GeneralTestQuestionId questionId = GeneralTestQuestionId.CreateNew();
+        _questionsList.AddToEnd(questionId);
+        _domainEvents.Add(new NewGeneralTestQuestionAddedEvent(questionId, answersType));
         return ErrOrNothing.Nothing;
     }
-    public ErrOrNothing RemoveQuestion(GeneralTestQuestionId questionId) {
-        var question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return Err.ErrFactory.NotFound(
-                message: $"Question with id {questionId} was not found in this test",
-                details: $"General format test with id {Id} has no question with id {questionId}. Either it has already been removed or it was never in the test"
-            );
-        }
-        _questions.Remove(question);
-        _questionsOrderController.RemoveEntity(question);
-        return ErrOrNothing.Nothing;
+    public void DeleteQuestion(GeneralTestQuestionId questionId) {
+        _questionsList.RemoveEntity(questionId);
     }
-    public IReadOnlyList<(GeneralTestQuestion Question, ushort Order)> GetQuestionsWithOrder() =>
-        _questionsOrderController.GetItemsWithOrders(_questions);
     public void UpdateTestTakingProcessSettings(
         bool forceSequentialFlow,
         GeneralTestFeedbackOption testFeedback
     ) => TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
     public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
-        var questionIds = _questions.Select(q => q.Id).ToHashSet();
+        var questionIds = _questionsList.EntityIds();
         var providedIds = orderController.EntityIds().ToHashSet();
 
         if (!questionIds.IsSubsetOf(providedIds)) {
@@ -92,7 +83,21 @@ public class GeneralFormatTest : BaseTest
         }
 
         var extraIds = providedIds.Except(questionIds);
-        _questionsOrderController = orderController.WithoutEntityIds(extraIds);
+        _questionsList = orderController.WithoutEntityIds(extraIds);
         return ErrOrNothing.Nothing;
+    }
+    public ImmutableHashSet<GeneralTestQuestionId> GetTestQuestionIds() =>
+        _questionsList.EntityIds();
+    public ErrOr<ImmutableArray<(GeneralTestQuestion Question, ushort Order)>> GetQuestionsWithOrder(
+        IEnumerable<GeneralTestQuestion> questions
+    ) {
+        if (questions.Any(q => !_questionsList.Contains(q.Id))) {
+            return new Err(
+                "General format test doesn't have information about order for all questions",
+                details: "Try again later. If it doesn't help try adding or removing one question",
+                source: ErrorSource.Server
+            );
+        }
+        return _questionsList.GetItemsWithOrders(questions);
     }
 }

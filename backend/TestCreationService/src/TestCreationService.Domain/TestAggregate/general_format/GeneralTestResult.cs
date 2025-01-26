@@ -11,14 +11,4 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
     public string Name { get; private set; }
     public string? Text { get; private set; }
     public string? Image { get; private set; }
-    protected virtual HashSet<GeneralTestAnswerId> _answerLeadingToResultIds { get; init; } = [];
-    public ImmutableHashSet<GeneralTestAnswerId> AnswerLeadingToResultIds => _answerLeadingToResultIds
-        .Order()
-        .ToImmutableHashSet();
-    //public ErrOrNothing AddAnswerLeadingToResultId(GeneralTestAnswerId answerId) {
-    //    return ErrOrNothing.Nothing;
-    //}
-    //public void RemoveAnswerLeadingToResultId(GeneralTestAnswerId answerId) {
-    //    _answerLeadingToResultIds.Remove(answerId);
-    //}
 }

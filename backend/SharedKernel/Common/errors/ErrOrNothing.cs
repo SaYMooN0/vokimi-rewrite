@@ -1,7 +1,4 @@
-﻿
-using SharedKernel.Common.exceptions;
-
-namespace SharedKernel.Common.errors;
+﻿namespace SharedKernel.Common.errors;
 
 public class ErrOrNothing
 {

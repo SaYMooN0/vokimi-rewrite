@@ -1,10 +1,8 @@
 ﻿using MediatR;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.general_format_tests;
+using SharedKernel.Common.general_test_questions;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Application.Common.interfaces.repositories.general_format_tests;
-using TestCreationService.Domain.Common.rules;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands.questions;
@@ -22,7 +20,7 @@ internal class AddGeneralTestQuestionCommandHandler : IRequestHandler<AddGeneral
     }
 
     public async Task<ErrOrNothing> Handle(AddGeneralTestQuestionCommand request, CancellationToken cancellationToken) {
-        GeneralFormatTest? test = await _generalFormatTestsRepository.GetWithQuestions(request.TestId);
+        GeneralFormatTest? test = await _generalFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
