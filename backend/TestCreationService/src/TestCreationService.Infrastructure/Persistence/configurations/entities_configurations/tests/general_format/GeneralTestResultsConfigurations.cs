@@ -15,12 +15,5 @@ internal class GeneralTestResultsConfigurations : IEntityTypeConfiguration<Gener
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-        
-        builder
-            .Ignore(x => x.AnswerLeadingToResultIds);
-        builder
-            .Property<HashSet<GeneralTestAnswerId>>("_answerLeadingToResultIds")
-            .HasColumnName("AnswerLeadingToResultIds")
-            .HasEntityIdsHashSetConversion();
     }
 }

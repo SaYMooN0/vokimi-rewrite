@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.EntityIds;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Infrastructure.Persistence.repositories;
@@ -16,9 +15,14 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.SaveChangesAsync();
 
     }
-
     public async Task<GeneralFormatTest?> GetById(TestId testId) {
         return await _db.GeneralFormatTests.FindAsync(testId);
+    }
+
+    public async Task<GeneralFormatTest?> GetWithResults(TestId testId) {
+        return await _db.GeneralFormatTests
+            .Include(t => EF.Property<List<GeneralTestResult>>(t, "_results"))
+            .FirstOrDefaultAsync(t => t.Id == testId);
     }
 
     public async Task Update(GeneralFormatTest test) {

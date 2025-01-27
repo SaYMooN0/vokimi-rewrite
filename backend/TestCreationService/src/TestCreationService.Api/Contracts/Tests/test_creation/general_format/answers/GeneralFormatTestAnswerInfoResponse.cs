@@ -1,18 +1,22 @@
-﻿using SharedKernel.Common.general_test_questions;
+﻿using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.general_test_questions;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;
 
-internal class GeneralFormatTestAnswerInfoResponse
+internal record class GeneralFormatTestAnswerInfoResponse(
+    string AnswerId,
+    ushort Order,
+    GeneralTestAnswersType Type,
+    Dictionary<string, string> TypeSpecificData,
+    string[] RelatedResultIds
+)
 {
-    public string AnswerId { get; init; }
-    public ushort Order { get; init; }
-    public GeneralTestAnswersType Type { get; init; }
-    public Dictionary<string, string> TypeSpecificData { get; init; } = [];
-    public static GeneralFormatTestAnswerInfoResponse Create(GeneralTestAnswer answer, ushort order) => new() {
-        AnswerId = answer.Id.ToString(),
-        Order = order,
-        Type = answer.TypeSpecificData.MatchingEnumType,
-        TypeSpecificData = answer.TypeSpecificData.ToDictionary()
-    };
+    public static GeneralFormatTestAnswerInfoResponse Create(GeneralTestAnswer answer, ushort order) => new(
+        answer.Id.ToString(),
+        order,
+        answer.TypeSpecificData.MatchingEnumType,
+        answer.TypeSpecificData.ToDictionary(),
+        answer.GetRelatedResultIds().Select(r => r.ToString()).ToArray()
+    );
 }

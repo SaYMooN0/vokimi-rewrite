@@ -3,6 +3,6 @@ using SharedKernel.Common;
 
 namespace TestCreationService.Domain.TestAggregate.general_format.events;
 public record class RelatedResultsForGeneralTestAnswerChangedEvent(
-    GeneralTestAnswerId AnswerId,
+    TestId TestId,
     HashSet<GeneralTestResultId> RelatedResults
 ) : IDomainEvent;

@@ -18,6 +18,11 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasEntityIdConversion();
 
         builder
+            .Property(x => x.TestId)
+            .ValueGeneratedNever()
+            .HasEntityIdConversion();
+
+        builder
             .Property<string[]>("_images")
             .HasColumnName("Images");
 

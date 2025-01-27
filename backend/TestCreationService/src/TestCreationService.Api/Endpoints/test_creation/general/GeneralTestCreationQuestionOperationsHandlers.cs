@@ -5,6 +5,7 @@ using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands;
+using TestCreationService.Application.Tests.general_format.commands.questions;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 
@@ -17,21 +18,22 @@ internal static class GeneralTestCreationQuestionOperationsHandlers
             .GroupCheckIfGeneralTestQuestionInProvidedTest()
             .GroupTestEditPermissionRequired();
 
-        group.MapDelete("/remove", RemoveQuestion);
+        group.MapDelete("/delete", DeleteQuestion);
 
         group.MapPost("/update", UpdateQuestion)
             .WithRequestValidation<UpdateGeneralFormatTestQuestionRequest>();
 
         return group;
     }
-    private async static Task<IResult> RemoveQuestion(
+    private async static Task<IResult> DeleteQuestion(
     HttpContext httpContext,
        ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
 
-        RemoveGeneralTestQuestionCommand command = new(questionId);
+
+        DeleteGeneralTestQuestionCommand command = new(testId, questionId);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(
@@ -56,7 +58,7 @@ internal static class GeneralTestCreationQuestionOperationsHandlers
         );
         var result = await mediator.Send(command);
 
-        return CustomResults.FromErrOrNothing(
+        return CustomResults.FromErrListOrNothing(
             result,
             () => Results.Ok()
         );

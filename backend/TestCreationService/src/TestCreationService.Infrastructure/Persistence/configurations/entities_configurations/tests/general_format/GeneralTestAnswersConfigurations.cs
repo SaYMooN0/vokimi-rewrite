@@ -16,8 +16,6 @@ internal class GeneralTestAnswersConfigurations : IEntityTypeConfiguration<Gener
             .HasEntityIdConversion();
 
         builder
-            .Ignore(x => x.RelatedResultIds);
-        builder
             .Property<HashSet<GeneralTestResultId>>("_relatedResultIds")
             .HasColumnName("RelatedResultIds")
             .HasEntityIdsHashSetConversion();

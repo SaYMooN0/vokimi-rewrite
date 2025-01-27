@@ -13,9 +13,7 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
     public GeneralTestQuestionId QuestionId { get; init; }
     public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; private set; }
     private HashSet<GeneralTestResultId> _relatedResultIds { get; set; } = [];
-    public ImmutableHashSet<GeneralTestResultId> RelatedResultIds => _relatedResultIds
-        .Order()
-        .ToImmutableHashSet();
+    public ImmutableHashSet<GeneralTestResultId> GetRelatedResultIds() => _relatedResultIds.ToImmutableHashSet();
     public static ErrOr<GeneralTestAnswer> CreateNew(
         GeneralTestQuestionId questionId,
         GeneralTestAnswerTypeSpecificData typeSpecificData,
@@ -45,15 +43,14 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
                 details: $"Previous type: {TypeSpecificData.MatchingEnumType}, new type: {newData.MatchingEnumType}"
             );
         }
+        if (relatedResultIds.Count > GeneralFormatTestRules.MaxRelatedResultsForAnswer) {
+            return Err.ErrFactory.InvalidData(
+                "Too many related results selected",
+                details: $"Maximum possible number of related results: {GeneralFormatTestRules.MaxRelatedResultsForAnswer}. Results selected: {relatedResultIds.Count}"
+            );
+        }
         TypeSpecificData = newData;
+        _relatedResultIds = relatedResultIds;
         return ErrOrNothing.Nothing;
-    }
-    public ErrOrNothing AddRelatedResult(GeneralTestResultId resultId) {
-        //no more than
-        return ErrOrNothing.Nothing;
-
-    }
-    public void RemoveRelatedResult(GeneralTestResultId resultId) {
-        _relatedResultIds.Remove(resultId);
     }
 }

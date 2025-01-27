@@ -14,6 +14,16 @@ internal class GeneralTestQuestionsRepository : IGeneralTestQuestionsRepository
         _db = db;
     }
 
+    public async Task Add(GeneralTestQuestion question) {
+        await _db.GeneralTestQuestions.AddAsync(question);
+    }
+
+    public async Task DeleteById(GeneralTestQuestionId questionId) {
+        await _db.GeneralTestQuestions
+            .Where(q => q.Id == questionId)
+            .ExecuteDeleteAsync();
+    }
+
     public async Task<ErrOr<IEnumerable<GeneralTestQuestion>>> GetAllWithId(IEnumerable<GeneralTestQuestionId> ids) {
         List<GeneralTestQuestion> result = new(ids.Count());
         foreach (var id in ids) {
@@ -26,8 +36,9 @@ internal class GeneralTestQuestionsRepository : IGeneralTestQuestionsRepository
         return result;
     }
 
-    public async Task<GeneralTestQuestion?> GetById(GeneralTestQuestionId id) =>
-        await _db.GeneralTestQuestions.FindAsync(id);
+    public async Task<GeneralTestQuestion?> GetById(GeneralTestQuestionId id) {
+        return await _db.GeneralTestQuestions.FindAsync(id);
+    }
 
     public async Task<GeneralTestQuestion?> GetWithAnswers(GeneralTestQuestionId id) =>
         await _db.GeneralTestQuestions

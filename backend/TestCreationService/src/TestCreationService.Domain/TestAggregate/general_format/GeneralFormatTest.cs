@@ -18,7 +18,9 @@ public class GeneralFormatTest : BaseTest
     public override TestFormat Format => TestFormat.General;
     protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
     protected virtual List<GeneralTestResult> _results { get; init; }
-    public IReadOnlyList<GeneralTestResult> Results => _results.OrderBy(r => r.Id).ToImmutableList();
+    public ImmutableArray<GeneralTestResult> Results => _results
+        .OrderBy(r => r.Id)
+        .ToImmutableArray();
     private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
     public static ErrOr<GeneralFormatTest> CreateNew(
@@ -60,11 +62,19 @@ public class GeneralFormatTest : BaseTest
         }
         GeneralTestQuestionId questionId = GeneralTestQuestionId.CreateNew();
         _questionsList.AddToEnd(questionId);
-        _domainEvents.Add(new NewGeneralTestQuestionAddedEvent(questionId, answersType));
+        _domainEvents.Add(new NewGeneralTestQuestionAddedEvent(Id, questionId, answersType));
         return ErrOrNothing.Nothing;
     }
-    public void DeleteQuestion(GeneralTestQuestionId questionId) {
+    public ErrOrNothing DeleteQuestion(GeneralTestQuestionId questionId) {
+        if (!_questionsList.Contains(questionId)) {
+            return new Err(
+                "There is no such question in this test",
+                details: $"Test with id {Id} does not have question with id {questionId}"
+            );
+        }
         _questionsList.RemoveEntity(questionId);
+        _domainEvents.Add(new GeneralTestQuestionDeletedEvent(questionId));
+        return ErrOrNothing.Nothing;
     }
     public void UpdateTestTakingProcessSettings(
         bool forceSequentialFlow,
@@ -99,5 +109,24 @@ public class GeneralFormatTest : BaseTest
             );
         }
         return _questionsList.GetItemsWithOrders(questions);
+    }
+    public bool HasResultWithId(GeneralTestResultId resultId) =>
+        _results.Any(r => r.Id == resultId);
+    public ImmutableDictionary<GeneralTestResultId, string> GetTestResultIdsWithNames() =>
+        _results.ToImmutableDictionary(r => r.Id, r => r.Name);
+    public ErrOr<GeneralTestResult> CreateResult() {
+        if (_results.Count >= GeneralFormatTestRules.MaxResultsInTestCount) {
+            return new Err(
+                $"General format test cannot have more than {GeneralFormatTestRules.MaxResultsInTestCount} results",
+                details: $"Maximum number of results allowed is {GeneralFormatTestRules.MaxResultsInTestCount}. Test already has {_results.Count}"
+            );
+        }
+        string resultName = "Test result #" + (_results.Count + 1);
+        var creationRes = GeneralTestResult.CreateNew(Id, resultName);
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
+        _results.Add(creationRes.GetSuccess());
+        return creationRes.GetSuccess();
     }
 }

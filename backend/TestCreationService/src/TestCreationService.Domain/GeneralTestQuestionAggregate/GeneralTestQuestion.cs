@@ -11,6 +11,7 @@ namespace TestCreationService.Domain.GeneralTestQuestionAggregate;
 
 public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
 {
+    private GeneralTestQuestion() { }
     public TestId TestId { get; init; }
     public string Text { get; private set; }
     public string[] _images { get; private set; } = [];
@@ -21,6 +22,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
     private EntitiesOrderController<GeneralTestAnswerId> _answersOrderController { get; set; }
     public GeneralTestQuestionAnswersCountLimit AnswerCountLimit { get; private set; }
     public GeneralTestQuestion(GeneralTestQuestionId id, TestId testId, GeneralTestAnswersType answersType) {
+        Id = id;
         TestId = testId;
         Text = "New question";
         _images = [];
@@ -78,7 +80,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         var newAnswer = creatingRes.GetSuccess();
         _answers.Add(newAnswer);
         _answersOrderController.AddToEnd(newAnswer.Id);
-        _domainEvents.Add(new RelatedResultsForGeneralTestAnswerChangedEvent(newAnswer.Id, relatedResultIds));
+        _domainEvents.Add(new RelatedResultsForGeneralTestAnswerChangedEvent(TestId, relatedResultIds));
         return ErrOrNothing.Nothing;
     }
     public ErrOrNothing UpdateAnswer(
@@ -103,7 +105,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         if (updateRes.IsErr(out var err)) {
             return err;
         }
-        _domainEvents.Add(new RelatedResultsForGeneralTestAnswerChangedEvent(answerToUpdate.Id, relatedResultIds));
+        _domainEvents.Add(new RelatedResultsForGeneralTestAnswerChangedEvent(TestId, relatedResultIds));
         return ErrOrNothing.Nothing;
     }
     public ErrOrNothing UpdateAnswerOrder(EntitiesOrderController<GeneralTestAnswerId> orderController) {

@@ -13,8 +13,4 @@
     <ProjectReference Include="..\TestCreationService.Infrastructure\TestCreationService.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Tests\test_creation\general_format\results\" />
-  </ItemGroup>
-
 </Project>
