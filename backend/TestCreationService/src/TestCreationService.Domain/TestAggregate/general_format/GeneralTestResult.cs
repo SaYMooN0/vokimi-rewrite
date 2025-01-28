@@ -1,7 +1,6 @@
 ﻿using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
-using System.Collections.Immutable;
 using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
@@ -24,5 +23,21 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
             Text = "General test result text",
             Image = null
         };
+    }
+    public ErrOrNothing Update(string name, string text, string? image) {
+        if (GeneralFormatTestRules.CheckResultNameForErrs(name).IsErr(out var err)) {
+            return err;
+        }
+        if (GeneralFormatTestRules.CheckResultTextForErrs(text).IsErr(out err)) {
+            return err;
+        }
+        int imgLen = string.IsNullOrEmpty(image) ? 0 : image.Length;
+        if (imgLen > 1000) {
+            return Err.ErrFactory.InvalidData("Image path is too long", details: "Try to somehow shorten it ");
+        }
+        Name = name;
+        Text = text;
+        Image = image;
+        return ErrOrNothing.Nothing;
     }
 }

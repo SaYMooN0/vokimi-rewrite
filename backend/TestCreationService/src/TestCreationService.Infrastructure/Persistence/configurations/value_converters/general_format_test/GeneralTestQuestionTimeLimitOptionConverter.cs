@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.general_test_questions;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 internal class GeneralTestQuestionTimeLimitOptionConverter : ValueConverter<GeneralTestQuestionTimeLimitOption, int>
 {

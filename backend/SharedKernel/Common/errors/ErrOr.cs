@@ -11,8 +11,8 @@ public class ErrOr<T>
     public static ErrOr<T> Success(T value) => new ErrOr<T>(value);
     public static ErrOr<T> Error(Err err) => new ErrOr<T>(err);
 
-    public TResult Match<TResult>(Func<T, TResult> successAction, Func<Err, TResult> errorAction) =>
-        value.Match(successAction, errorAction);
+    public TResult Match<TResult>(Func<T, TResult> successFunc, Func<Err, TResult> errorFunc) =>
+        value.Match(successFunc, errorFunc);
     public bool IsErr() => value.IsT1;
     public bool IsErr(out Err err) {
         if (value.IsT1) {

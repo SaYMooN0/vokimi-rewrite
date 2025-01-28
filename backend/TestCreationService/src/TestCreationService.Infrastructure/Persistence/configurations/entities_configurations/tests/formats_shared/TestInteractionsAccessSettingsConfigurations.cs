@@ -4,7 +4,7 @@ using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Infrastructure.Persistence.configurations.extension;
 using TestCreationService.Domain.TestAggregate;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests;
+namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;
 
 internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfiguration<TestInteractionsAccessSettings>
 {
@@ -18,7 +18,7 @@ internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfigu
 
         builder
             .HasOne<BaseTest>()
-            .WithOne("InteractionsAccessSettings")
+            .WithOne("_interactionsAccessSettings")
             .HasForeignKey<TestInteractionsAccessSettings>("TestId");
 
         builder

@@ -43,3 +43,9 @@ public class GeneralTestResultId : EntityId
 
     public static GeneralTestResultId CreateNew() => new(Guid.CreateVersion7());
 }
+public class TestStylesSheetId : EntityId
+{
+    public TestStylesSheetId(Guid value) : base(value) { }
+
+    public static TestStylesSheetId CreateNew() => new(Guid.CreateVersion7());
+}

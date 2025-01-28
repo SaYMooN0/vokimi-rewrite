@@ -25,4 +25,14 @@ internal static class HttpContextExtensions
     }
     public static GeneralTestAnswerId GetGeneralTestAnswerIdFromRoute(this HttpContext context) =>
         new(context.GetAnswerGuidFromRoute(exceptionMessage: "Invalid general format test answer id"));
+    private static Guid GetResultGuidFromRoute(this HttpContext context, string exceptionMessage) {
+        var idStr = context.Request.RouteValues["resultId"]?.ToString() ?? "";
+        if (!Guid.TryParse(idStr, out var testGuid)) {
+            throw new ErrCausedException(Err.ErrFactory.InvalidData(exceptionMessage));
+        }
+
+        return testGuid;
+    }
+    public static GeneralTestResultId GetGeneralTestResultIdFromRoute(this HttpContext context) =>
+        new(context.GetResultGuidFromRoute(exceptionMessage: "Invalid general format test result id"));
 }

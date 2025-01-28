@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.EntityIds;
-using System.Collections.Immutable;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+using TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.extension;
 
@@ -59,5 +59,12 @@ internal static class PropertyBuilderExtensions
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
         return builder.HasConversion(new GeneralTestFeedbackOptionConverter());
+    }
+    public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
+        this PropertyBuilder<TProperty> builder
+    ) where TProperty : class {
+        return builder
+            .HasConversion(new HexColorConverter())
+            .HasMaxLength(7);
     }
 }

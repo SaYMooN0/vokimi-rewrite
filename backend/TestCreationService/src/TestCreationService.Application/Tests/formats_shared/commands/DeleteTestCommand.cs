@@ -4,7 +4,7 @@ using SharedKernel.Common.errors;
 
 namespace TestCreationService.Application.Tests.formats_shared.commands;
 
-public class DeleteTestCommand(TestId TestId) : IRequest<ErrOrNothing>;
+public record class DeleteTestCommand(TestId TestId) : IRequest<ErrOrNothing>;
 public class DeleteTestCommandHandler : IRequestHandler<DeleteTestCommand, ErrOrNothing>
 {
     public async Task<ErrOrNothing> Handle(DeleteTestCommand request, CancellationToken cancellationToken) {

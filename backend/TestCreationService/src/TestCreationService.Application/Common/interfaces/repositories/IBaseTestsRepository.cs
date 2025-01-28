@@ -9,5 +9,6 @@ public interface IBaseTestsRepository
     public Task<ErrOr<HashSet<AppUserId>>> GetUserIdsWithPermissionToEditTest(TestId testId);
     public Task<ErrOr<bool>> CheckIfUserIsTestCreator(TestId testId, AppUserId userId);
     public Task<BaseTest?> GetById(TestId testId);
+    public Task<BaseTest?> GetWithStyles(TestId testId);
     public Task Update(BaseTest test);
 }

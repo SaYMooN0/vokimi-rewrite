@@ -3,6 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.test_styles;
 using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Rules;
@@ -18,9 +19,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
     private readonly HashSet<AppUserId> _editorIds = new();
     public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
     public abstract TestFormat Format { get; }
-    protected TestMainInfo MainInfo { get; init; }
-    protected TestInteractionsAccessSettings InteractionsAccessSettings { get; init; }
-    protected TestStyles Styles { get; init; }
+    private TestMainInfo _mainInfo { get; init; }
+    private TestInteractionsAccessSettings _interactionsAccessSettings { get; init; }
+    private TestStylesSheet _styles { get; init; }
 
     protected BaseTest(
         TestId id,
@@ -31,9 +32,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Id = id;
         CreatorId = creatorId;
         _editorIds = editorIds;
-        MainInfo = mainInfo;
-        InteractionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
-        Styles = TestStyles.Default;
+        _mainInfo = mainInfo;
+        _interactionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
+        _styles = TestStylesSheet.CreateNew(id);
     }
     public ErrOrNothing UpdateEditors(HashSet<AppUserId> userIds) {
         if (userIds.Count > TestRules.MaxTestEditorsCount) {
@@ -56,12 +57,11 @@ public abstract class BaseTest : AggregateRoot<TestId>
     }
     public bool IsUserCreator(AppUserId userId) => userId == CreatorId;
     public HashSet<AppUserId> TestEditorsWithCreator() => new HashSet<AppUserId>(EditorIds) { CreatorId };
-    public ErrOrNothing UpdateMainInfo(string testName, string description, Language language) {
-        return MainInfo.Update(testName, description, language);
-    }
+    public ErrOrNothing UpdateMainInfo(string testName, string description, Language language) =>
+        _mainInfo.Update(testName, description, language);
     public ErrOrNothing UpdateCoverImg(string coverImg) {
-        return MainInfo.UpdateCoverImg(coverImg);
-        //domain event for img service...
+        return _mainInfo.UpdateCoverImg(coverImg);
+        //interaction event for img service...
     }
     public ErrListOrNothing UpdateInteractionsAccessSettings(
         AccessLevel testAccessLevel,
@@ -69,11 +69,15 @@ public abstract class BaseTest : AggregateRoot<TestId>
         ResourceAvailabilitySetting discussionsSetting,
         bool allowTestTakenPosts,
         ResourceAvailabilitySetting tagsSuggestionsSetting
-    ) => InteractionsAccessSettings.Update(
+    ) => _interactionsAccessSettings.Update(
         testAccessLevel,
         ratingsSetting: ratingsSetting,
         discussionsSetting: discussionsSetting,
         allowTestTakenPosts,
         tagsSuggestionsSetting
     );
+    public void UpdateStyles(HexColor accentColor, HexColor errorsColor, TestStylesButtons buttonsStyle) =>
+        _styles.Update(accentColor, errorsColor, buttonsStyle);
+    public void SetStylesDefault() =>
+        _styles.SetToDefault();
 }

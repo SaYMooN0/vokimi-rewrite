@@ -53,4 +53,6 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
         _relatedResultIds = relatedResultIds;
         return ErrOrNothing.Nothing;
     }
+    public void RemoveRelatedResultId(GeneralTestResultId resultId) =>
+        _relatedResultIds.Remove(resultId);
 }

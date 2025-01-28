@@ -2,7 +2,7 @@
 using System.Text.Json;
 using TestCreationService.Domain.TestAggregate.general_format;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 internal class GeneralTestFeedbackOptionConverter : ValueConverter<GeneralTestFeedbackOption, string>
 {

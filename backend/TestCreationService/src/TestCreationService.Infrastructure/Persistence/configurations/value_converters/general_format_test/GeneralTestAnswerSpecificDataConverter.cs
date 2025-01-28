@@ -4,7 +4,7 @@ using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using System.Text.Json;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 internal class GeneralTestAnswerSpecificDataConverter : ValueConverter<GeneralTestAnswerTypeSpecificData, string>
 {

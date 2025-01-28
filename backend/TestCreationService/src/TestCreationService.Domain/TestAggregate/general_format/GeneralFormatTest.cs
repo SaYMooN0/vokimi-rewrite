@@ -9,6 +9,7 @@ using TestCreationService.Domain.GeneralTestQuestionAggregate.events;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
+using TestCreationService.Domain.TestAggregate.general_format.events;
 
 namespace TestCreationService.Domain.TestAggregate.general_format;
 
@@ -128,5 +129,39 @@ public class GeneralFormatTest : BaseTest
         }
         _results.Add(creationRes.GetSuccess());
         return creationRes.GetSuccess();
+    }
+    public ErrOrNothing DeleteGeneralTestResult(GeneralTestResultId resultId) {
+        GeneralTestResult? result = _results.FirstOrDefault(r => r.Id == resultId);
+        if (result is null) {
+            return Err.ErrFactory.NotFound(
+                "There is no such result in this test",
+                details: $"General format test with id {Id} doesn't have result with id {resultId}"
+            );
+        }
+        _results.Remove(result);
+        _domainEvents.Add(new GeneralTestResultDeletedEvent(Id, result.Id));
+        return ErrOrNothing.Nothing;
+    }
+    public ErrOrNothing UpdateResult(
+        GeneralTestResultId resultId,
+        string Name,
+        string Text,
+        string? Image
+    ) {
+        GeneralTestResult? result = _results.FirstOrDefault(r => r.Id == resultId);
+        if (result is null) {
+            return Err.ErrFactory.NotFound(
+                "Cannot update result for general format test. There is no such result in this test",
+                details: $"General format test with id {Id} doesn't have result with id {resultId}"
+            );
+        }
+        GeneralTestResult? resultWithSameName = _results.FirstOrDefault(r => r.Name == Name && r.Id != resultId);
+        if (resultWithSameName is not null) {
+            return Err.ErrFactory.InvalidData(
+                "Cannot update result. Test already has result with such name. Result name must be unique",
+                details: $"General format test result with id {resultWithSameName.Id} already has name {resultWithSameName.Name}"
+            );
+        }
+        return result.Update(Name, Text, Image);
     }
 }

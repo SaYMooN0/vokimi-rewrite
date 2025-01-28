@@ -136,4 +136,9 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         _answersOrderController.RemoveEntity(answer.Id);
         return ErrOrNothing.Nothing;
     }
+    public void RemoveRelatedResultFromAnswers(GeneralTestResultId resultId) {
+        foreach (var a in _answers) {
+            a.RemoveRelatedResultId(resultId);
+        }
+    }
 }

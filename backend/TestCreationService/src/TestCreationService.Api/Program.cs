@@ -37,13 +37,18 @@ namespace TestCreationService.Api
         }
         private static void MapHandlers(WebApplication app) {
             app.MapGroup("/newTestInitialization").MapNewTestInitializationHandlers();
+            
             app.MapGroup("/testCreation/{testId}").MapFormatsSharedTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/styles").MapTestCreationStylesHandlers();
+
             app.MapGroup("/testCreation/{testId}/general").MapGeneralFormatTestCreationHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions").MapGeneralTestCreationQuestionsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}").MapGeneralTestCreationQuestionOperationsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers").MapGeneralTestCreationAnswersHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers/{answerId}").MapGeneralTestCreationAnswerOperationsHandlers();
             app.MapGroup("/testCreation/{testId}/general/results").MapGeneralTestCreationResultsHandlers();
+            app.MapGroup("/testCreation/{testId}/general/results/{resultId}/").MapGeneralTestCreationResultOperationHandlers();
+            
             //app.MapGroup("/testCreation/{testId}/scoring").MapScoringFormatTestCreationHandlers();
         }
     }

@@ -28,7 +28,7 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property("CreatorId")
             .HasConversion(new EntityIdConverter<AppUserId>());
 
-        builder.OwnsOne<TestMainInfo>("MainInfo",
+        builder.OwnsOne<TestMainInfo>("_mainInfo",
             mi => {
                 mi.Property(p => p.Name).HasColumnName("maininfo_Name");
                 mi.Property(p => p.CoverImg).HasColumnName("maininfo_CoverImg");
@@ -36,9 +36,5 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
                 mi.Property(p => p.Language).HasColumnName("maininfo_Language");
             }
         );
-
-        builder.OwnsOne<TestStyles>("Styles", s => {
-
-        });
     }
 }
