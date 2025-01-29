@@ -22,9 +22,12 @@ internal static class FormatsSharedTestCreationHandlers
         group.MapPost("/updateEditors", UpdateTestEditors)
             .WithRequestValidation<UpdateTestEditorsRequest>()
             .OnlyByTestCreator();
+        group.MapPost("/changeTestCreator", ChangeTestCreator)
+            .WithRequestValidation<ChangeTestCreatorRequest>()
+            .OnlyByTestCreator();
         group.MapPost("/deleteTest", DeleteTest)
             .OnlyByTestCreator();
-        
+
         group.MapPost("/updateMainInfo", UpdateTestMainInfo)
             .WithRequestValidation<UpdateTestMainInfoRequest>()
             .TestEditPermissionRequired();
@@ -53,6 +56,25 @@ internal static class FormatsSharedTestCreationHandlers
         return CustomResults.FromErrOr(
             result,
             (ids) => Results.Json(new TestEditorsUpdatedResponse(ids), statusCode: 200)
+        );
+    }
+    private async static Task<IResult> ChangeTestCreator(
+       HttpContext httpContext,
+       ISender mediator
+    ) {
+        var request = httpContext.GetValidatedRequest<ChangeTestCreatorRequest>();
+        var creator = httpContext.GetAuthenticatedUserId();
+
+        ChangeTestCreatorCommand command = new(
+            httpContext.GetTestIdFromRoute(), 
+            request.ParsedNewCreatorId().GetSuccess(), 
+            request.KeepCurrentCreatorAsEditor
+        );
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(
+            result,
+            () => Results.Ok()
         );
     }
     private async static Task<IResult> DeleteTest(

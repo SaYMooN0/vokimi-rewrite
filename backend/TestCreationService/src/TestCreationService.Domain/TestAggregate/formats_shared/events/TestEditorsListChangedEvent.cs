@@ -5,7 +5,7 @@ namespace TestCreationService.Domain.TestAggregate.formats_shared.events;
 
 public record class TestEditorsListChangedEvent(
     TestId TestId,
-    HashSet<AppUserId> newEditors,
+    ISet<AppUserId> newEditors,
     IEnumerable<AppUserId> oldEditors
 ) : IDomainEvent;
 

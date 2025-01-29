@@ -15,7 +15,7 @@ namespace TestCreationService.Domain.TestAggregate;
 public abstract class BaseTest : AggregateRoot<TestId>
 {
     protected BaseTest() { }
-    protected AppUserId CreatorId { get; init; }
+    protected AppUserId CreatorId { get; private set; }
     private readonly HashSet<AppUserId> _editorIds = new();
     public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
     public abstract TestFormat Format { get; }
@@ -36,24 +36,43 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _interactionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
         _styles = TestStylesSheet.CreateNew(id);
     }
-    public ErrOrNothing UpdateEditors(HashSet<AppUserId> userIds) {
-        if (userIds.Count > TestRules.MaxTestEditorsCount) {
+    public ErrOrNothing UpdateEditors(HashSet<AppUserId> newEditors) {
+        if (newEditors.Count > TestRules.MaxTestEditorsCount) {
             return new Err(
                 message: "Too many test editors",
                 details: "You can't add more than " + TestRules.MaxTestEditorsCount + " editors to the test"
             );
         }
-        if (userIds.Any(id => id == CreatorId)) {
+        if (newEditors.Any(id => id == CreatorId)) {
             return new Err(
                message: "Test creator can't be editor",
                details: "Remove the test creator from the list of editors"
            );
         }
-        _domainEvents.Add(new TestEditorsListChangedEvent(Id, userIds, EditorIds));
+        _domainEvents.Add(new TestEditorsListChangedEvent(Id, newEditors, EditorIds));
         _editorIds.Clear();
-        _editorIds.UnionWith(userIds);
+        _editorIds.UnionWith(newEditors);
         return ErrOrNothing.Nothing;
 
+    }
+    public ErrOrNothing ChangeTestCreator(AppUserId newCreatorId, bool keepCurrentAsEditor) {
+        if (CreatorId == newCreatorId) {
+            return new Err(message: "Specified user is already set as test creator");
+        }
+        if (!_editorIds.Contains(newCreatorId)) {
+            return new Err(
+                message: "User you want to make creator is not currently an editor. Only editors can become test creator. If you still want to make this user creator, add them as editor first"
+            );
+        }
+
+        var oldEditors = _editorIds.ToImmutableHashSet();
+        _editorIds.Remove(newCreatorId);
+        if (keepCurrentAsEditor) {
+            _editorIds.Add(CreatorId);
+        }
+        CreatorId = newCreatorId;
+        _domainEvents.Add(new TestEditorsListChangedEvent(Id, EditorIds, oldEditors));
+        return ErrOrNothing.Nothing;
     }
     public bool IsUserCreator(AppUserId userId) => userId == CreatorId;
     public HashSet<AppUserId> TestEditorsWithCreator() => new HashSet<AppUserId>(EditorIds) { CreatorId };

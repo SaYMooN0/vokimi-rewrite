@@ -1,0 +1,45 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Configs;
+using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Infrastructure.IntegrationEvents.background_service;
+using TestCatalogService.Infrastructure.IntegrationEvents.integration_events_publisher;
+using TestCatalogService.Infrastructure.Persistence;
+using TestCatalogService.Infrastructure.Persistence.repositories;
+
+namespace TestCatalogService.Infrastructure;
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
+        services
+            .AddMessageBrokerIntegration(configuration)
+            .AddPersistence(configuration)
+            .AddMediatR();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMediatR(this IServiceCollection services) {
+        services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
+
+        return services;
+    }
+
+    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services, IConfiguration configuration) {
+        services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
+        services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
+        services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
+
+        return services;
+    }
+    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+        string dbConnetionString = configuration.GetConnectionString("TestCatalogServiceDb")
+            ?? throw new Exception("Database connection string is not provided.");
+        services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnetionString));
+
+        services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
+
+        return services;
+    }
+}

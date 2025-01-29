@@ -14,4 +14,8 @@
     <Folder Include="Contracts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TestCatalogService.Application\TestCatalogService.Application.csproj" />
+  </ItemGroup>
+
 </Project>

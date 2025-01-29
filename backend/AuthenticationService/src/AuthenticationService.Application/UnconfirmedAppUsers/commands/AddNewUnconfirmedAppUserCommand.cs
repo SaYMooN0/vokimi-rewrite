@@ -5,7 +5,6 @@ using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.exceptions;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
 
