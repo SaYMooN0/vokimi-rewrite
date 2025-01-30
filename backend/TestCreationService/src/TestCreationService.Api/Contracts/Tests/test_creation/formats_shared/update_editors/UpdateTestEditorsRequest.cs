@@ -9,6 +9,9 @@ public record class UpdateTestEditorsRequest(
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {
+        if (EditorIds is null) {
+            return Err.ErrFactory.InvalidData("Editors list is not set");
+        }
         if (EditorIds.Length > TestRules.MaxTestEditorsCount) {
             return Err.ErrFactory.InvalidData(
                 message: $"Too many editors selected. Maximum number of editors is {TestRules.MaxTestEditorsCount}",

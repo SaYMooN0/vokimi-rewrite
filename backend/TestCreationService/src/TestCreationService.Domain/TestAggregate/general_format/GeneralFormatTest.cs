@@ -164,4 +164,12 @@ public class GeneralFormatTest : BaseTest
         }
         return result.Update(Name, Text, Image);
     }
+
+    public override ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems() {
+        //main info
+        //questions
+        //results
+        //tags
+        return Err.ErrFactory.NotImplemented(nameof(CheckForPublishingProblems));
+    }
 }

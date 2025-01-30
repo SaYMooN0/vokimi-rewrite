@@ -5,7 +5,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 using TestCreationService.Application.Tests.formats_shared.commands.styles;
 using TestCreationService.Api.Extensions;
 
-namespace TestCreationService.Api.Endpoints.test_creation;
+namespace TestCreationService.Api.Endpoints.test_creation.formats_shared;
 internal static class TestCreationStylesHandlers
 {
     internal static RouteGroupBuilder MapTestCreationStylesHandlers(this RouteGroupBuilder group) {
@@ -43,10 +43,10 @@ internal static class TestCreationStylesHandlers
        ISender mediator
     ) {
         var testId = httpContext.GetTestIdFromRoute();
-        
+
         SetTestStylesDefaultCommand command = new(testId);
         var result = await mediator.Send(command);
-        
+
         return CustomResults.FromErrOrNothing(
             result,
             () => Results.Ok()

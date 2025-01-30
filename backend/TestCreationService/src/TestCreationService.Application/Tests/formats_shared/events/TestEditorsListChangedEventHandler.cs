@@ -7,10 +7,10 @@ namespace TestCreationService.Application.Tests.formats_shared.events;
 
 internal class TestEditorsListChangedEventHandler : INotificationHandler<TestEditorsListChangedEvent>
 {
-    private readonly IAppUsersRepository appUsersRepository;
+    private readonly IAppUsersRepository _appUsersRepository;
 
     public TestEditorsListChangedEventHandler(IAppUsersRepository appUsersRepository) {
-        this.appUsersRepository = appUsersRepository;
+        _appUsersRepository = appUsersRepository;
     }
 
     public async Task Handle(TestEditorsListChangedEvent notification, CancellationToken cancellationToken) {
@@ -19,7 +19,7 @@ internal class TestEditorsListChangedEventHandler : INotificationHandler<TestEdi
         List<AppUser> updateList = new List<AppUser>(editorsToAdd.Count() + editorsToRemove.Count());
         
         foreach (var editorIdToAdd in editorsToAdd) {
-            var userToAdd = await appUsersRepository.GetById(editorIdToAdd);
+            var userToAdd = await _appUsersRepository.GetById(editorIdToAdd);
             if (userToAdd is not null) {
                 userToAdd.AddEditorRoleForTest(notification.TestId);
                 updateList.Add(userToAdd);
@@ -27,12 +27,12 @@ internal class TestEditorsListChangedEventHandler : INotificationHandler<TestEdi
         }
 
         foreach (var editorIdToRemove in editorsToRemove) {
-            var userToRemove = await appUsersRepository.GetById(editorIdToRemove);
+            var userToRemove = await _appUsersRepository.GetById(editorIdToRemove);
             if (userToRemove is not null) {
                 userToRemove.RemoveEditorRoleForTest(notification.TestId);
                 updateList.Add(userToRemove);
             }
         }
-        await appUsersRepository.UpdateRange(updateList);
+        await _appUsersRepository.UpdateRange(updateList);
     }
 }

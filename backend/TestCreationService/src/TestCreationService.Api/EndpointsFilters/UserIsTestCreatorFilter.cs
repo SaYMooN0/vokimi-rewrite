@@ -22,7 +22,7 @@ internal class UserIsTestCreatorFilter : IEndpointFilter
         if (isCreatorResult.IsErr(out var err)) {
             return CustomResults.ErrorResponse(err);
         }
-        bool isCreator = isCreatorResult.IsSuccess();
+        bool isCreator = isCreatorResult.GetSuccess();
         if (!isCreator) {
             return CustomResults.ErrorResponse(Err.ErrFactory.NoAccess(
                 message: "You must be the test creator to perform this action"

@@ -3,8 +3,8 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.test_styles;
 using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
+using TestCreationService.Domain.TestAggregate.formats_shared;
 
 namespace TestCreationService.Infrastructure.Persistence.repositories;
 
@@ -36,5 +36,10 @@ internal class BaseTestsRepository : IBaseTestsRepository
     public async Task<BaseTest?> GetWithStyles(TestId testId) =>
         await _db.BaseTests
             .Include(t => EF.Property<TestStylesSheet>(t, "_styles"))
+            .FirstOrDefaultAsync(t => t.Id == testId);
+
+    public async Task<BaseTest?> GetWithTags(TestId testId) =>
+        await _db.BaseTests
+            .Include(t => EF.Property<TestTagsList>(t, "_tags"))
             .FirstOrDefaultAsync(t => t.Id == testId);
 }

@@ -14,15 +14,16 @@ public class AppUser : AggregateRoot<AppUserId>
     public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
 
     public void AddCreatedTest(TestId testId) {
-        if (!_createdTestIds.Contains(testId)) {
-            _createdTestIds.Add(testId);
-        }
+        _createdTestIds.Add(testId);
+    }
+    public void RemoveCreatedTest(TestId testId) {
+        _createdTestIds.Remove(testId);
     }
     public void AddEditorRoleForTest(TestId testId) {
         if (!_editorAssignedTests.Contains(testId)) { _editorAssignedTests.Add(testId); }
     }
     public void RemoveEditorRoleForTest(TestId testId) {
-        if (_editorAssignedTests.Contains(testId)) { _editorAssignedTests.Remove(testId); }
+        _editorAssignedTests.Remove(testId);
     }
     public AppUser(AppUserId id) {
         Id = id;

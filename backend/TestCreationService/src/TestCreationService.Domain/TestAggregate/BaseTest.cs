@@ -22,7 +22,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     private TestMainInfo _mainInfo { get; init; }
     private TestInteractionsAccessSettings _interactionsAccessSettings { get; init; }
     private TestStylesSheet _styles { get; init; }
-
+    private TestTagsList _tags { get; init; }
     protected BaseTest(
         TestId id,
         AppUserId creatorId,
@@ -70,7 +70,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         if (keepCurrentAsEditor) {
             _editorIds.Add(CreatorId);
         }
+        var oldCreator = CreatorId;
         CreatorId = newCreatorId;
+        _domainEvents.Add(new TestCreatorChangedEvent(Id, OldCreator: oldCreator, NewCreator: newCreatorId));
         _domainEvents.Add(new TestEditorsListChangedEvent(Id, EditorIds, oldEditors));
         return ErrOrNothing.Nothing;
     }
@@ -99,4 +101,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _styles.Update(accentColor, errorsColor, buttonsStyle);
     public void SetStylesDefault() =>
         _styles.SetToDefault();
+    public ISet<string> GetTags() => _tags.GetTags();
+    public ErrListOr<ISet<string>> UpdateTags(IEnumerable<string> newTags) => _tags.Update(newTags);
+    public void ClearTags() => _tags.Clear();
+    public abstract ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems();
+
 }

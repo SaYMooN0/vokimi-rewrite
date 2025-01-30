@@ -32,4 +32,8 @@ public class ScoringFormatTest : BaseTest
         newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }
+
+    public override ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems() {
+        throw new NotImplementedException();
+    }
 }

@@ -11,7 +11,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 using TestCreationService.Api.Extensions;
 
-namespace TestCreationService.Api.Endpoints.test_creation;
+namespace TestCreationService.Api.Endpoints.test_creation.formats_shared;
 
 internal static class FormatsSharedTestCreationHandlers
 {
@@ -22,7 +22,7 @@ internal static class FormatsSharedTestCreationHandlers
         group.MapPost("/updateEditors", UpdateTestEditors)
             .WithRequestValidation<UpdateTestEditorsRequest>()
             .OnlyByTestCreator();
-        group.MapPost("/changeTestCreator", ChangeTestCreator)
+        group.MapPost("/changeCreator", ChangeTestCreator)
             .WithRequestValidation<ChangeTestCreatorRequest>()
             .OnlyByTestCreator();
         group.MapPost("/deleteTest", DeleteTest)
@@ -66,8 +66,8 @@ internal static class FormatsSharedTestCreationHandlers
         var creator = httpContext.GetAuthenticatedUserId();
 
         ChangeTestCreatorCommand command = new(
-            httpContext.GetTestIdFromRoute(), 
-            request.ParsedNewCreatorId().GetSuccess(), 
+            httpContext.GetTestIdFromRoute(),
+            request.ParsedNewCreatorId().GetSuccess(),
             request.KeepCurrentCreatorAsEditor
         );
         var result = await mediator.Send(command);

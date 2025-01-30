@@ -8,10 +8,13 @@ namespace TestCreationService.Api.Contracts.Tests.test_initialization;
 
 internal record class InitNewTestRequest(
     string TestName,
-    string[]? EditorIds
+    string[] EditorIds
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {
+        if (EditorIds is null) {
+            return Err.ErrFactory.InvalidData("Editors list is not set");
+        }
         if (TestRules.CheckTestNameForErrs(TestName).IsErr(out var err)) {
             return err;
         }
@@ -24,7 +27,6 @@ internal record class InitNewTestRequest(
         return RequestValidationResult.Success;
     }
     public HashSet<AppUserId> GetParsedEditorIdsWithoutCreator(AppUserId creator) =>
-        EditorIds is null ? [] :
         EditorIds
             .Select(id => new AppUserId(new(id)))
             .Where(id => id != creator)
