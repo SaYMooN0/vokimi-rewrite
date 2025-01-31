@@ -33,7 +33,4 @@ public class ScoringFormatTest : BaseTest
         return newTest;
     }
 
-    public override ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems() {
-        throw new NotImplementedException();
-    }
 }

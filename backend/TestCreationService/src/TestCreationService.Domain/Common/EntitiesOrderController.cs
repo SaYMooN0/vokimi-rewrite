@@ -73,21 +73,4 @@ public class EntitiesOrderController<T> where T : EntityId
             IsShuffled = IsShuffled
         };
     }
-    //public IReadOnlyList<EntityType> GetItemsByShuffledState<EntityType>(IEnumerable<EntityType> entities) where EntityType : Entity<T> {
-    //    if (IsShuffled) {
-    //        return entities
-    //            .OrderBy(_ => Guid.NewGuid())
-    //            .ToImmutableList();
-    //    }
-
-    //    return entities
-    //        .OrderBy(e => _entityOrders[e.Id])
-    //        .ToImmutableList();
-    //}
-    //public ErrOrNothing RemoveByOrder(ushort orderToRemove) {
-    //    var entityToRemove = _entityOrders.FirstOrDefault(e => e.Value == orderToRemove).Key;
-    //    _entityOrders.Remove(entityToRemove);
-    //    ReevaluateOrders();
-    //    return ErrOrNothing.Nothing;
-    //}
 }

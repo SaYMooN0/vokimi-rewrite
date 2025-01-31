@@ -13,27 +13,33 @@ public static class TestRules
     public const int MaxTestDescriptionLength = 500;
     public static ErrOrNothing CheckTestNameForErrs(string str) {
         int len = string.IsNullOrWhiteSpace(str) ? 0 : str.Length;
-        if (len < TestRules.MinNameLength) {
+        if (len < MinNameLength) {
             return Err.ErrFactory.InvalidData(
-                $"Test name is too short. Minimum length is {TestRules.MinNameLength} characters",
-                details: $"Current length: {len}. Minimum required: {TestRules.MinNameLength}"
+                $"Test name is too short. Minimum length is {MinNameLength} characters",
+                details: $"Current length: {len}. Minimum required: {MinNameLength}"
             );
         }
-        if (len > TestRules.MaxNameLength) {
+        if (len > MaxNameLength) {
             return Err.ErrFactory.InvalidData(
-                $"Test name is too long. Maximum length is {TestRules.MaxNameLength} characters",
-                details: $"Current length: {len}. Maximum allowed: {TestRules.MaxNameLength}"
+                $"Test name is too long. Maximum length is {MaxNameLength} characters",
+                details: $"Current length: {len}. Maximum allowed: {MaxNameLength}"
             );
         }
         return ErrOrNothing.Nothing;
     }
     public static ErrOrNothing CheckDescriptionForErrs(string str) {
         int len = string.IsNullOrWhiteSpace(str) ? 0 : str.Length;
-        if (len > TestRules.MaxTestDescriptionLength) {
+        if (len > MaxTestDescriptionLength) {
             return Err.ErrFactory.InvalidData(
-                $"Test description is too long. Maximum length is {TestRules.MaxTestDescriptionLength} characters",
-                details: $"Current length: {len}. Maximum allowed: {TestRules.MaxTestDescriptionLength}"
+                $"Test description is too long. Maximum length is {MaxTestDescriptionLength} characters",
+                details: $"Current length: {len}. Maximum allowed: {MaxTestDescriptionLength}"
             );
+        }
+        return ErrOrNothing.Nothing;
+    }
+    public static ErrOrNothing CheckCoverStringForErrs(string coverImg) {
+        if (string.IsNullOrWhiteSpace(coverImg) || coverImg.Length == 0) {
+            return Err.ErrFactory.InvalidData("Cover image cannot be empty");
         }
         return ErrOrNothing.Nothing;
     }

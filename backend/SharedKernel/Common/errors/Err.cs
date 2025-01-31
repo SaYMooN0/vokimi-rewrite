@@ -34,7 +34,7 @@ public class Err
 
         return sb.ToString();
     }
-
+    public Err WithPrefix(string prefix) => new Err($"{prefix}: {Message}", Code, Details, Source);
     public static class ErrFactory
     {
         public static Err NotImplemented(string message = "Not Implemented", string details = "", ErrorSource source = ErrorSource.Server) =>

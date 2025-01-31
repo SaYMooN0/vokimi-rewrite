@@ -19,10 +19,10 @@ public abstract class BaseTest : AggregateRoot<TestId>
     private readonly HashSet<AppUserId> _editorIds = new();
     public ImmutableHashSet<AppUserId> EditorIds => _editorIds.ToImmutableHashSet();
     public abstract TestFormat Format { get; }
-    private TestMainInfo _mainInfo { get; init; }
-    private TestInteractionsAccessSettings _interactionsAccessSettings { get; init; }
-    private TestStylesSheet _styles { get; init; }
-    private TestTagsList _tags { get; init; }
+    protected TestMainInfo _mainInfo { get; init; }
+    protected TestInteractionsAccessSettings _interactionsAccessSettings { get; init; }
+    protected TestStylesSheet _styles { get; init; }
+    protected TestTagsList _tags { get; init; }
     protected BaseTest(
         TestId id,
         AppUserId creatorId,
@@ -104,6 +104,5 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public ISet<string> GetTags() => _tags.GetTags();
     public ErrListOr<ISet<string>> UpdateTags(IEnumerable<string> newTags) => _tags.Update(newTags);
     public void ClearTags() => _tags.Clear();
-    public abstract ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems();
 
 }

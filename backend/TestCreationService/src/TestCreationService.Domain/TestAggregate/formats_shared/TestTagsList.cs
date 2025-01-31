@@ -41,4 +41,11 @@ public class TestTagsList : Entity<TestTagsListId>
     }
     public ImmutableHashSet<string> GetTags() => _tags.ToImmutableHashSet();
     public void Clear() { _tags.Clear(); }
+    public IEnumerable<Err> CheckForPublishingProblems() {
+        if (_tags.Count > TestTagsRules.MaxTagsForTestCount) {
+            yield return Err.ErrFactory.InvalidData(
+                $"Test has too many tags.Test cannot have more than {TestTagsRules.MaxTagsForTestCount} tags"
+            );
+        }
+    }
 }

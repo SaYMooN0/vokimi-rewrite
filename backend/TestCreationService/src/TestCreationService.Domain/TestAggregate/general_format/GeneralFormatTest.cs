@@ -165,11 +165,77 @@ public class GeneralFormatTest : BaseTest
         return result.Update(Name, Text, Image);
     }
 
-    public override ErrOr<List<TestPublishingProblem>> CheckForPublishingProblems() {
-        //main info
-        //questions
-        //results
-        //tags
-        return Err.ErrFactory.NotImplemented(nameof(CheckForPublishingProblems));
+    public List<TestPublishingProblem> CheckForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) => [
+        .. _mainInfo.CheckForPublishingProblems().Select(e => TestPublishingProblem.FromErr(e, "Main Info")),
+        .. CheckQuestionsForPublishingProblems(questions).Select(e => TestPublishingProblem.FromErr(e, "Questions")),
+        .. CheckResultsForPublishingProblems(questions).Select(e => TestPublishingProblem.FromErr(e, "Results")),
+        .. _tags.CheckForPublishingProblems().Select(e => TestPublishingProblem.FromErr(e, "Tags")),
+    ];
+    private IEnumerable<Err> CheckQuestionsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
+        if (questions is null) {
+            yield return new Err(
+                "Questions were not loaded",
+                details: "Try again later. If it doesn't help try adding or removing one question",
+                source: ErrorSource.Server
+            );
+            yield break;
+        }
+        int questionsCount = questions.Count();
+        if (questionsCount > GeneralFormatTestRules.MaxQuestionsCount) {
+            yield return new Err(
+                $"General format test cannot have more than {GeneralFormatTestRules.MaxQuestionsCount} questions. Test has {questionsCount} questions"
+            );
+            if (questionsCount > GeneralFormatTestRules.MaxQuestionsCount * 2) {
+                yield break;
+            }
+        }
+        if (questionsCount < GeneralFormatTestRules.MinQuestionsCount) {
+            yield return new Err(
+                $"General format test must have at least {GeneralFormatTestRules.MinQuestionsCount} questions. Test has {questionsCount} questions"
+            );
+        }
+        foreach (var question in questions) {
+            var errs = question.CheckForPublishingProblems();
+            if (errs.Any()) {
+                string prefix = $"Question" +
+                    (string.IsNullOrWhiteSpace(question.Text) ?
+                        $"with id: {question.Id}" :
+                        $"'{question.Text.Take(20)}...'");
+                foreach (var err in errs) {
+                    yield return err.WithPrefix(prefix);
+                }
+            }
+
+        }
+    }
+    private IEnumerable<Err> CheckResultsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
+        if (_results is null) {
+            yield return new Err(
+                "Results were not loaded",
+                details: "Try again later. If it doesn't help try adding or removing one result",
+                source: ErrorSource.Server
+            );
+            yield break;
+        }
+        int resultsCount = _results.Count;
+        if (resultsCount > GeneralFormatTestRules.MaxResultsInTestCount) {
+            yield return new Err(
+                $"General format test cannot have more than {GeneralFormatTestRules.MaxResultsInTestCount} results. Test has {resultsCount} results"
+            );
+            if (resultsCount > GeneralFormatTestRules.MaxResultsInTestCount * 2) {
+                yield break;
+            }
+        }
+        if (resultsCount < GeneralFormatTestRules.MinResultsInTestCount) {
+            yield return new Err(
+                $"General format test must have at least {GeneralFormatTestRules.MinResultsInTestCount} results. Test has {resultsCount} results"
+            );
+        }
+        var resultIdsAnswersLeadTo = questions is null ? [] : questions.SelectMany(q => q.GetIdsOfResultsAnswersLeadTo()).ToHashSet();
+        foreach (var result in _results) {
+            if (!resultIdsAnswersLeadTo.Contains(result.Id)) {
+                yield return new Err($"Result '{result.Name}' has no answers leading to it. Result must have at least one answer leading to it");
+            }
+        }
     }
 }

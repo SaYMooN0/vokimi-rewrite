@@ -1,11 +1,14 @@
-﻿using SharedKernel.Common;
+﻿using OneOf.Types;
+using SharedKernel.Common;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
+using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.general_format.events;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TestCreationService.Domain.GeneralTestQuestionAggregate;
 
@@ -46,9 +49,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
                 $"Multiple choice question cannot have more than {GeneralTestQuestionRules.MaxAnswersCount} answers, because it is the maximum count of answers that question can have")
             );
         }
-        if (errs.Any()) {
-            return errs;
-        }
+        if (errs.Any()) { return errs; }
         Text = text;
         _images = images;
         TimeLimit = timeLimit;
@@ -139,6 +140,52 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
     public void RemoveRelatedResultFromAnswers(GeneralTestResultId resultId) {
         foreach (var a in _answers) {
             a.RemoveRelatedResultId(resultId);
+        }
+    }
+    public ImmutableHashSet<GeneralTestResultId> GetIdsOfResultsAnswersLeadTo() => _answers
+        .SelectMany(a => a.GetRelatedResultIds())
+        .ToImmutableHashSet();
+    public IEnumerable<Err> CheckForPublishingProblems() {
+        if (GeneralTestQuestionRules.CheckQuestionTextForErrs(Text).IsErr(out var err)) {
+            yield return err;
+        }
+        if (GeneralTestQuestionRules.CheckQuestionImagesForErrs(_images).IsErr(out err)) {
+            yield return err;
+        }
+        if (_answers is null) {
+            yield return new Err(
+                "Answers were not loaded",
+                details: "Try again later. If it doesn't help try adding or removing one answer",
+                source: ErrorSource.Server
+            );
+            yield break;
+        }
+        int answersCount = _answers.Count;
+        if (answersCount > GeneralTestQuestionRules.MaxAnswersCount) {
+            yield return new Err(
+                $"Test question cannot have more than {GeneralTestQuestionRules.MaxAnswersCount} answers. Question has {answersCount} answers"
+            );
+            if (answersCount > GeneralTestQuestionRules.MaxAnswersCount * 2) {
+                yield break;
+            }
+        }
+        if (answersCount < GeneralTestQuestionRules.MinAnswersCount) {
+            yield return new Err(
+                $"Test question cannot have less than {GeneralTestQuestionRules.MinAnswersCount} answers. Question has {answersCount} answers"
+            );
+        }
+        if (!AnswerCountLimit.IsMultipleChoice) {
+            yield break;
+        }
+        if (answersCount < AnswerCountLimit.MaxAnswers) {
+            yield return new Err(
+              $"Question is a multiple choice question and with maximum number of answers to chose equal to {AnswerCountLimit.MaxAnswers}. Question has only {answersCount} answers"
+            );
+        }
+        if (answersCount < AnswerCountLimit.MinAnswers) {
+            yield return new Err(
+              $"Question is a multiple choice question and with minimum number of answers to chose equal to {AnswerCountLimit.MinAnswers}. Question has only {answersCount} answers"
+            );
         }
     }
 }

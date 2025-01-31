@@ -14,8 +14,12 @@ public class TestMainInfo : ValueObject
     public string Description { get; private set; }
     public Language Language { get; private set; }
 
-    public override IEnumerable<object> GetEqualityComponents() =>
-        [Name, CoverImg, Description, Language];
+    public override IEnumerable<object> GetEqualityComponents() {
+        yield return Name;
+        yield return CoverImg;
+        yield return Description;
+        yield return Language;
+    }
     public static ErrOr<TestMainInfo> CreateNew(string testName) {
         if (TestRules.CheckTestNameForErrs(testName).IsErr(out var err)) {
             return err;
@@ -39,10 +43,10 @@ public class TestMainInfo : ValueObject
         Language = language;
         return ErrOrNothing.Nothing;
     }
-    public ErrOrNothing UpdateCoverImg(string coverImg) {
-        if (string.IsNullOrWhiteSpace(coverImg) || coverImg.Length == 0) {
-            return Err.ErrFactory.InvalidData("Cover image cannot be empty");
-        }
-        return ErrOrNothing.Nothing;
+    public ErrOrNothing UpdateCoverImg(string coverImg) => TestRules.CheckCoverStringForErrs(coverImg);
+    public IEnumerable<Err> CheckForPublishingProblems() {
+        if (TestRules.CheckTestNameForErrs(Name).IsErr(out var err)) { yield return err; }
+        if (TestRules.CheckDescriptionForErrs(Description).IsErr(out err)) { yield return err; }
+        if (TestRules.CheckCoverStringForErrs(CoverImg).IsErr(out err)) { yield return err; }
     }
 }
