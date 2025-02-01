@@ -2,6 +2,8 @@
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.general_format;
+using SharedKernel.IntegrationEvents.test_publishing;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
@@ -146,7 +148,7 @@ public class GeneralFormatTest : BaseTest
         GeneralTestResultId resultId,
         string Name,
         string Text,
-        string? Image
+        string Image
     ) {
         GeneralTestResult? result = _results.FirstOrDefault(r => r.Id == resultId);
         if (result is null) {
@@ -237,5 +239,37 @@ public class GeneralFormatTest : BaseTest
                 yield return new Err($"Result '{result.Name}' has no answers leading to it. Result must have at least one answer leading to it");
             }
         }
+    }
+    public ErrOrNothing Publish(IEnumerable<GeneralTestQuestion> questions) {
+        if (CheckForPublishingProblems(questions).Any()) {
+            return new Err("Cannot publish test. Test has publishing problems");
+        }
+        GeneralTestPublishedEvent e = new(
+            Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description, _mainInfo.Language,
+            new(
+                _interactionsAccessSettings.TestAccess,
+                _interactionsAccessSettings.AllowRatings,
+                _interactionsAccessSettings.AllowDiscussions,
+                _interactionsAccessSettings.AllowTestTakenPosts,
+                _interactionsAccessSettings.AllowTagsSuggestions
+            ),
+            new(
+                _styles.AccentColor,
+                _styles.ErrorsColor,
+                _styles.Buttons
+            ),
+            _tags.GetTags().ToArray(),
+            new(
+                TestTakingProcessSettings.ForceSequentialFlow,
+                TestTakingProcessSettings.Feedback
+            ),
+            _questionsList.IsShuffled,
+            _questionsList
+                .GetItemsWithOrders(questions)
+                .Select(i => i.Entity.ToTestPublishedDto(i.Order))
+                .ToArray(),
+            _results.Select(r => new GeneralTestPublishedResultDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
+        );
+        return ErrOrNothing.Nothing;
     }
 }

@@ -47,7 +47,7 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasGeneralTestQuestionTimeLimitOptionConverter();
 
         builder
-            .Property(x => x.AnswerCountLimit)
+            .Property(x => x.AnswersCountLimit)
             .HasGeneralTestQuestionAnswersCountLimitConverter();
 
     }

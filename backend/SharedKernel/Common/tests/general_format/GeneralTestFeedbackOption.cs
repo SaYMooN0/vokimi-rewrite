@@ -1,9 +1,7 @@
-﻿using SharedKernel.Common;
-using SharedKernel.Common.common_enums;
+﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.errors;
-using TestCreationService.Domain.Common.rules;
 
-namespace TestCreationService.Domain.TestAggregate.general_format;
+namespace SharedKernel.Common.tests.general_format;
 
 public abstract class GeneralTestFeedbackOption : ValueObject
 {

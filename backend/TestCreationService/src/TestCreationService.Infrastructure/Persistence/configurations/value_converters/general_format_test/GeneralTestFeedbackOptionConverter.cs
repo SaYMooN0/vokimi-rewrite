@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SharedKernel.Common.tests.general_format;
 using System.Text.Json;
-using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 

@@ -1,8 +1,7 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.errors;
-using TestCreationService.Domain.Common.rules;
-using TestCreationService.Domain.TestAggregate.general_format;
+using SharedKernel.Common.tests.general_format;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format;
 

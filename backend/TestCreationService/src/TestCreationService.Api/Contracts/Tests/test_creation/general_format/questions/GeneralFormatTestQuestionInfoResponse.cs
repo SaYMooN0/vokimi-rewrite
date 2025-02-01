@@ -18,7 +18,7 @@ internal record class GeneralFormatTestQuestionInfoResponse(
         Images: question.Images.ToArray(),
         TimeLimit: question.TimeLimit.ToInt(),
         AnswersType: question.AnswersType.ToString(),
-        AnswerCountLimit: question.AnswerCountLimit.ToString(),
+        AnswerCountLimit: question.AnswersCountLimit.ToString(),
         OrderInTest: questionOrder
     );
 }

@@ -11,7 +11,7 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
     public TestId TestId { get; init; }
     public string Name { get; private set; }
     public string Text { get; private set; }
-    public string? Image { get; private set; }
+    public string Image { get; private set; }
     public static ErrOr<GeneralTestResult> CreateNew(TestId testId, string name) {
         if (GeneralFormatTestRules.CheckResultNameForErrs(name).IsErr(out var err)) {
             return err;
@@ -21,10 +21,10 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
             TestId = testId,
             Name = name,
             Text = "General test result text",
-            Image = null
+            Image = string.Empty
         };
     }
-    public ErrOrNothing Update(string name, string text, string? image) {
+    public ErrOrNothing Update(string name, string text, string image) {
         if (GeneralFormatTestRules.CheckResultNameForErrs(name).IsErr(out var err)) {
             return err;
         }

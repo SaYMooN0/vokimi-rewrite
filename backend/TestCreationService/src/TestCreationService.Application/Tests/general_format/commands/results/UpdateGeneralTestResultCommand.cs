@@ -11,7 +11,7 @@ public record class UpdateGeneralTestResultCommand(
     GeneralTestResultId ResultId,
     string Name,
     string Text,
-    string? Image
+    string Image
 ) : IRequest<ErrOrNothing>;
 internal class UpdateGeneralTestResultCommandHandler :
     IRequestHandler<UpdateGeneralTestResultCommand, ErrOrNothing>
@@ -31,7 +31,7 @@ internal class UpdateGeneralTestResultCommandHandler :
             request.ResultId,
             request.Name,
             request.Text,
-            request.Image
+            request.Image ?? ""
         );
         if (updateRes.IsErr(out var err)) {
             return err;

@@ -4,6 +4,7 @@ using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
+using SharedKernel.IntegrationEvents.test_publishing;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
@@ -23,7 +24,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
     public GeneralTestAnswersType AnswersType { get; init; }
     protected virtual List<GeneralTestAnswer> _answers { get; init; }
     private EntitiesOrderController<GeneralTestAnswerId> _answersOrderController { get; set; }
-    public GeneralTestQuestionAnswersCountLimit AnswerCountLimit { get; private set; }
+    public GeneralTestQuestionAnswersCountLimit AnswersCountLimit { get; private set; }
     public GeneralTestQuestion(GeneralTestQuestionId id, TestId testId, GeneralTestAnswersType answersType) {
         Id = id;
         TestId = testId;
@@ -33,7 +34,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         AnswersType = answersType;
         _answers = new();
         _answersOrderController = EntitiesOrderController<GeneralTestAnswerId>.Empty(isShuffled: false);
-        AnswerCountLimit = GeneralTestQuestionAnswersCountLimit.SingleChoice();
+        AnswersCountLimit = GeneralTestQuestionAnswersCountLimit.SingleChoice();
     }
     public ErrListOrNothing Update(
         string text,
@@ -53,7 +54,7 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         Text = text;
         _images = images;
         TimeLimit = timeLimit;
-        AnswerCountLimit = answerCountLimit;
+        AnswersCountLimit = answerCountLimit;
         return ErrListOrNothing.Nothing;
     }
     public IReadOnlyList<(GeneralTestAnswer Question, ushort Order)> GetAnswersWithOrder() =>
@@ -174,18 +175,33 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
                 $"Test question cannot have less than {GeneralTestQuestionRules.MinAnswersCount} answers. Question has {answersCount} answers"
             );
         }
-        if (!AnswerCountLimit.IsMultipleChoice) {
+        if (!AnswersCountLimit.IsMultipleChoice) {
             yield break;
         }
-        if (answersCount < AnswerCountLimit.MaxAnswers) {
+        if (answersCount < AnswersCountLimit.MaxAnswers) {
             yield return new Err(
-              $"Question is a multiple choice question and with maximum number of answers to chose equal to {AnswerCountLimit.MaxAnswers}. Question has only {answersCount} answers"
+              $"Question is a multiple choice question and with maximum number of answers to chose equal to {AnswersCountLimit.MaxAnswers}. Question has only {answersCount} answers"
             );
         }
-        if (answersCount < AnswerCountLimit.MinAnswers) {
+        if (answersCount < AnswersCountLimit.MinAnswers) {
             yield return new Err(
-              $"Question is a multiple choice question and with minimum number of answers to chose equal to {AnswerCountLimit.MinAnswers}. Question has only {answersCount} answers"
+              $"Question is a multiple choice question and with minimum number of answers to chose equal to {AnswersCountLimit.MinAnswers}. Question has only {answersCount} answers"
             );
         }
     }
+    public GeneralTestPublishedQuestionDto ToTestPublishedDto(ushort order) => new(
+        Id,
+        order,
+        Text,
+        _images,
+        TimeLimit,
+        AnswersType,
+        _answersOrderController.IsShuffled,
+        AnswersCountLimit,
+        _answers.Select(a=> new GeneralTestPublishedAnswerDto(
+            a.Id, 
+            a.TypeSpecificData, 
+            a.GetRelatedResultIds().ToArray()
+        )).ToArray()
+    );
 }

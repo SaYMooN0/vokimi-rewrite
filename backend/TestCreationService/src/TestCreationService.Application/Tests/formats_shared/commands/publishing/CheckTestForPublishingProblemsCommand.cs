@@ -6,16 +6,16 @@ using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.general_format;
-public record class CheckTestForPublishingErrsCommand(TestId TestId) : IRequest<TestPublishingProblem[]>;
+public record class CheckTestForPublishingProblemsCommand(TestId TestId) : IRequest<TestPublishingProblem[]>;
 
-public class CheckTestForPublishingErrsCommandHandler : IRequestHandler<CheckTestForPublishingErrsCommand, TestPublishingProblem[]>
+public class CheckTestForPublishingProblemsCommandHandler : IRequestHandler<CheckTestForPublishingProblemsCommand, TestPublishingProblem[]>
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
 
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
     private readonly IGeneralTestQuestionsRepository _generalTestQuestionsRepository;
 
-    public CheckTestForPublishingErrsCommandHandler(
+    public CheckTestForPublishingProblemsCommandHandler(
         IBaseTestsRepository baseTestsRepository,
         IGeneralFormatTestsRepository generalFormatTestsRepository,
         IGeneralTestQuestionsRepository generalTestQuestionsRepository
@@ -25,7 +25,7 @@ public class CheckTestForPublishingErrsCommandHandler : IRequestHandler<CheckTes
         _generalTestQuestionsRepository = generalTestQuestionsRepository;
     }
 
-    public async Task<TestPublishingProblem[]> Handle(CheckTestForPublishingErrsCommand request, CancellationToken cancellationToken) {
+    public async Task<TestPublishingProblem[]> Handle(CheckTestForPublishingProblemsCommand request, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
             return [new TestPublishingProblem("Test", "Unknown test", $"Test with id {request.TestId} not found")];

@@ -7,7 +7,7 @@ namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.r
 public record class UpdateGeneralTestResultRequest(
     string Name,
     string Text,
-    string? Image
+    string Image
 ) : IRequestWithValidationNeeded
 {
     public RequestValidationResult Validate() {

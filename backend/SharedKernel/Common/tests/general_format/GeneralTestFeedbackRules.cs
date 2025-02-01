@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.errors;
 
-namespace TestCreationService.Domain.Common.rules;
+namespace SharedKernel.Common.tests.general_format;
 
 public static class GeneralTestFeedbackRules
 {

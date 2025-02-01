@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.tests.test_styles;
 using TestCreationService.Application.Common.interfaces.repositories;
+using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Infrastructure.Persistence.repositories;
@@ -17,6 +19,14 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
     }
     public async Task<GeneralFormatTest?> GetById(TestId testId) {
         return await _db.GeneralFormatTests.FindAsync(testId);
+    }
+
+    public async Task<GeneralFormatTest?> GetWithEverything(TestId testId) {
+        return await _db.GeneralFormatTests
+            .Include(t => EF.Property<TestStylesSheet>(t, "_styles"))
+            .Include(t => EF.Property<TestTagsList>(t, "_tags"))
+            .Include(t => EF.Property<List<GeneralTestResult>>(t, "_results"))
+            .FirstOrDefaultAsync(t => t.Id == testId);
     }
 
     public async Task<GeneralFormatTest?> GetWithResults(TestId testId) {
