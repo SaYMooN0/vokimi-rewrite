@@ -1,4 +1,6 @@
-﻿namespace SharedKernel.Common.tests.value_objects;
+﻿using SharedKernel.Common.domain;
+
+namespace SharedKernel.Common.tests.value_objects;
 
 public abstract class BaseAnswersCountLimit : ValueObject
 {

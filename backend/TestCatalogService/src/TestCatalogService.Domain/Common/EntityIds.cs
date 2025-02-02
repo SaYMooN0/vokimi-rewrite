@@ -1,9 +1,11 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.interfaces;
 
 namespace TestCatalogService.Domain.Common;
 
-public class TestTagId : EntityId
+public class TestTagId : IEntityId
 {
-    public TestTagId(Guid value) : base(value) { }
-    public static TestTagId CreateNew() => new(Guid.CreateVersion7());
+    public string Value { get; init; }
+    public TestTagId(string value) { Value = value; }
+    public override string ToString() => Value;
 }

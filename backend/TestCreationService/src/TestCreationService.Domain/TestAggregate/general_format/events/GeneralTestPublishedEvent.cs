@@ -1,6 +1,5 @@
-﻿using SharedKernel.Common;
-using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.common_enums;
+using SharedKernel.Common.domain;
 using SharedKernel.IntegrationEvents.test_publishing;
 
 namespace TestCreationService.Domain.TestAggregate.general_format.events;
@@ -13,6 +12,7 @@ public record class GeneralTestPublishedEvent(
     string CoverImage,
     string Description,
     Language Language,
+    DateTime PublicationDate,
     TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
     TestPublishedStylesDto Styles,
     string[] Tags,

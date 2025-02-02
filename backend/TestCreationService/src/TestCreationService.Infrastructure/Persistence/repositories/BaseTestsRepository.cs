@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.test_styles;
 using TestCreationService.Application.Common.interfaces.repositories;

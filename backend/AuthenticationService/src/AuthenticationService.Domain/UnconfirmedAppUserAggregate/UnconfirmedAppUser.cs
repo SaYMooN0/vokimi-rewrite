@@ -2,7 +2,7 @@
 using AuthenticationService.Domain.Common;
 using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Domain.Rules;
-using SharedKernel.Common;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;

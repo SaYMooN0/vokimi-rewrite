@@ -10,7 +10,7 @@ public static class GeneralFormatTestRules
     public const int
         MaxRelatedResultsForAnswer = 20;
     public const int
-        MinResultsInTestCount = 60,
+        MinResultsInTestCount = 2,
         MaxResultsInTestCount = 60;
     public const int
         MinResultNameLength = 6,

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.extension;
+namespace TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 internal static class PropertyBuilderExtensions
 {
@@ -14,15 +14,11 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new ResourceAvailabilitySettingConverter())
             .HasMaxLength(20);
     }
-    public static PropertyBuilder<TId> HasEntityIdConversion<TId>(this PropertyBuilder<TId> builder) where TId : EntityId {
-        return builder.HasConversion(new EntityIdConverter<TId>());
-    }
-
     public static PropertyBuilder<HashSet<T>> HasEntityIdsHashSetConversion<T>(
         this PropertyBuilder<HashSet<T>> builder) where T : EntityId {
         builder.HasConversion(
             new EntityIdHashSetConverter<T>(),
-            new HashSetOfEntityIdsComparer<T>()
+            new EntityIdHashSetComparer<T>()
         );
         return builder;
     }

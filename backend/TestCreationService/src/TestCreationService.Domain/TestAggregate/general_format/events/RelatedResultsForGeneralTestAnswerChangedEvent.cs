@@ -1,5 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
-using SharedKernel.Common;
+﻿using SharedKernel.Common.domain;
 
 namespace TestCreationService.Domain.TestAggregate.general_format.events;
 public record class RelatedResultsForGeneralTestAnswerChangedEvent(

@@ -1,8 +1,8 @@
 ﻿using ApiShared.extensions;
 using ApiShared;
 using MediatR;
-using SharedKernel.Common.EntityIds;
 using TestCreationService.Api.Extensions;
+using SharedKernel.Common.domain;
 
 namespace TestCreationService.Api.Endpoints;
 

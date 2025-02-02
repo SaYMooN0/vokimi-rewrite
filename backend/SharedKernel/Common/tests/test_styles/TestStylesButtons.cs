@@ -1,5 +1,7 @@
 ﻿
 
+using SharedKernel.Common.domain;
+
 namespace SharedKernel.Common.tests.test_styles;
 
 public class TestStylesButtons : ValueObject

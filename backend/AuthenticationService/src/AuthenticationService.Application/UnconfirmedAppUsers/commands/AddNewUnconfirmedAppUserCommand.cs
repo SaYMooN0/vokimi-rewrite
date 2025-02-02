@@ -3,8 +3,8 @@ using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Application.Configs;
 using AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 using MediatR;
-using SharedKernel.Common;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 
 namespace AuthenticationService.Application.UnconfirmedAppUsers.commands;
 
@@ -18,19 +18,22 @@ public class AddNewUnconfirmedAppUserCommandHandler : IRequestHandler<AddNewUnco
     private readonly IEmailService _emailService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly FrontendConfig _frontendConfig;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public AddNewUnconfirmedAppUserCommandHandler(
         IAppUsersRepository appUsersRepository,
         IUnconfirmedAppUsersRepository unconfirmedAppUsersRepository,
         IEmailService emailService,
         IPasswordHasher passwordHasher,
-        FrontendConfig frontendConfig
+        FrontendConfig frontendConfig,
+        IDateTimeProvider dateTimeProvider
     ) {
         _appUsersRepository = appUsersRepository;
         _unconfirmedAppUsersRepository = unconfirmedAppUsersRepository;
         _emailService = emailService;
         _passwordHasher = passwordHasher;
         _frontendConfig = frontendConfig;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrListOrNothing> Handle(AddNewUnconfirmedAppUserCommand request, CancellationToken cancellationToken) {
@@ -38,7 +41,7 @@ public class AddNewUnconfirmedAppUserCommandHandler : IRequestHandler<AddNewUnco
             request.email,
             request.password,
             _passwordHasher.HashPassword,
-            UtcDateTimeProvider.Instance
+           _dateTimeProvider
         );
         if (userToAddCreationRes.AnyErr(out var errs)) { return errs; }
 

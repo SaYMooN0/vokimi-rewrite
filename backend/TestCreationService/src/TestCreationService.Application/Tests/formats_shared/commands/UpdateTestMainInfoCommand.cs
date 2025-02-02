@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using System.Net;
 using TestCreationService.Application.Common.interfaces.repositories;

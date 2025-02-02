@@ -1,5 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
-using SharedKernel.Common.general_test_questions;
+﻿using SharedKernel.Common.general_test_questions;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;

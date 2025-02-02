@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 
 namespace SharedKernel.IntegrationEvents.authentication;
 

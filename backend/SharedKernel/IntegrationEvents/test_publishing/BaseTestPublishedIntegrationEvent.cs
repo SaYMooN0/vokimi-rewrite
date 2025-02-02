@@ -1,6 +1,6 @@
 ﻿
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.tests.test_styles;
 using SharedKernel.Common.tests.value_objects;
 
@@ -14,6 +14,7 @@ public abstract record BaseTestPublishedIntegrationEvent(
     string CoverImage, 
     string Description,
     Language Language,
+    DateTime PublicationDate,
     TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
     TestPublishedStylesDto Styles, 
     string[] Tags

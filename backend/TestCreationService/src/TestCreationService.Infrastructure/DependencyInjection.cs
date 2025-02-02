@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Common.interfaces;
+using SharedKernel.Common;
 using SharedKernel.Configs;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Infrastructure.IntegrationEvents.background_service;
@@ -16,7 +18,8 @@ public static class DependencyInjection
         services
             .AddMessageBrokerIntegration(configuration)
             .AddPersistence(configuration)
-            .AddMediatR();
+            .AddMediatR()
+            .AddDateTimeService();
 
         return services;
     }
@@ -45,6 +48,10 @@ public static class DependencyInjection
         services.AddScoped<IScoringFormatTestsRepository, ScoringFormatTestsRepository>();
         services.AddScoped<IGeneralTestQuestionsRepository, GeneralTestQuestionsRepository>();
 
+        return services;
+    }
+    private static IServiceCollection AddDateTimeService(this IServiceCollection services) {
+        services.AddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
         return services;
     }
 }

@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.tests.value_objects;
 
 namespace SharedKernel.Common.tests.test_styles;

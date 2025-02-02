@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using TestCreationService.Domain.TestAggregate;
-using TestCreationService.Infrastructure.Persistence.configurations.extension;
-using SharedKernel.Common.EntityIds;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 using TestCreationService.Domain.TestAggregate.formats_shared;
+using SharedKernel.Common.domain;
+using InfrastructureConfigurationShared.Extensions;
+using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests;
 
@@ -25,8 +26,8 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .HasEntityIdsHashSetConversion();
 
         builder
-            .Property("CreatorId")
-            .HasConversion(new EntityIdConverter<AppUserId>());
+            .Property<AppUserId>("CreatorId")
+            .HasEntityIdConversion();
 
         builder.OwnsOne<TestMainInfo>("_mainInfo",
             mi => {

@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.tests.test_styles;
 using TestCreationService.Domain.TestAggregate.formats_shared;
-using TestCreationService.Infrastructure.Persistence.configurations.extension;
 using TestCreationService.Domain.TestAggregate;
+using InfrastructureConfigurationShared.Extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;
 
@@ -24,7 +24,7 @@ internal class TestTagsListConfigurations : IEntityTypeConfiguration<TestTagsLis
             .HasForeignKey<TestTagsList>("TestId");
 
         builder
-            .Property<HashSet<string>>("_tags")
+            .Property<List<string>>("_tags")
             .HasColumnName("Tags");
 
 

@@ -1,6 +1,7 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.IntegrationEvents.test_publishing;
@@ -240,12 +241,13 @@ public class GeneralFormatTest : BaseTest
             }
         }
     }
-    public ErrOrNothing Publish(IEnumerable<GeneralTestQuestion> questions) {
+    public ErrOrNothing Publish(IEnumerable<GeneralTestQuestion> questions, IDateTimeProvider dateTimeProvider) {
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
         }
         GeneralTestPublishedEvent e = new(
             Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description, _mainInfo.Language,
+            dateTimeProvider.Now,
             new(
                 _interactionsAccessSettings.TestAccess,
                 _interactionsAccessSettings.AllowRatings,

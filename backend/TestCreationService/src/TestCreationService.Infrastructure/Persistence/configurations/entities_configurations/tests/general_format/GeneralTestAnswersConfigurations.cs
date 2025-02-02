@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureConfigurationShared.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
-using TestCreationService.Infrastructure.Persistence.configurations.extension;
+using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
 internal class GeneralTestAnswersConfigurations : IEntityTypeConfiguration<GeneralTestAnswer>

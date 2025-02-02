@@ -16,13 +16,14 @@ internal class DomainToIntegrationEventsHandler :
     }
     public async Task Handle(GeneralTestPublishedEvent notification, CancellationToken cancellationToken) {
         var integrationEvent = new GeneralTestPublishedIntegrationEvent(
-            notification.TestId, 
+            notification.TestId,
             notification.CreatorId,
             notification.EditorIds,
             notification.Name,
             notification.CoverImage,
             notification.Description,
             notification.Language,
+            notification.PublicationDate,
             notification.InteractionsAccessSettings,
             notification.Styles,
             notification.Tags,

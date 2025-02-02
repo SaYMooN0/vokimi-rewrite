@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using System.Data;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;

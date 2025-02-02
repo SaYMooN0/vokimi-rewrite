@@ -1,7 +1,7 @@
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain.interfaces;
 
-namespace SharedKernel.Common;
-public abstract class Entity<IdType> where IdType : EntityId
+namespace SharedKernel.Common.domain;
+public abstract class Entity<IdType> where IdType : IEntityId
 {
     public IdType Id { get; init; }
 
@@ -9,11 +9,9 @@ public abstract class Entity<IdType> where IdType : EntityId
         if (other is null || other.GetType() != GetType()) {
             return false;
         }
-
-        return Id == ((Entity<IdType>)other).Id;
+        Entity<IdType> otherEntity = (Entity<IdType>)other;
+        return Id.Equals(otherEntity.Id);
     }
-
-
     public override int GetHashCode() =>
         Id.GetHashCode();
 

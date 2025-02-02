@@ -1,6 +1,6 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestCreationService.Application.Common.interfaces.repositories;
 

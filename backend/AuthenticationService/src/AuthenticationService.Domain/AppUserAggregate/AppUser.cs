@@ -1,7 +1,6 @@
 ﻿using AuthenticationService.Domain.AppUserAggregate.events;
 using AuthenticationService.Domain.Common.value_objects;
-using SharedKernel.Common;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.interfaces;
 
 namespace AuthenticationService.Domain.AppUserAggregate;

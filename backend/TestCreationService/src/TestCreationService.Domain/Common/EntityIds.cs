@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 
 namespace TestCreationService.Domain.Common;
 public class TestInteractionsAccessSettingsId : EntityId

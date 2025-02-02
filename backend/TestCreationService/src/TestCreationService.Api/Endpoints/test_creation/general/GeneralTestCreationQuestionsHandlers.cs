@@ -1,7 +1,7 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using MediatR;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 using TestCreationService.Api.Extensions;

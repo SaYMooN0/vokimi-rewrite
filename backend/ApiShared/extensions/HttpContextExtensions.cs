@@ -1,6 +1,6 @@
 ﻿using ApiShared.interfaces;
 using Microsoft.AspNetCore.Http;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 
 namespace ApiShared.extensions;

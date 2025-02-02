@@ -1,13 +1,15 @@
-﻿namespace SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain.interfaces;
 
-public abstract class EntityId : ValueObject, IComparable
+namespace SharedKernel.Common.domain;
+
+public abstract class EntityId : ValueObject, IComparable, IEntityId
 {
     public Guid Value { get; init; }
     protected EntityId(Guid value) => Value = value;
     public override string ToString() => Value.ToString();
     public override IEnumerable<object> GetEqualityComponents() { yield return Value; }
     public int CompareTo(object? obj) => obj switch {
-        EntityId ed => ed.Value.CompareTo(Value),
+        IEntityId ed => ToString().CompareTo(ed.ToString()),
         Guid guid => guid.CompareTo(Value),
         _ => -1
     };

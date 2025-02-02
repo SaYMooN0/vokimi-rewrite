@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
@@ -10,7 +10,7 @@ public class TestTagsList : Entity<TestTagsListId>
 {
     private TestTagsList() { }
     private TestId TestId { get; init; }
-    private HashSet<string> _tags;
+    private List<string> _tags { get; set; }
     public static TestTagsList CreateNew(TestId testId) => new() {
         TestId = testId,
         Id = TestTagsListId.CreateNew(),
@@ -36,7 +36,7 @@ public class TestTagsList : Entity<TestTagsListId>
         }
         if (errs.Any()) { return errs; }
 
-        _tags = newTags;
+        _tags = newTags.ToList();
         return GetTags();
     }
     public ImmutableHashSet<string> GetTags() => _tags.ToImmutableHashSet();

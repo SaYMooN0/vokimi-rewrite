@@ -1,7 +1,6 @@
-﻿
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 
@@ -15,9 +14,9 @@ internal class EntityIdHashSetConverter<T> : ValueConverter<HashSet<T>, string> 
                 .ToHashSet()) 
     { }
 }
-internal class HashSetOfEntityIdsComparer<T> : ValueComparer<HashSet<T>> where T : EntityId
+internal class EntityIdHashSetComparer<T> : ValueComparer<HashSet<T>> where T : EntityId
 {
-    public HashSetOfEntityIdsComparer() : base(
+    public EntityIdHashSetComparer() : base(
       (t1, t2) => t1!.SequenceEqual(t2!),
       t => t.Select(x => x!.GetHashCode()).Aggregate((x, y) => x ^ y),
       t => t) {

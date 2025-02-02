@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 

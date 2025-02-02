@@ -1,9 +1,6 @@
 ﻿using ApiShared.extensions;
 using ApiShared;
 using MediatR;
-using SharedKernel.Common.EntityIds;
-using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
-using TestCreationService.Application.Tests.formats_shared.commands;
 using TestCreationService.Application.Tests.general_format.commands;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format;
 using TestCreationService.Api.Extensions;

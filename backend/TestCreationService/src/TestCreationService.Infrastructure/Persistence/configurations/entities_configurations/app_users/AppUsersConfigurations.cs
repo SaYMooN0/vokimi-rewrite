@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureConfigurationShared.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.TestAggregate;
-using TestCreationService.Infrastructure.Persistence.configurations.extension;
+using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.app_users;
 

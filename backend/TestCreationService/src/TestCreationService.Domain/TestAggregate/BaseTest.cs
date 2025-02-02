@@ -1,6 +1,5 @@
-﻿using SharedKernel.Common;
-using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.common_enums;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.test_styles;
@@ -35,6 +34,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _mainInfo = mainInfo;
         _interactionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
         _styles = TestStylesSheet.CreateNew(id);
+        _tags =  TestTagsList.CreateNew(id);
     }
     public ErrOrNothing UpdateEditors(HashSet<AppUserId> newEditors) {
         if (newEditors.Count > TestRules.MaxTestEditorsCount) {

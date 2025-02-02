@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate;
@@ -9,16 +10,20 @@ public record class PublishTestCommand(TestId TestId) : IRequest<ErrOrNothing>;
 
 public class PublishTestCommandHandler : IRequestHandler<PublishTestCommand, ErrOrNothing>
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
+
     private readonly IBaseTestsRepository _baseTestsRepository;
 
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
     private readonly IGeneralTestQuestionsRepository _generalTestQuestionsRepository;
 
     public PublishTestCommandHandler(
+        IDateTimeProvider dateTimeProvider,
         IBaseTestsRepository baseTestsRepository,
         IGeneralFormatTestsRepository generalFormatTestsRepository,
         IGeneralTestQuestionsRepository generalTestQuestionsRepository
     ) {
+        _dateTimeProvider = dateTimeProvider;
         _baseTestsRepository = baseTestsRepository;
         _generalFormatTestsRepository = generalFormatTestsRepository;
         _generalTestQuestionsRepository = generalTestQuestionsRepository;
@@ -46,6 +51,6 @@ public class PublishTestCommandHandler : IRequestHandler<PublishTestCommand, Err
             return Err.ErrFactory.NotFound("Unable to get all test questions", "Try again later. If it doesn't help try adding or removing one question");
         }
         var questions = questionsRes.GetSuccess();
-        return test.Publish(questions);
+        return test.Publish(questions, _dateTimeProvider);
     }
 }

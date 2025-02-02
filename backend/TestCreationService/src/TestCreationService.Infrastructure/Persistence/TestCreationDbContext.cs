@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Common;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.interfaces;
 using System.Reflection;
 using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;

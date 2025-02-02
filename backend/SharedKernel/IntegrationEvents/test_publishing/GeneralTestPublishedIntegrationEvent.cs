@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using SharedKernel.Common.tests.general_format;
@@ -9,19 +9,20 @@ namespace SharedKernel.IntegrationEvents.test_publishing;
 public record GeneralTestPublishedIntegrationEvent(
     TestId TestId,
     AppUserId Creator,
-    AppUserId[] EditorIds, 
-    string Name, 
+    AppUserId[] EditorIds,
+    string Name,
     string CoverImage,
     string Description,
     Language Language,
-    TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings, 
+    DateTime PublicationDate,
+    TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
     TestPublishedStylesDto Styles,
     string[] Tags,
     TestTakingProcessSettings TestTakingProcessSettings,
     bool ShuffleQuestions,
     GeneralTestPublishedQuestionDto[] Questions,
     GeneralTestPublishedResultDto[] Results
-) : BaseTestPublishedIntegrationEvent(TestId, Creator, EditorIds, Name, CoverImage, Description, Language, InteractionsAccessSettings, Styles, Tags);
+) : BaseTestPublishedIntegrationEvent(TestId, Creator, EditorIds, Name, CoverImage, Description, Language, PublicationDate, InteractionsAccessSettings, Styles, Tags);
 
 public record TestTakingProcessSettings(bool ForceSequentialFlow, GeneralTestFeedbackOption feedback);
 
@@ -37,7 +38,7 @@ public record GeneralTestPublishedQuestionDto(
     ushort Order,
     string Text,
     string[] Images,
-    GeneralTestQuestionTimeLimitOption TimeLimitOption, 
+    GeneralTestQuestionTimeLimitOption TimeLimitOption,
     GeneralTestAnswersType AnswersType,
     bool ShuffleAnswers,
     GeneralTestQuestionAnswersCountLimit AnswersCountLimit,

@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Common.domain;
+﻿namespace SharedKernel.Common.domain.interfaces;
 
 public interface IAggregateRoot
 {

@@ -1,28 +1,46 @@
+using ApiShared;
+using System.Text.Json.Serialization;
+using TestCatalogService.Infrastructure.Persistence;
+using TestCatalogService.Application;
+using TestCatalogService.Infrastructure;
 
-namespace TestCatalogService.Api
+namespace TestCatalogService.Api;
+public class Program
 {
-    public class Program
-    {
-        public static void Main(string[] args) {
-            var builder = WebApplication.CreateBuilder(args);
+    public static void Main(string[] args) {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddOpenApi();
+        builder.Services
+            .AddAuthTokenConfig(builder.Configuration)
+            .AddApplication(builder.Configuration)
+            .AddInfrastructure(builder.Configuration)
+            .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+        var app = builder.Build();
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
-
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment()) {
-                app.MapOpenApi();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.MapGet("/hello", () => "Hello World!");
-            app.Run();
+        if (app.Environment.IsDevelopment()) {
+            app.MapOpenApi();
         }
+
+        app.AddExceptionHandlingMiddleware();
+        app.UseHttpsRedirection();
+
+        MapHandlers(app);
+
+        using (var scope = app.Services.CreateScope()) {
+            var services = scope.ServiceProvider;
+            try {
+                var appDbContext = services.GetRequiredService<TestCatalogDbContext>();
+                appDbContext.Database.EnsureDeleted();
+                appDbContext.Database.EnsureCreated();
+                appDbContext.SaveChanges();
+            } catch (Exception ex) {
+                app.Logger.LogError(ex, "An error occurred while initializing the database.");
+                throw;
+            }
+        }
+        app.Run();
+    }
+    private static void MapHandlers(WebApplication app) {
+        app.MapGet("/hello", () => "Hello World!");
     }
 }

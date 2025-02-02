@@ -12,7 +12,7 @@ public class UnconfirmedAppUserTests
         // Arrange
         string invalidEmail = "invalid_email";
         string password = "validPassword123";
-        var dateTimeProvider = new UtcDateTimeProvider();
+        UtcDateTimeProvider dateTimeProvider = new();
 
         // Act
         var result = UnconfirmedAppUser.Create(
@@ -32,7 +32,7 @@ public class UnconfirmedAppUserTests
         // Arrange
         string invalidEmail = "justvalidemail@email.email";
         string password = "validPassword123";
-        var dateTimeProvider = new UtcDateTimeProvider();
+        UtcDateTimeProvider dateTimeProvider = new();
 
         // Act
         var result = UnconfirmedAppUser.Create(
@@ -50,7 +50,7 @@ public class UnconfirmedAppUserTests
     public void CreateAppUnconfirmedUser_WhenPasswordInvalid_ShouldReturnErr() {
         // Arrange
         string email = "validemail@email.com";
-        var dateTimeProvider = new UtcDateTimeProvider();
+        UtcDateTimeProvider dateTimeProvider = new();
 
         // Act & Assert
 
@@ -62,7 +62,7 @@ public class UnconfirmedAppUserTests
             (pass) => pass,
             dateTimeProvider
         );
-        Assert.True(resultShort.AnyErr((err) => err.Message == PasswordRules.MinLengthMessage));
+        Assert.True(resultShort.AnyErr((err) => err.Message == PasswordRules.IncorrectLengthMessage));
 
         // Password too long
         var longPassword = new string('a', PasswordRules.MaxLength + 1);
@@ -72,10 +72,10 @@ public class UnconfirmedAppUserTests
             (pass) => pass,
             dateTimeProvider
         );
-        Assert.True(resultLong.AnyErr((err) => err.Message == PasswordRules.MaxLengthMessage));
+        Assert.True(resultLong.AnyErr((err) => err.Message == PasswordRules.IncorrectLengthMessage));
 
         // Password without letter
-        var noLetterPassword = "12345678"; 
+        var noLetterPassword = "12345678";
         var resultNoLetter = UnconfirmedAppUser.Create(
             email,
             noLetterPassword,
@@ -85,7 +85,7 @@ public class UnconfirmedAppUserTests
         Assert.True(resultNoLetter.AnyErr((err) => err.Message == PasswordRules.MustContainLetterMessage));
 
         // Password without number
-        var noNumberPassword = "abcdefgh"; 
+        var noNumberPassword = "abcdefgh";
         var resultNoNumber = UnconfirmedAppUser.Create(
             email,
             noNumberPassword,

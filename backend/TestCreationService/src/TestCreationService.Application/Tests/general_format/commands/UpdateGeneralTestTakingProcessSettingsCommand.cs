@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.general_format;
 using TestCreationService.Application.Common.interfaces.repositories;

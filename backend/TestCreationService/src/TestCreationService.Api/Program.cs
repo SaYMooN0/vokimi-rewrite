@@ -1,14 +1,10 @@
 using ApiShared;
-using SharedKernel.Common.EntityIds;
-using System;
 using System.Text.Json.Serialization;
 using TestCreationService.Api.Endpoints;
 using TestCreationService.Api.Endpoints.test_creation.formats_shared;
 using TestCreationService.Api.Endpoints.test_creation.general;
 using TestCreationService.Application;
-using TestCreationService.Domain.AppUserAggregate;
 using TestCreationService.Infrastructure;
-using TestCreationService.Infrastructure.Persistence;
 
 namespace TestCreationService.Api
 {

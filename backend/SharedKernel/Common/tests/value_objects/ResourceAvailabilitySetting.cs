@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.common_enums;
+using SharedKernel.Common.domain;
 
 namespace SharedKernel.Common.tests.value_objects;
 

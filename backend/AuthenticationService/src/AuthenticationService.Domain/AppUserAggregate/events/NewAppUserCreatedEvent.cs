@@ -1,5 +1,4 @@
-﻿using SharedKernel.Common;
-using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 
 namespace AuthenticationService.Domain.AppUserAggregate.events;
 

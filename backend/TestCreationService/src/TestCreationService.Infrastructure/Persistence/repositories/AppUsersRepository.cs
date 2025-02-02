@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.AppUserAggregate;
 

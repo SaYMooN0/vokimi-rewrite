@@ -13,7 +13,9 @@ using AuthenticationService.Infrastructure.Services;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common;
+using SharedKernel.Common.domain;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
 
 namespace AuthenticationService.Infrastructure;
@@ -26,6 +28,7 @@ public static class DependencyInjection
             .AddPersistence(configuration)
             .AddEmailService(configuration)
             .AddMediatR()
+            .AddDateTimeService()
             ;
 
         return services;
@@ -65,7 +68,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordUpdateRequestsRepository, PasswordResetRequestsRepository>();
 
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-        
+
         SqlMapper.AddTypeHandler(typeof(Email), new EmailTypeHandler());
         SqlMapper.AddTypeHandler(typeof(DateOnly), new DateOnlyTypeHandler());
 
@@ -79,6 +82,10 @@ public static class DependencyInjection
     private static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration) {
         services.Configure<EmailServiceConfig>(options => configuration.GetSection("EmailServiceConfig").Bind(options));
         services.AddTransient<IEmailService, EmailService>();
+        return services;
+    }
+    private static IServiceCollection AddDateTimeService(this IServiceCollection services) {
+        services.AddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
         return services;
     }
 }

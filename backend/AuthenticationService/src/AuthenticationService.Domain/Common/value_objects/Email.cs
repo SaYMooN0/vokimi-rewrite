@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common;
+﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using System.Text.RegularExpressions;
 

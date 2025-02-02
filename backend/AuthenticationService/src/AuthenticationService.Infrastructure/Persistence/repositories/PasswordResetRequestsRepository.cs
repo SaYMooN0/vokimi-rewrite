@@ -1,5 +1,5 @@
 ﻿using AuthenticationService.Application.Common.interfaces.repositories;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Infrastructure.Persistence.repositories;

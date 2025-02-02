@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using SharedKernel.Common;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.interfaces;
 using System.Reflection;
 using TestCatalogService.Domain.TestAggregate;
 
@@ -11,8 +11,6 @@ namespace TestCatalogService.Infrastructure.Persistence;
 public class TestCatalogDbContext : DbContext
 {
     private readonly IPublisher _publisher;
-
-
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public TestCatalogDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;

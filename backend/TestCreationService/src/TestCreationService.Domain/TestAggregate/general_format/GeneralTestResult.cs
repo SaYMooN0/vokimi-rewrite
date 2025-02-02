@@ -1,5 +1,4 @@
-﻿using SharedKernel.Common;
-using SharedKernel.Common.EntityIds;
+﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Rules;
 
