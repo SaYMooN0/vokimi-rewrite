@@ -1,15 +1,15 @@
-﻿
-using SharedKernel.Common.common_enums;
+﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests.test_styles;
 using SharedKernel.Common.tests.value_objects;
+using System.Collections.Immutable;
 
 namespace SharedKernel.IntegrationEvents.test_publishing;
 
 public abstract record BaseTestPublishedIntegrationEvent(
     TestId TestId,
     AppUserId CreatorId,
-    AppUserId[] EditorIds,
+    ImmutableArray<AppUserId> EditorIds,
     string Name, 
     string CoverImage, 
     string Description,

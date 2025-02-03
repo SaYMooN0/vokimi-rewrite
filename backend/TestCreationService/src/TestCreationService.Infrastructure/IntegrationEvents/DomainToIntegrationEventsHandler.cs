@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SharedKernel.IntegrationEvents.test_publishing;
+using System.Collections.Immutable;
 using TestCreationService.Domain.TestAggregate.general_format.events;
 using TestCreationService.Infrastructure.IntegrationEvents.integration_events_publisher;
 
@@ -18,7 +19,7 @@ internal class DomainToIntegrationEventsHandler :
         var integrationEvent = new GeneralTestPublishedIntegrationEvent(
             notification.TestId,
             notification.CreatorId,
-            notification.EditorIds,
+            notification.EditorIds.ToImmutableArray(),
             notification.Name,
             notification.CoverImage,
             notification.Description,

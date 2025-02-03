@@ -17,7 +17,7 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
 
         builder
             .Property(x => x.EditorIds)
-            .HasEntityIdsArrayConversion();
+            .HasEntityIdsImmutableArrayConversion();
 
         builder
             .Property(x => x.CreatorId)

@@ -36,13 +36,13 @@ internal class ConsumeIntegrationEventsBackgroundService : IHostedService
             UserName = _messageBrokerSettings.UserName,
             Password = _messageBrokerSettings.Password
         };
-        connection = await connectionFactory.CreateConnectionAsync();
+        connection = await connectionFactory.CreateConnectionAsync(cancellationToken);
         channel = await connection.CreateChannelAsync();
         await SetupMessageBrokerAsync(cancellationToken);
 
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (sender, eventArgs) => await HandleEventAsync(sender, eventArgs, cancellationToken);
-        await channel.BasicConsumeAsync(_messageBrokerSettings.QueueName, autoAck: false, consumer: consumer);
+        await channel.BasicConsumeAsync(_messageBrokerSettings.QueueName, autoAck: false, consumer, cancellationToken);
     }
     private async Task SetupMessageBrokerAsync(CancellationToken cancellationToken) {
         await channel.ExchangeDeclareAsync(_messageBrokerSettings.ExchangeName, ExchangeType.Fanout, durable: true);

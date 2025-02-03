@@ -1,4 +1,9 @@
 ﻿using SharedKernel.Common.domain;
+using TestCatalogService.Domain.Common;
 
 namespace TestCatalogService.Domain.TestTagAggregate.events;
-public record class TestTagsChangedEvent(HashSet<string> oldTags, HashSet<string> newTags) : IDomainEvent;
+public record class TestTagsChangedEvent(
+    TestId TestId,
+    ISet<TestTagId> OldTags,
+    ISet<TestTagId> NewTags
+) : IDomainEvent;

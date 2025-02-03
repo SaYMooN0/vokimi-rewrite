@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using SharedKernel.Common;
-using SharedKernel.Common.domain;
-using SharedKernel.Common.EntityIds;
 using System.Data;
+using SharedKernel.Common.domain.interfaces;
 
 namespace AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 

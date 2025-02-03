@@ -10,3 +10,11 @@ public enum GeneralTestAnswersType //7 types
     AudioOnly,
     AudioAndText
 }
+public static class GeneralTestAnswersTypeExtensions
+{
+    public static bool HasAudio(this GeneralTestAnswersType answersType) => answersType switch {
+        GeneralTestAnswersType.AudioOnly => true,
+        GeneralTestAnswersType.AudioAndText => true,
+        _ => false
+    };
+}

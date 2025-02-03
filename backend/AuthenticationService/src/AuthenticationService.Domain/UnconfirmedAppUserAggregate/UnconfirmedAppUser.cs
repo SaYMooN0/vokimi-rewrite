@@ -3,7 +3,6 @@ using AuthenticationService.Domain.Common;
 using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Domain.Rules;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.EntityIds;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 
@@ -12,7 +11,7 @@ namespace AuthenticationService.Domain.UnconfirmedAppUserAggregate;
 public class UnconfirmedAppUser : AggregateRoot<UnconfirmedAppUserId>
 {
     private UnconfirmedAppUser() { }
-    public string PasswordHash { get; private set; }
+    private string PasswordHash { get;  set; }
     public Email Email { get; init; }
     public DateTime CreationTime { get; init; }
     public string ConfirmationString { get; init; }
@@ -34,7 +33,6 @@ public class UnconfirmedAppUser : AggregateRoot<UnconfirmedAppUserId>
         if (errList.Any()) { return errList; }
 
         string passwordHash = hashFunction(password);
-        string confirmationString = $"{DateTime.Now.GetHashCode()}-{Guid.NewGuid()}";
 
         return new UnconfirmedAppUser() {
             Id = UnconfirmedAppUserId.CreateNew(),

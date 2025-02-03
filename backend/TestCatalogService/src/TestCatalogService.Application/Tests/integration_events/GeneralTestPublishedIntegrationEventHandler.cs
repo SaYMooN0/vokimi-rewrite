@@ -1,11 +1,50 @@
 ﻿using MediatR;
+using SharedKernel.Common.errors;
+using SharedKernel.Common.general_test_questions;
 using SharedKernel.IntegrationEvents.test_publishing;
+using System.Collections.Immutable;
+using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.TestAggregate.general_format;
 
 namespace TestCatalogService.Application.Tests.integration_events;
 
 internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandler<GeneralTestPublishedIntegrationEvent>
 {
+    private IGeneralFormatTestsRepository _generalFormatTestsRepository;
+
+    public GeneralTestPublishedIntegrationEventHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+        _generalFormatTestsRepository = generalFormatTestsRepository;
+    }
+
     public async Task Handle(GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
-      
+        var questionsCount = (ushort)notification.Questions.Count();
+        var resultsCount = (ushort)notification.Results.Count();
+        bool anyAudioAnswers = notification.Questions.Any(q => q.AnswersType.HasAudio());
+        ImmutableHashSet<TestTagId> tags = notification.Tags
+            .Select(t => {
+                var res = TestTagId.Create(t);
+                if (res.IsErr(out var err)) { throw new ErrCausedException(err); }
+                return res.GetSuccess();
+            })
+            .ToImmutableHashSet();
+
+        var creationRes = GeneralFormatTest.CreateNew(
+            notification.TestId,
+            notification.Name,
+            notification.CoverImage,
+            notification.Description,
+            notification.CreatorId,
+            notification.EditorIds,
+            notification.PublicationDate,
+            notification.Language,
+            questionsCount: questionsCount,
+            resultsCount: resultsCount,
+            anyAudioAnswers: anyAudioAnswers,
+            tags
+        );
+        if (creationRes.IsErr(out var err)) {
+            throw new ErrCausedException(err);
+        }
     }
 }

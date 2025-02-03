@@ -1,8 +1,6 @@
 ﻿using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 using Dapper;
-using SharedKernel.Common;
-using SharedKernel.Common.domain;
-using SharedKernel.Common.EntityIds;
+using SharedKernel.Common.domain.interfaces;
 
 namespace AuthenticationService.Infrastructure.Persistence;
 

@@ -3,13 +3,14 @@ using SharedKernel.Common.domain;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using SharedKernel.Common.tests.general_format;
+using System.Collections.Immutable;
 
 namespace SharedKernel.IntegrationEvents.test_publishing;
 
 public record GeneralTestPublishedIntegrationEvent(
     TestId TestId,
-    AppUserId Creator,
-    AppUserId[] EditorIds,
+    AppUserId CreatorIds,
+    ImmutableArray<AppUserId> EditorIds,
     string Name,
     string CoverImage,
     string Description,
@@ -22,7 +23,7 @@ public record GeneralTestPublishedIntegrationEvent(
     bool ShuffleQuestions,
     GeneralTestPublishedQuestionDto[] Questions,
     GeneralTestPublishedResultDto[] Results
-) : BaseTestPublishedIntegrationEvent(TestId, Creator, EditorIds, Name, CoverImage, Description, Language, PublicationDate, InteractionsAccessSettings, Styles, Tags);
+) : BaseTestPublishedIntegrationEvent(TestId, CreatorIds, EditorIds, Name, CoverImage, Description, Language, PublicationDate, InteractionsAccessSettings, Styles, Tags);
 
 public record TestTakingProcessSettings(bool ForceSequentialFlow, GeneralTestFeedbackOption feedback);
 
