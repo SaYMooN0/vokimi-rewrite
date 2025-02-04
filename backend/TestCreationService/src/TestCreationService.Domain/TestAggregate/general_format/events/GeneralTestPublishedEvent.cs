@@ -20,6 +20,4 @@ public record class GeneralTestPublishedEvent(
     bool ShuffleQuestions,
     GeneralTestPublishedQuestionDto[] Questions,
     GeneralTestPublishedResultDto[] Results
-) : IDomainEvent
-{
-}
+) : IDomainEvent;

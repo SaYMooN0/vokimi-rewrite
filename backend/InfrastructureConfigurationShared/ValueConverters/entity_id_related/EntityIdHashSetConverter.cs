@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.domain;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 
 internal class EntityIdHashSetConverter<T> : ValueConverter<HashSet<T>, string> where T : EntityId
 {

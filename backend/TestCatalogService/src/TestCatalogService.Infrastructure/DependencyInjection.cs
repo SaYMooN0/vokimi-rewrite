@@ -11,6 +11,7 @@ using TestCatalogService.Infrastructure.Persistence;
 using TestCatalogService.Infrastructure.Persistence.repositories;
 
 namespace TestCatalogService.Infrastructure;
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
@@ -30,24 +31,28 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services,
+        IConfiguration configuration) {
         services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
         services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
         services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
 
         return services;
     }
+
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         string dbConnetionString = configuration.GetConnectionString("TestCatalogServiceDb")
-            ?? throw new Exception("Database connection string is not provided.");
+                                   ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnetionString));
 
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
         services.AddScoped<ITestTagsRepository, TestTagsRepository>();
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
 
         return services;
     }
+
     private static IServiceCollection AddDateTimeService(this IServiceCollection services) {
         services.AddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
         return services;

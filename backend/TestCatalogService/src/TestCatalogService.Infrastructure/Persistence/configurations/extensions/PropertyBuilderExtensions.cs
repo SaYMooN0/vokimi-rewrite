@@ -1,16 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
 using System.Collections.Immutable;
+using TestCatalogService.Domain.Common;
 using TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.extensions;
 
 internal static class PropertyBuilderExtensions
 {
-    public static PropertyBuilder<ImmutableArray<T>> HasEntityIdsImmutableArrayConversion<T>(this PropertyBuilder<ImmutableArray<T>> builder) where T : EntityId {
+    public static PropertyBuilder<ImmutableArray<T>> HasEntityIdsImmutableArrayConversion<T>(
+        this PropertyBuilder<ImmutableArray<T>> builder) where T : EntityId {
         builder.HasConversion(
             new EntityIdsImmutableArrayConverter<T>(),
             new EntityIdsImmutableArrayComparer<T>()
+        );
+        return builder;
+    }
+
+    public static PropertyBuilder<ImmutableHashSet<TestTagId>> HasTagIdsImmutableHashSetConversion(
+        this PropertyBuilder<ImmutableHashSet<TestTagId>> builder) {
+        builder.HasConversion(
+            new TagIdsImmutableHashSetConverter(),
+            new TagIdsImmutableHashSetComparer()
         );
         return builder;
     }

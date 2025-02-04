@@ -20,11 +20,15 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
+
+
     protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
     protected virtual List<GeneralTestResult> _results { get; init; }
+
     public ImmutableArray<GeneralTestResult> Results => _results
         .OrderBy(r => r.Id)
         .ToImmutableArray();
+
     private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
 
     public static ErrOr<GeneralFormatTest> CreateNew(
@@ -36,7 +40,10 @@ public class GeneralFormatTest : BaseTest
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
         }
-        if (editorIds.Contains(creatorId)) { editorIds.Remove(creatorId); }
+
+        if (editorIds.Contains(creatorId)) {
+            editorIds.Remove(creatorId);
+        }
 
         var newTest = new GeneralFormatTest(
             creatorId,
@@ -47,6 +54,7 @@ public class GeneralFormatTest : BaseTest
         newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }
+
     private GeneralFormatTest(
         AppUserId creatorId,
         HashSet<AppUserId> editorIds,
@@ -61,14 +69,17 @@ public class GeneralFormatTest : BaseTest
         if (_questionsList.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
             return new Err(
                 $"General format test cannot have more than {GeneralFormatTestRules.MaxQuestionsCount} questions",
-                details: $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questionsList.Count} questions"
+                details:
+                $"Maximum number of questions allowed is {GeneralFormatTestRules.MaxQuestionsCount}. Test already has {_questionsList.Count} questions"
             );
         }
+
         GeneralTestQuestionId questionId = GeneralTestQuestionId.CreateNew();
         _questionsList.AddToEnd(questionId);
         _domainEvents.Add(new NewGeneralTestQuestionAddedEvent(Id, questionId, answersType));
         return ErrOrNothing.Nothing;
     }
+
     public ErrOrNothing DeleteQuestion(GeneralTestQuestionId questionId) {
         if (!_questionsList.Contains(questionId)) {
             return new Err(
@@ -76,14 +87,17 @@ public class GeneralFormatTest : BaseTest
                 details: $"Test with id {Id} does not have question with id {questionId}"
             );
         }
+
         _questionsList.RemoveEntity(questionId);
         _domainEvents.Add(new GeneralTestQuestionDeletedEvent(questionId));
         return ErrOrNothing.Nothing;
     }
+
     public void UpdateTestTakingProcessSettings(
         bool forceSequentialFlow,
         GeneralTestFeedbackOption testFeedback
     ) => TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
+
     public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
         var questionIds = _questionsList.EntityIds();
         var providedIds = orderController.EntityIds().ToHashSet();
@@ -100,8 +114,10 @@ public class GeneralFormatTest : BaseTest
         _questionsList = orderController.WithoutEntityIds(extraIds);
         return ErrOrNothing.Nothing;
     }
+
     public ImmutableHashSet<GeneralTestQuestionId> GetTestQuestionIds() =>
         _questionsList.EntityIds();
+
     public ErrOr<ImmutableArray<(GeneralTestQuestion Question, ushort Order)>> GetQuestionsWithOrder(
         IEnumerable<GeneralTestQuestion> questions
     ) {
@@ -112,28 +128,36 @@ public class GeneralFormatTest : BaseTest
                 source: ErrorSource.Server
             );
         }
+
         return _questionsList.GetItemsWithOrders(questions);
     }
+
     public bool HasResultWithId(GeneralTestResultId resultId) =>
         _results.Any(r => r.Id == resultId);
+
     public ImmutableDictionary<GeneralTestResultId, string> GetTestResultIdsWithNames() =>
         _results.ToImmutableDictionary(r => r.Id, r => r.Name);
+
     public ErrOr<GeneralTestResult> CreateResult() {
         if (_results.Count >= GeneralFormatTestRules.MaxResultsInTestCount) {
             return new Err(
                 $"General format test cannot have more than {GeneralFormatTestRules.MaxResultsInTestCount} results",
-                details: $"Maximum number of results allowed is {GeneralFormatTestRules.MaxResultsInTestCount}. Test already has {_results.Count}"
+                details:
+                $"Maximum number of results allowed is {GeneralFormatTestRules.MaxResultsInTestCount}. Test already has {_results.Count}"
             );
         }
+
         string resultName = "Test result #" + (_results.Count + 1);
         var creationRes = GeneralTestResult.CreateNew(Id, resultName);
         if (creationRes.IsErr(out var err)) {
             return err;
         }
+
         _results.Add(creationRes.GetSuccess());
         return creationRes.GetSuccess();
     }
-    public ErrOrNothing DeleteGeneralTestResult(GeneralTestResultId resultId) {
+
+    public ErrOrNothing DeleteResult(GeneralTestResultId resultId) {
         GeneralTestResult? result = _results.FirstOrDefault(r => r.Id == resultId);
         if (result is null) {
             return Err.ErrFactory.NotFound(
@@ -141,10 +165,12 @@ public class GeneralFormatTest : BaseTest
                 details: $"General format test with id {Id} doesn't have result with id {resultId}"
             );
         }
+
         _results.Remove(result);
         _domainEvents.Add(new GeneralTestResultDeletedEvent(Id, result.Id));
         return ErrOrNothing.Nothing;
     }
+
     public ErrOrNothing UpdateResult(
         GeneralTestResultId resultId,
         string Name,
@@ -158,13 +184,16 @@ public class GeneralFormatTest : BaseTest
                 details: $"General format test with id {Id} doesn't have result with id {resultId}"
             );
         }
+
         GeneralTestResult? resultWithSameName = _results.FirstOrDefault(r => r.Name == Name && r.Id != resultId);
         if (resultWithSameName is not null) {
             return Err.ErrFactory.InvalidData(
                 "Cannot update result. Test already has result with such name. Result name must be unique",
-                details: $"General format test result with id {resultWithSameName.Id} already has name {resultWithSameName.Name}"
+                details:
+                $"General format test result with id {resultWithSameName.Id} already has name {resultWithSameName.Name}"
             );
         }
+
         return result.Update(Name, Text, Image);
     }
 
@@ -174,6 +203,7 @@ public class GeneralFormatTest : BaseTest
         .. CheckResultsForPublishingProblems(questions).Select(e => TestPublishingProblem.FromErr(e, "Results")),
         .. _tags.CheckForPublishingProblems().Select(e => TestPublishingProblem.FromErr(e, "Tags")),
     ];
+
     private IEnumerable<Err> CheckQuestionsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
         if (questions is null) {
             yield return new Err(
@@ -183,6 +213,7 @@ public class GeneralFormatTest : BaseTest
             );
             yield break;
         }
+
         int questionsCount = questions.Count();
         if (questionsCount > GeneralFormatTestRules.MaxQuestionsCount) {
             yield return new Err(
@@ -192,25 +223,27 @@ public class GeneralFormatTest : BaseTest
                 yield break;
             }
         }
+
         if (questionsCount < GeneralFormatTestRules.MinQuestionsCount) {
             yield return new Err(
                 $"General format test must have at least {GeneralFormatTestRules.MinQuestionsCount} questions. Test has {questionsCount} questions"
             );
         }
+
         foreach (var question in questions) {
             var errs = question.CheckForPublishingProblems();
             if (errs.Any()) {
                 string prefix = $"Question" +
-                    (string.IsNullOrWhiteSpace(question.Text) ?
-                        $"with id: {question.Id}" :
-                        $"'{question.Text.Take(20)}...'");
+                                (string.IsNullOrWhiteSpace(question.Text)
+                                    ? $"with id: {question.Id}"
+                                    : $"'{question.Text.Take(20)}...'");
                 foreach (var err in errs) {
                     yield return err.WithPrefix(prefix);
                 }
             }
-
         }
     }
+
     private IEnumerable<Err> CheckResultsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
         if (_results is null) {
             yield return new Err(
@@ -220,6 +253,7 @@ public class GeneralFormatTest : BaseTest
             );
             yield break;
         }
+
         int resultsCount = _results.Count;
         if (resultsCount > GeneralFormatTestRules.MaxResultsInTestCount) {
             yield return new Err(
@@ -229,24 +263,31 @@ public class GeneralFormatTest : BaseTest
                 yield break;
             }
         }
+
         if (resultsCount < GeneralFormatTestRules.MinResultsInTestCount) {
             yield return new Err(
                 $"General format test must have at least {GeneralFormatTestRules.MinResultsInTestCount} results. Test has {resultsCount} results"
             );
         }
-        var resultIdsAnswersLeadTo = questions is null ? [] : questions.SelectMany(q => q.GetIdsOfResultsAnswersLeadTo()).ToHashSet();
+
+        var resultIdsAnswersLeadTo =
+            questions is null ? [] : questions.SelectMany(q => q.GetIdsOfResultsAnswersLeadTo()).ToHashSet();
         foreach (var result in _results) {
             if (!resultIdsAnswersLeadTo.Contains(result.Id)) {
-                yield return new Err($"Result '{result.Name}' has no answers leading to it. Result must have at least one answer leading to it");
+                yield return new Err(
+                    $"Result '{result.Name}' has no answers leading to it. Result must have at least one answer leading to it");
             }
         }
     }
+
     public ErrOrNothing Publish(IEnumerable<GeneralTestQuestion> questions, IDateTimeProvider dateTimeProvider) {
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
         }
+
         GeneralTestPublishedEvent e = new(
-            Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description, _mainInfo.Language,
+            Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description,
+            _mainInfo.Language,
             dateTimeProvider.Now,
             new(
                 _interactionsAccessSettings.TestAccess,
@@ -273,5 +314,13 @@ public class GeneralFormatTest : BaseTest
             _results.Select(r => new GeneralTestPublishedResultDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
         );
         return ErrOrNothing.Nothing;
+    }
+
+    public override void DeleteTest() {
+        foreach (var questionId in _questionsList.EntityIds()) {
+            this.DeleteQuestion(questionId);
+        }
+
+        _domainEvents.Add(new GeneralFormatTestDeletedEvent(Id, CreatorId, _editorIds));
     }
 }

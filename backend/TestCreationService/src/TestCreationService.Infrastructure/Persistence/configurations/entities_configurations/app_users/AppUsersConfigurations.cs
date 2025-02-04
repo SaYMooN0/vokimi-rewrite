@@ -24,13 +24,6 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .Property<HashSet<TestId>>("_createdTestIds")
             .HasColumnName("CreatedTestIds")
             .HasEntityIdsHashSetConversion();
-        //builder
-        //    .Property(u => u.CreatedTestIds)
-        //    .HasEntityIdsHashSetConversion();
-
-        //builder
-        //    .Property(u => u.EditorAssignedTests)
-        //    .HasEntityIdsHashSetConversion();
 
         builder.Ignore(x => x.EditorAssignedTests);
         builder

@@ -22,5 +22,8 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
         builder
             .Property(x => x.CreatorId)
             .HasEntityIdConversion();
+        builder
+            .Property(x => x.Tags)
+            .HasTagIdsImmutableHashSetConversion();
     }
 }

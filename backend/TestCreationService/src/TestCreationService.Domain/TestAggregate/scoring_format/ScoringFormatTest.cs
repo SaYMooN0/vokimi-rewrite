@@ -11,17 +11,23 @@ public class ScoringFormatTest : BaseTest
 {
     private ScoringFormatTest() { }
     public override TestFormat Format => TestFormat.Scoring;
+
     private ScoringFormatTest(
-       AppUserId creatorId,
-       HashSet<AppUserId> editorIds,
-       TestMainInfo mainInfo
-   ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
-    public static ErrOr<ScoringFormatTest> CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
+        AppUserId creatorId,
+        HashSet<AppUserId> editorIds,
+        TestMainInfo mainInfo
+    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) { }
+
+    public static ErrOr<ScoringFormatTest>
+        CreateNew(AppUserId creatorId, string testName, HashSet<AppUserId> editorIds) {
         var mainInfoCreation = TestMainInfo.CreateNew(testName);
         if (mainInfoCreation.IsErr(out var err)) {
             return err;
         }
-        if (editorIds.Contains(creatorId)) { editorIds.Remove(creatorId); }
+
+        if (editorIds.Contains(creatorId)) {
+            editorIds.Remove(creatorId);
+        }
 
         var newTest = new ScoringFormatTest(
             creatorId,
@@ -33,4 +39,7 @@ public class ScoringFormatTest : BaseTest
         return newTest;
     }
 
+    public override void DeleteTest() {
+        throw new ErrCausedException(Err.ErrFactory.NotImplemented());
+    }
 }

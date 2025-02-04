@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.interfaces;
 using System.Reflection;
+using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestAggregate.general_format;
 using TestCatalogService.Domain.TestTagAggregate;
@@ -17,6 +18,7 @@ public class TestCatalogDbContext : DbContext
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
     public DbSet<TestTag> TestTags { get; set; } = null!;
+    public DbSet<AppUser> AppUsers { get; set; } = null!;
 
     public TestCatalogDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;

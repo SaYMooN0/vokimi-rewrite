@@ -9,21 +9,25 @@ public class AppUser : AggregateRoot<AppUserId>
     private readonly HashSet<TestId> _createdTestIds = [];
     public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
 
-    private readonly HashSet<TestId> _editorAssignedTests = new();
+    private readonly HashSet<TestId> _editorAssignedTests = [];
     public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
 
     public void AddCreatedTest(TestId testId) {
         _createdTestIds.Add(testId);
     }
+
     public void RemoveCreatedTest(TestId testId) {
         _createdTestIds.Remove(testId);
     }
+
     public void AddEditorRoleForTest(TestId testId) {
-        if (!_editorAssignedTests.Contains(testId)) { _editorAssignedTests.Add(testId); }
+        _editorAssignedTests.Add(testId);
     }
+
     public void RemoveEditorRoleForTest(TestId testId) {
         _editorAssignedTests.Remove(testId);
     }
+
     public AppUser(AppUserId id) {
         Id = id;
         _createdTestIds = [];

@@ -1,8 +1,8 @@
-﻿using SharedKernel.Common.common_enums;
+﻿using System.Collections.Immutable;
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
-using System.Collections.Immutable;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestTagAggregate.events;
@@ -16,6 +16,7 @@ public class GeneralFormatTest : BaseTest
     public ushort QuestionsCount { get; init; }
     public ushort ResultsCount { get; init; }
     public bool AnyAudioAnswers { get; init; }
+
     public static ErrOr<GeneralFormatTest> CreateNew(
         TestId testId,
         string name,
@@ -30,7 +31,11 @@ public class GeneralFormatTest : BaseTest
         bool anyAudioAnswers,
         ImmutableHashSet<TestTagId> tags
     ) {
-        if (string.IsNullOrWhiteSpace(name)) { return Err.ErrFactory.InvalidData("Name is required"); }
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return Err.ErrFactory.InvalidData("Name is required");
+        }
+
         var newTest = new GeneralFormatTest() {
             Id = testId,
             Name = name,
@@ -46,6 +51,8 @@ public class GeneralFormatTest : BaseTest
             Tags = tags
         };
         newTest._domainEvents.Add(new TestTagsChangedEvent(newTest.Id, new HashSet<TestTagId>(), tags));
-        newTest._domainEvents.Add(new NewPublishedTestCreatedEvent(newTest.Id, creatorId, editorIds.ToImmutableHashSet()));
+        newTest._domainEvents.Add(new NewPublishedTestCreatedEvent(newTest.Id, creatorId,
+            editorIds.ToImmutableHashSet()));
+        return newTest;
     }
 }

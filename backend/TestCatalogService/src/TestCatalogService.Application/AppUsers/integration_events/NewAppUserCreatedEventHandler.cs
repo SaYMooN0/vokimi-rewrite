@@ -1,9 +1,9 @@
-﻿using MediatR;
+using MediatR;
 using SharedKernel.IntegrationEvents.authentication;
-using TestCreationService.Application.Common.interfaces.repositories;
-using TestCreationService.Domain.AppUserAggregate;
+using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.AppUserAggregate;
 
-namespace TestCreationService.Application.AppUsers.integration_events;
+namespace TestCatalogService.Application.AppUsers.integration_events;
 
 internal class NewAppUserCreatedEventHandler : INotificationHandler<NewAppUserCreatedIntegrationEvent>
 {

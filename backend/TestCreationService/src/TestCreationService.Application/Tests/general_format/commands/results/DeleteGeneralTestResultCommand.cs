@@ -24,7 +24,7 @@ internal class DeleteGeneralTestResultCommandHandler :
         if (test is null) {
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
-        var deleteRes = test.DeleteGeneralTestResult(request.ResultId);
+        var deleteRes = test.DeleteResult(request.ResultId);
         if (deleteRes.IsErr(out var err)) {
             return err;
         }

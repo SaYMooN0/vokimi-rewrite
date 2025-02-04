@@ -11,4 +11,5 @@ public interface IGeneralFormatTestsRepository
     public Task Update(GeneralFormatTest test);
     public Task<GeneralFormatTest?> GetWithResults(TestId testId);
     public Task<GeneralFormatTest?> GetWithEverything(TestId testId);
+    public Task Delete(TestId testId);
 }

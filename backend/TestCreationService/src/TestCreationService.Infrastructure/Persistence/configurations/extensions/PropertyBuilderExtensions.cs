@@ -14,14 +14,7 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new ResourceAvailabilitySettingConverter())
             .HasMaxLength(20);
     }
-    public static PropertyBuilder<HashSet<T>> HasEntityIdsHashSetConversion<T>(
-        this PropertyBuilder<HashSet<T>> builder) where T : EntityId {
-        builder.HasConversion(
-            new EntityIdHashSetConverter<T>(),
-            new EntityIdHashSetComparer<T>()
-        );
-        return builder;
-    }
+
     public static PropertyBuilder<Dictionary<T, ushort>> HasEntityIdsOrderDictionaryConversion<T>(
         this PropertyBuilder<Dictionary<T, ushort>> builder) where T : EntityId {
         builder.HasConversion(
@@ -30,6 +23,7 @@ internal static class PropertyBuilderExtensions
         );
         return builder;
     }
+
     public static PropertyBuilder<TProperty> HasGeneralTestQuestionTimeLimitOptionConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
@@ -37,6 +31,7 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new GeneralTestQuestionTimeLimitOptionConverter())
             .HasMaxLength(20);
     }
+
     public static PropertyBuilder<TProperty> HasGeneralTestQuestionAnswersCountLimitConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
@@ -44,6 +39,7 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new GeneralTestQuestionAnswersCountLimitConverter())
             .HasMaxLength(20);
     }
+
     public static PropertyBuilder<TProperty> HasGeneralTestAnswerSpecificDataConversion<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
@@ -51,11 +47,13 @@ internal static class PropertyBuilderExtensions
             .HasConversion(new GeneralTestAnswerSpecificDataConverter())
             .HasMaxLength(2040);
     }
+
     public static PropertyBuilder<TProperty> HasGeneralTestFeedbackOptionConverter<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
         return builder.HasConversion(new GeneralTestFeedbackOptionConverter());
     }
+
     public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
