@@ -368,3 +368,5 @@ FodyWeavers.xsd
 /backend/TestCatalogService/src/TestCatalogService.Api/appsettings.json
 /backend/TestCatalogService/src/TestCatalogService.Api/appsettings.Development.json
 /backend/.idea/.idea.backend/.idea
+/backend/TestTakingService/src/TestTakingService.Api/appsettings.json
+/backend/TestTakingService/src/TestTakingService.Api/appsettings.Development.json
