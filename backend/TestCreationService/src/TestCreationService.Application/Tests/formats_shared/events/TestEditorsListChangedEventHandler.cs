@@ -14,8 +14,8 @@ internal class TestEditorsListChangedEventHandler : INotificationHandler<TestEdi
     }
 
     public async Task Handle(TestEditorsListChangedEvent notification, CancellationToken cancellationToken) {
-        var editorsToAdd = notification.newEditors.Except(notification.oldEditors);
-        var editorsToRemove = notification.oldEditors.Except(notification.newEditors);
+        var editorsToAdd = notification.NewEditors.Except(notification.PreviousEditors);
+        var editorsToRemove = notification.PreviousEditors.Except(notification.NewEditors);
         List<AppUser> updateList = new List<AppUser>(editorsToAdd.Count() + editorsToRemove.Count());
         
         foreach (var editorIdToAdd in editorsToAdd) {

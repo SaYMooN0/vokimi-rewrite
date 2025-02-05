@@ -34,7 +34,7 @@ public class ScoringFormatTest : BaseTest
             editorIds.ToHashSet(),
             mainInfoCreation.GetSuccess()
         );
-        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIds, []));
+        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIds, new HashSet<AppUserId>()));
         newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }

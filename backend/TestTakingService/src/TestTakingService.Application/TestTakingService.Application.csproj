@@ -5,9 +5,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-		<ProjectReference Include="..\TestCatalogService.Domain\TestCatalogService.Domain.csproj" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+		<ProjectReference Include="..\TestTakingService.Domain\TestTakingService.Domain.csproj" />
 	</ItemGroup>
+
 </Project>

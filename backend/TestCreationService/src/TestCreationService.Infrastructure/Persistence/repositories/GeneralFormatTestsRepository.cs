@@ -17,6 +17,13 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.SaveChangesAsync();
 
     }
+
+    public async Task Delete(TestId testId) {
+        await _db.GeneralFormatTests
+            .Where(t => t.Id == testId)
+            .ExecuteDeleteAsync();
+    }
+
     public async Task<GeneralFormatTest?> GetById(TestId testId) {
         return await _db.GeneralFormatTests.FindAsync(testId);
     }

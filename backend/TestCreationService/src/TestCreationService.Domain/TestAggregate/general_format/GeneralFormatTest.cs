@@ -41,16 +41,19 @@ public class GeneralFormatTest : BaseTest
             return err;
         }
 
-        if (editorIds.Contains(creatorId)) {
-            editorIds.Remove(creatorId);
+        editorIds.Remove(creatorId);
+        if (editorIds.Count() > TestRules.MaxTestEditorsCount) {
+            return new Err(
+                message: "Too many test editors",
+                details: $"You can't add more than {TestRules.MaxTestEditorsCount} editors to the test. Current count of unique editors: {editorIds.Count()}"
+            );
         }
-
         var newTest = new GeneralFormatTest(
             creatorId,
             editorIds.ToHashSet(),
             mainInfoCreation.GetSuccess()
         );
-        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIds, []));
+        newTest._domainEvents.Add(new TestEditorsListChangedEvent(newTest.Id, editorIds, new HashSet<AppUserId>()));
         newTest._domainEvents.Add(new NewTestInitializedEvent(newTest.Id, newTest.CreatorId));
         return newTest;
     }
@@ -82,7 +85,7 @@ public class GeneralFormatTest : BaseTest
 
     public ErrOrNothing DeleteQuestion(GeneralTestQuestionId questionId) {
         if (!_questionsList.Contains(questionId)) {
-            return new Err(
+            return Err.ErrFactory.NotFound(
                 "There is no such question in this test",
                 details: $"Test with id {Id} does not have question with id {questionId}"
             );

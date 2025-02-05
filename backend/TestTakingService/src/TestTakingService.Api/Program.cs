@@ -1,9 +1,10 @@
-using ApiShared;
 using System.Text.Json.Serialization;
-using TestCatalogService.Application;
-using TestCatalogService.Infrastructure;
+using TestTakingService.Application;
+using TestTakingService.Infrastructure;
+using ApiShared;
 
-namespace TestCatalogService.Api;
+namespace TestTakingService.Api;
+
 public class Program
 {
     public static void Main(string[] args) {
@@ -24,8 +25,9 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
-
+        app.Run();
     }
+
     private static void MapHandlers(WebApplication app) {
         app.MapGet("/hello", () => "Hello World!");
     }

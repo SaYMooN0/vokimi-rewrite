@@ -28,7 +28,7 @@ internal class GeneralFormatTestDeletedEventHandler : INotificationHandler<Gener
             await _appUsersRepository.Update(creator);
         }
 
-        foreach (var editorId in notification.Editors) {
+        foreach (var editorId in notification.EditorIds) {
             AppUser? editor = await _appUsersRepository.GetById(editorId);
             if (editor is not null) {
                 editor.RemoveEditorRoleForTest(notification.TestId);
