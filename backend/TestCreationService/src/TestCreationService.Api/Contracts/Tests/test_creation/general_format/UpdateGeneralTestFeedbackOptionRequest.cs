@@ -5,8 +5,7 @@ using SharedKernel.Common.tests.general_format;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.general_format;
 
-public record class UpdateGeneralTestTakingProcessSettingsRequest(
-    bool ForceSequentialFlow,
+public record class UpdateGeneralTestFeedbackOptionRequest(
     bool EnableTestFeedback,
     AnonymityValues FeedbackAnonymity,
     string AccompanyingText,

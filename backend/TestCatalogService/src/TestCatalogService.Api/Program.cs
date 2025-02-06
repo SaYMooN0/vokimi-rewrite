@@ -24,7 +24,8 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
-
+        
+        app.Run();
     }
     private static void MapHandlers(WebApplication app) {
         app.MapGet("/hello", () => "Hello World!");

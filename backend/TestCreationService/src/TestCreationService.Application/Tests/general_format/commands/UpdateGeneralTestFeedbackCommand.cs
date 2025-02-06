@@ -7,29 +7,30 @@ using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands;
 
-public record class UpdateGeneralTestTakingProcessSettingsCommand(
+public record class UpdateGeneralTestFeedbackCommand(
     TestId TestId,
-    bool ForceSequentialFlow,
     GeneralTestFeedbackOption FeedbackOption
 ) : IRequest<ErrOrNothing>;
-public class UpdateGeneralTestTakingProcessSettingsCommandHandler
-    : IRequestHandler<UpdateGeneralTestTakingProcessSettingsCommand, ErrOrNothing>
+
+public class UpdateGeneralTestFeedbackCommandHandler
+    : IRequestHandler<UpdateGeneralTestFeedbackCommand, ErrOrNothing>
 {
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
-    public UpdateGeneralTestTakingProcessSettingsCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+    public UpdateGeneralTestFeedbackCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
         _generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
     public async Task<ErrOrNothing> Handle(
-        UpdateGeneralTestTakingProcessSettingsCommand request,
+        UpdateGeneralTestFeedbackCommand request,
         CancellationToken cancellationToken
     ) {
         GeneralFormatTest? test = await _generalFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
-        test.UpdateTestTakingProcessSettings(request.ForceSequentialFlow, request.FeedbackOption);
+
+        test.UpdateTestFeedback(request.FeedbackOption);
         await _generalFormatTestsRepository.Update(test);
         return ErrOrNothing.Nothing;
     }

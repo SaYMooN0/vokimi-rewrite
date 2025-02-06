@@ -19,13 +19,12 @@ public record GeneralTestPublishedIntegrationEvent(
     TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
     TestPublishedStylesDto Styles,
     string[] Tags,
-    TestTakingProcessSettings TestTakingProcessSettings,
-    bool ShuffleQuestions,
+    GeneralTestFeedbackOption FeedbackOption,
     GeneralTestPublishedQuestionDto[] Questions,
+    bool ShuffleQuestions,
     GeneralTestPublishedResultDto[] Results
-) : BaseTestPublishedIntegrationEvent(TestId, CreatorIds, EditorIds, Name, CoverImage, Description, Language, PublicationDate, InteractionsAccessSettings, Styles, Tags);
-
-public record TestTakingProcessSettings(bool ForceSequentialFlow, GeneralTestFeedbackOption feedback);
+) : BaseTestPublishedIntegrationEvent(TestId, CreatorIds, EditorIds, Name, CoverImage, Description, Language,
+    PublicationDate, InteractionsAccessSettings, Styles, Tags);
 
 public record GeneralTestPublishedResultDto(
     GeneralTestResultId Id,
@@ -45,6 +44,7 @@ public record GeneralTestPublishedQuestionDto(
     GeneralTestQuestionAnswersCountLimit AnswersCountLimit,
     GeneralTestPublishedAnswerDto[] Answers
 );
+
 public record GeneralTestPublishedAnswerDto(
     GeneralTestAnswerId Id,
     GeneralTestAnswerTypeSpecificData TypeSpecificData,

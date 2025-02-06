@@ -7,5 +7,5 @@ public abstract class BaseTest : AggregateRoot<TestId>
 {
     protected BaseTest() { }
     public abstract TestFormat Format { get; }
-    public AppUserId CreatorId { get; init; }
+    protected AppUserId _creatorId { get; init; }
 }

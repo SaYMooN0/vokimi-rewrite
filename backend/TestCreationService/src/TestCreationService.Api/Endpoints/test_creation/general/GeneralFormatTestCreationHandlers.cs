@@ -10,24 +10,25 @@ namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralFormatTestCreationHandlers
 {
     internal static RouteGroupBuilder MapGeneralFormatTestCreationHandlers(this RouteGroupBuilder group) {
-        group.MapPost("/updateTestTakingProcessSettings", UpdateTestTakingProcessSettings)
-            .WithRequestValidation<UpdateGeneralTestTakingProcessSettingsRequest>()
-            .AuthenticationRequired()
-            .TestEditPermissionRequired();
+        group
+            .GroupAuthenticationRequired()
+            .GroupTestEditPermissionRequired();
+
+        group
+            .MapPost("/updateFeedbackOption", UpdateTestFeedbackOption)
+            .WithRequestValidation<UpdateGeneralTestFeedbackOptionRequest>();
         return group;
     }
-    private async static Task<IResult> UpdateTestTakingProcessSettings(
-       HttpContext httpContext,
-       ISender mediator
+
+    private static async Task<IResult> UpdateTestFeedbackOption(
+        HttpContext httpContext,
+        ISender mediator
     ) {
-        var request = httpContext.GetValidatedRequest<UpdateGeneralTestTakingProcessSettingsRequest>();
+        var request = httpContext.GetValidatedRequest<UpdateGeneralTestFeedbackOptionRequest>();
         var testId = httpContext.GetTestIdFromRoute();
         var feedbackOption = request.CreateFeedbackOption().GetSuccess();
-        UpdateGeneralTestTakingProcessSettingsCommand command = new(
-            testId,
-            request.ForceSequentialFlow,
-            feedbackOption
-        );
+
+        UpdateGeneralTestFeedbackCommand command = new(testId, feedbackOption);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(
@@ -35,5 +36,4 @@ internal static class GeneralFormatTestCreationHandlers
             () => Results.Ok()
         );
     }
-
 }

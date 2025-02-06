@@ -32,12 +32,9 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
         builder.HasMany<GeneralTestResult>("_results")
             .WithOne()
             .HasForeignKey(q => q.TestId);
-
+        
         builder
-            .HasOne<GeneralTestTakingProcessSettings>("TestTakingProcessSettings")
-            .WithOne()
-            .HasForeignKey<GeneralTestTakingProcessSettings>();
-
-
+            .Property(x => x.Feedback)
+            .HasGeneralTestFeedbackOptionConverter();
     }
 }

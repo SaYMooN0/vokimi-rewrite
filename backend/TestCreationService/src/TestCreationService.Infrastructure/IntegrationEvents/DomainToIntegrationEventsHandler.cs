@@ -15,6 +15,7 @@ internal class DomainToIntegrationEventsHandler :
     public DomainToIntegrationEventsHandler(IIntegrationEventsPublisher integrationEventsPublisher) {
         _integrationEventsPublisher = integrationEventsPublisher;
     }
+
     public async Task Handle(GeneralTestPublishedEvent notification, CancellationToken cancellationToken) {
         var integrationEvent = new GeneralTestPublishedIntegrationEvent(
             notification.TestId,
@@ -28,9 +29,9 @@ internal class DomainToIntegrationEventsHandler :
             notification.InteractionsAccessSettings,
             notification.Styles,
             notification.Tags,
-            notification.TestTakingProcessSettings,
-            notification.ShuffleQuestions,
+            notification.FeedbackOption,
             notification.Questions,
+            notification.ShuffleQuestions,
             notification.Results
         );
         await _integrationEventsPublisher.PublishEvent(integrationEvent);

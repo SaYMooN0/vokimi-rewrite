@@ -1,11 +1,11 @@
-﻿using SharedKernel.Common.domain;
+﻿using System.Collections.Immutable;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.IntegrationEvents.test_publishing;
-using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Domain.GeneralTestQuestionAggregate.events;
@@ -20,8 +20,6 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-
-
     protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
     protected virtual List<GeneralTestResult> _results { get; init; }
 
@@ -29,7 +27,8 @@ public class GeneralFormatTest : BaseTest
         .OrderBy(r => r.Id)
         .ToImmutableArray();
 
-    private GeneralTestTakingProcessSettings TestTakingProcessSettings { get; init; }
+    public GeneralTestFeedbackOption Feedback { get; private set; }
+
 
     public static ErrOr<GeneralFormatTest> CreateNew(
         AppUserId creatorId,
@@ -45,9 +44,11 @@ public class GeneralFormatTest : BaseTest
         if (editorIds.Count() > TestRules.MaxTestEditorsCount) {
             return new Err(
                 message: "Too many test editors",
-                details: $"You can't add more than {TestRules.MaxTestEditorsCount} editors to the test. Current count of unique editors: {editorIds.Count()}"
+                details:
+                $"You can't add more than {TestRules.MaxTestEditorsCount} editors to the test. Current count of unique editors: {editorIds.Count()}"
             );
         }
+
         var newTest = new GeneralFormatTest(
             creatorId,
             editorIds.ToHashSet(),
@@ -65,7 +66,6 @@ public class GeneralFormatTest : BaseTest
     ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
         _questionsList = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
         _results = [];
-        TestTakingProcessSettings = GeneralTestTakingProcessSettings.CreateNew();
     }
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
@@ -96,10 +96,8 @@ public class GeneralFormatTest : BaseTest
         return ErrOrNothing.Nothing;
     }
 
-    public void UpdateTestTakingProcessSettings(
-        bool forceSequentialFlow,
-        GeneralTestFeedbackOption testFeedback
-    ) => TestTakingProcessSettings.Update(forceSequentialFlow, testFeedback);
+    public void UpdateTestFeedback(GeneralTestFeedbackOption testFeedback) =>
+        Feedback = testFeedback;
 
     public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
         var questionIds = _questionsList.EntityIds();
@@ -201,10 +199,14 @@ public class GeneralFormatTest : BaseTest
     }
 
     public List<TestPublishingProblem> CheckForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) => [
-        .. _mainInfo.CheckForPublishingProblems().Select(e => TestPublishingProblem.FromErr(e, "Main Info")),
-        .. CheckQuestionsForPublishingProblems(questions).Select(e => TestPublishingProblem.FromErr(e, "Questions")),
-        .. CheckResultsForPublishingProblems(questions).Select(e => TestPublishingProblem.FromErr(e, "Results")),
-        .. _tags.CheckForPublishingProblems().Select(e => TestPublishingProblem.FromErr(e, "Tags")),
+        .. _mainInfo.CheckForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Main Info")),
+        .. CheckQuestionsForPublishingProblems(questions)
+            .Select(e => TestPublishingProblem.FromErr(e, "Questions")),
+        .. CheckResultsForPublishingProblems(questions)
+            .Select(e => TestPublishingProblem.FromErr(e, "Results")),
+        .. _tags.CheckForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Tags")),
     ];
 
     private IEnumerable<Err> CheckQuestionsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
@@ -287,33 +289,26 @@ public class GeneralFormatTest : BaseTest
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
         }
-
+        TestPublishedInteractionsAccessSettingsDto interactionsAccessSettingsDto = new(
+            _interactionsAccessSettings.TestAccess,
+            _interactionsAccessSettings.AllowRatings,
+            _interactionsAccessSettings.AllowDiscussions,
+            _interactionsAccessSettings.AllowTestTakenPosts,
+            _interactionsAccessSettings.AllowTagsSuggestions
+        );
         GeneralTestPublishedEvent e = new(
             Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description,
             _mainInfo.Language,
             dateTimeProvider.Now,
-            new(
-                _interactionsAccessSettings.TestAccess,
-                _interactionsAccessSettings.AllowRatings,
-                _interactionsAccessSettings.AllowDiscussions,
-                _interactionsAccessSettings.AllowTestTakenPosts,
-                _interactionsAccessSettings.AllowTagsSuggestions
-            ),
-            new(
-                _styles.AccentColor,
-                _styles.ErrorsColor,
-                _styles.Buttons
-            ),
+            interactionsAccessSettingsDto,
+            new(_styles.AccentColor, _styles.ErrorsColor, _styles.Buttons),
             _tags.GetTags().ToArray(),
-            new(
-                TestTakingProcessSettings.ForceSequentialFlow,
-                TestTakingProcessSettings.Feedback
-            ),
-            _questionsList.IsShuffled,
+            Feedback,
             _questionsList
                 .GetItemsWithOrders(questions)
                 .Select(i => i.Entity.ToTestPublishedDto(i.Order))
                 .ToArray(),
+            _questionsList.IsShuffled,
             _results.Select(r => new GeneralTestPublishedResultDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
         );
         return ErrOrNothing.Nothing;
@@ -323,7 +318,6 @@ public class GeneralFormatTest : BaseTest
         foreach (var questionId in _questionsList.EntityIds()) {
             this.DeleteQuestion(questionId);
         }
-
         _domainEvents.Add(new GeneralFormatTestDeletedEvent(Id, CreatorId, _editorIds));
     }
 }

@@ -4,9 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Common;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
+using TestTakingService.Application.Common.interfaces.repositories;
 using TestTakingService.Infrastructure.IntegrationEvents.background_service;
 using TestTakingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestTakingService.Infrastructure.Persistence;
+using TestTakingService.Infrastructure.Persistence.repositories;
 
 namespace TestTakingService.Infrastructure;
 
@@ -45,7 +47,7 @@ public static class DependencyInjection
                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnetionString));
 
-        //services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
+        services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
 
         return services;
     }

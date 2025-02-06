@@ -1,5 +1,6 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.tests.general_format;
 using SharedKernel.IntegrationEvents.test_publishing;
 
 namespace TestCreationService.Domain.TestAggregate.general_format.events;
@@ -16,8 +17,8 @@ public record class GeneralTestPublishedEvent(
     TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
     TestPublishedStylesDto Styles,
     string[] Tags,
-    TestTakingProcessSettings TestTakingProcessSettings,
-    bool ShuffleQuestions,
+    GeneralTestFeedbackOption FeedbackOption,
     GeneralTestPublishedQuestionDto[] Questions,
+    bool ShuffleQuestions,
     GeneralTestPublishedResultDto[] Results
 ) : IDomainEvent;

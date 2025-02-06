@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using TestTakingService.Application;
 using TestTakingService.Infrastructure;
 using ApiShared;
+using TestTakingService.Api.Endpoints;
 
 namespace TestTakingService.Api;
 
@@ -29,6 +30,6 @@ public class Program
     }
 
     private static void MapHandlers(WebApplication app) {
-        app.MapGet("/hello", () => "Hello World!");
+        app.MapGroup("/{testId}/general/").MapGeneralTestTakingHandlers();
     }
 }
