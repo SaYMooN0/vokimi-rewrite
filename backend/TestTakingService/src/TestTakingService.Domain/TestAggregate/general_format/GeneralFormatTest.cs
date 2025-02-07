@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
@@ -17,6 +18,7 @@ public class GeneralFormatTest : BaseTest
     public GeneralFormatTest(
         TestId testId,
         AppUserId creatorId,
+        AccessLevel accessLevel,
         ImmutableArray<GeneralTestQuestion> questions,
         bool shuffleQuestions,
         ImmutableArray<GeneralTestResult> results,
@@ -24,6 +26,7 @@ public class GeneralFormatTest : BaseTest
     ) {
         Id = testId;
         _creatorId = creatorId;
+        AccessLevel = accessLevel;
         _questions = questions;
         _shuffleQuestions = shuffleQuestions;
         _results = results;

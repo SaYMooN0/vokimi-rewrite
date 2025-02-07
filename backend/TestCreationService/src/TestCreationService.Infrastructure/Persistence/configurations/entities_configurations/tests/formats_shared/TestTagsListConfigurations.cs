@@ -21,7 +21,7 @@ internal class TestTagsListConfigurations : IEntityTypeConfiguration<TestTagsLis
         builder
             .HasOne<BaseTest>()
             .WithOne("_tags")
-            .HasForeignKey<TestTagsList>("TestId");
+            .HasForeignKey<TestTagsList>("_testId");
 
         builder
             .Property<List<string>>("_tags")

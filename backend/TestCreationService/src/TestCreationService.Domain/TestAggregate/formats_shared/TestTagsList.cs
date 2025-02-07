@@ -9,10 +9,10 @@ namespace TestCreationService.Domain.TestAggregate.formats_shared;
 public class TestTagsList : Entity<TestTagsListId>
 {
     private TestTagsList() { }
-    private TestId TestId { get; init; }
+    private TestId _testId { get; init; }
     private List<string> _tags { get; set; }
     public static TestTagsList CreateNew(TestId testId) => new() {
-        TestId = testId,
+        _testId = testId,
         Id = TestTagsListId.CreateNew(),
         _tags = []
     };

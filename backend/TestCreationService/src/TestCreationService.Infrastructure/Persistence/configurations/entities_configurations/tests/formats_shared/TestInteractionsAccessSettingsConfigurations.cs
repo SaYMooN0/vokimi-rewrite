@@ -20,7 +20,7 @@ internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfigu
         builder
             .HasOne<BaseTest>()
             .WithOne("_interactionsAccessSettings")
-            .HasForeignKey<TestInteractionsAccessSettings>("TestId");
+            .HasForeignKey<TestInteractionsAccessSettings>("_testId");
 
         builder
             .Property(s => s.AllowRatings)

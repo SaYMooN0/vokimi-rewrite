@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
-using System.Text.Json;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
+namespace InfrastructureConfigurationShared.ValueConverters.general_format_test;
 
 internal class GeneralTestAnswerSpecificDataConverter : ValueConverter<GeneralTestAnswerTypeSpecificData, string>
 {

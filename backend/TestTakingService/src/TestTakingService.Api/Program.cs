@@ -3,6 +3,7 @@ using TestTakingService.Application;
 using TestTakingService.Infrastructure;
 using ApiShared;
 using TestTakingService.Api.Endpoints;
+using TestTakingService.Infrastructure.Persistence;
 
 namespace TestTakingService.Api;
 
@@ -26,6 +27,18 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
+        using (var scope = app.Services.CreateScope()) {
+            var services = scope.ServiceProvider;
+            try {
+                var appDbContext = services.GetRequiredService<TestTakingDbContext>();
+                appDbContext.Database.EnsureDeleted();
+                appDbContext.Database.EnsureCreated();
+                appDbContext.SaveChanges();
+            } catch (Exception ex) {
+                app.Logger.LogError(ex, "An error occurred while initializing the database.");
+                throw;
+            }
+        }
         app.Run();
     }
 

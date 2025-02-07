@@ -78,6 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTakingService.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTakingService.Domain.UnitTests", "TestTakingService\tests\TestTakingService.Domain.UnitTests\TestTakingService.Domain.UnitTests.csproj", "{A4253B9B-08E5-4E4A-A19C-AF31E19C9683}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedUserRelationsContext", "SharedUserRelationsContext\SharedUserRelationsContext.csproj", "{C789A418-107F-4048-9F6F-55A910673AFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +178,10 @@ Global
 		{A4253B9B-08E5-4E4A-A19C-AF31E19C9683}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4253B9B-08E5-4E4A-A19C-AF31E19C9683}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4253B9B-08E5-4E4A-A19C-AF31E19C9683}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C789A418-107F-4048-9F6F-55A910673AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C789A418-107F-4048-9F6F-55A910673AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C789A418-107F-4048-9F6F-55A910673AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C789A418-107F-4048-9F6F-55A910673AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -48,6 +48,7 @@ public static class DependencyInjection
         services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnetionString));
 
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
+        services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
 
         return services;
     }

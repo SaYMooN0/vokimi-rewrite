@@ -24,35 +24,8 @@ internal static class PropertyBuilderExtensions
         return builder;
     }
 
-    public static PropertyBuilder<TProperty> HasGeneralTestQuestionTimeLimitOptionConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestQuestionTimeLimitOptionConverter())
-            .HasMaxLength(20);
-    }
+    
 
-    public static PropertyBuilder<TProperty> HasGeneralTestQuestionAnswersCountLimitConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestQuestionAnswersCountLimitConverter())
-            .HasMaxLength(20);
-    }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestAnswerSpecificDataConversion<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestAnswerSpecificDataConverter())
-            .HasMaxLength(2040);
-    }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestFeedbackOptionConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder.HasConversion(new GeneralTestFeedbackOptionConverter());
-    }
 
     public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
         this PropertyBuilder<TProperty> builder

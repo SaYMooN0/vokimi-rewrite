@@ -10,7 +10,7 @@ namespace TestCreationService.Domain.TestAggregate.formats_shared;
 public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>
 {
     private TestInteractionsAccessSettings() { }
-    private TestId TestId { get; init; }
+    private TestId _testId { get; init; }
     public AccessLevel TestAccess { get; private set; }
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
     public ResourceAvailabilitySetting AllowDiscussions { get; private set; }
@@ -19,7 +19,7 @@ public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSetti
 
     public static TestInteractionsAccessSettings CreateNew(TestId testId) => new() {
         Id = TestInteractionsAccessSettingsId.CreateNew(),
-        TestId = testId,
+        _testId = testId,
         TestAccess = AccessLevel.Public,
         AllowRatings = ResourceAvailabilitySetting.EnabledPublic,
         AllowDiscussions = ResourceAvailabilitySetting.EnabledPublic,
