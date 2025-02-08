@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ApiShared.extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using SharedKernel.Common.domain;
-using SharedKernel.Common.errors;
 using SharedKernel.Configs;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace ApiShared.endpoints_filters;
 
@@ -19,39 +15,13 @@ internal class AuthenticationRequiredEndpointFilter : IEndpointFilter
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
         var httpContext = context.HttpContext;
-        var token = httpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        var userIdOrErr = httpContext.ParseUserIdFromJwtToken(_jwtConfig);
 
-        if (string.IsNullOrEmpty(token)) {
-            return CustomResults.Unauthorized(new Err("Access denied. Authentication required"));
+        if (userIdOrErr.IsErr(out var err))
+        {
+            return CustomResults.Unauthorized(err.WithPrefix("Access denied. Authentication required"));
         }
-
-        var handler = new JwtSecurityTokenHandler();
-        var tokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidIssuer = _jwtConfig.Issuer,
-            ValidAudience = _jwtConfig.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.SecretKey))
-        };
-        string userIdClaim = string.Empty;
-        try {
-
-            var principal = handler.ValidateToken(token, tokenValidationParameters, out _);
-            userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-        } catch (Exception ex) {
-            return CustomResults.Unauthorized(new Err(
-                "Access denied. Authentication required",
-                details: "Incorrect authentication token")
-            );
-
-        }
-        if (string.IsNullOrEmpty(userIdClaim)) {
-            return CustomResults.Unauthorized(new Err("Access denied. Authentication required"));
-        }
-
-        var userId = new AppUserId(Guid.Parse(userIdClaim));
-        httpContext.Items["AppUserId"] = userId;
+        httpContext.Items["AppUserId"] = userIdOrErr.GetSuccess();
 
         return await next(context);
     }

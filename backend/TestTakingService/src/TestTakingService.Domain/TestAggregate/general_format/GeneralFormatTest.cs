@@ -3,6 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
+using SharedKernel.Common.tests.test_styles;
 
 namespace TestTakingService.Domain.TestAggregate.general_format;
 
@@ -10,26 +11,26 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-    protected virtual ImmutableArray<GeneralTestQuestion> _questions { get; init; }
+    public virtual ImmutableArray<GeneralTestQuestion> Questions { get; init; }
     private bool _shuffleQuestions { get; init; }
     protected virtual ImmutableArray<GeneralTestResult> _results { get; init; }
-    private GeneralTestFeedbackOption _feedbackOption { get; init; }
+    public GeneralTestFeedbackOption FeedbackOption { get; init; }
 
     public GeneralFormatTest(
         TestId testId,
         AppUserId creatorId,
+        ImmutableHashSet<AppUserId> editors,
         AccessLevel accessLevel,
+        TestStylesSheet styles,
+        //general format specific
         ImmutableArray<GeneralTestQuestion> questions,
         bool shuffleQuestions,
         ImmutableArray<GeneralTestResult> results,
         GeneralTestFeedbackOption feedbackOption
-    ) {
-        Id = testId;
-        _creatorId = creatorId;
-        AccessLevel = accessLevel;
-        _questions = questions;
+    ) : base(testId, creatorId, editors, accessLevel, styles) {
+        Questions = questions;
         _shuffleQuestions = shuffleQuestions;
         _results = results;
-        _feedbackOption = feedbackOption;
+        FeedbackOption = feedbackOption;
     }
 }

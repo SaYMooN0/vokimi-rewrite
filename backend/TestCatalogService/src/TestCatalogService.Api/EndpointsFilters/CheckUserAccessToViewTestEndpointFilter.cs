@@ -1,21 +1,21 @@
-﻿using ApiShared;
+using ApiShared;
 using ApiShared.extensions;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Configs;
 using SharedUserRelationsContext.repository;
-using TestTakingService.Application.Common.interfaces.repositories;
-using TestTakingService.Domain.TestAggregate;
+using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.TestAggregate;
 
-namespace TestTakingService.Api.EndpointsFilters;
+namespace TestCatalogService.Api.EndpointsFilters;
 
-internal class CheckUserAccessToTakeTestEndpointFilter : IEndpointFilter
+public class CheckUserAccessToViewTestEndpointFilter: IEndpointFilter
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
     private readonly IUserFollowingsRepository _userFollowingsRepository;
     private readonly JwtTokenConfig _jwtConfig;
 
-    public CheckUserAccessToTakeTestEndpointFilter(
+    public CheckUserAccessToViewTestEndpointFilter(
         IBaseTestsRepository baseTestsRepository,
         IUserFollowingsRepository userFollowingsRepository,
         JwtTokenConfig jwtConfig
@@ -35,10 +35,10 @@ internal class CheckUserAccessToTakeTestEndpointFilter : IEndpointFilter
         var userIdRes = context.HttpContext.ParseUserIdFromJwtToken(_jwtConfig);
         ErrOrNothing access;
         if (userIdRes.IsSuccess(out var userId)) {
-            access = await test.CheckUserAccessToTakeTest(userId, _userFollowingsRepository.GetUserFollowings);
+            access = await test.CheckUserAccessToViewTest(userId, _userFollowingsRepository.GetUserFollowings);
         }
         else {
-            access = test.CheckAccessToTakeTestForUnauthorized();
+            access = test.CheckAccessToViewTestForUnauthorized();
         }
 
         return access.IsErr(out var err)

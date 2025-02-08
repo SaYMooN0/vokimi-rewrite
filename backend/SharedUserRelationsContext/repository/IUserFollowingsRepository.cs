@@ -5,6 +5,6 @@ namespace SharedUserRelationsContext.repository;
 
 public interface IUserFollowingsRepository
 {
-    public ImmutableArray<AppUserId> GetUserFollowings(AppUserId userId);
-    public ImmutableArray<AppUserId> GetUserFollowers(AppUserId userId);
+    public Task<ImmutableArray<AppUserId>> GetUserFollowings(AppUserId userId);
+    public Task<ImmutableArray<AppUserId>> GetUserFollowers(AppUserId userId);
 }

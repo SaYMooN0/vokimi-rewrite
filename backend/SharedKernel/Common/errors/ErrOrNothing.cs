@@ -22,5 +22,5 @@ public class ErrOrNothing
     public static implicit operator ErrOrNothing(Err err) {
         return new ErrOrNothing(err);
     }
-    public readonly static ErrOrNothing Nothing = new ErrOrNothing(null);
+    public static readonly ErrOrNothing Nothing = new ErrOrNothing(null);
 }

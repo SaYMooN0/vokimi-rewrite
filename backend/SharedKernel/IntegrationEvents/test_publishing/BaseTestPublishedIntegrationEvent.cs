@@ -10,13 +10,13 @@ public abstract record BaseTestPublishedIntegrationEvent(
     TestId TestId,
     AppUserId CreatorId,
     ImmutableArray<AppUserId> EditorIds,
-    string Name, 
-    string CoverImage, 
+    string Name,
+    string CoverImage,
     string Description,
     Language Language,
     DateTime PublicationDate,
     TestPublishedInteractionsAccessSettingsDto InteractionsAccessSettings,
-    TestPublishedStylesDto Styles, 
+    TestPublishedStylesDto Styles,
     string[] Tags
 ) : IIntegrationEvent;
 
@@ -27,7 +27,9 @@ public record TestPublishedInteractionsAccessSettingsDto(
     bool AllowTestTakenPosts,
     ResourceAvailabilitySetting AllowTagsSuggestions
 );
+
 public record TestPublishedStylesDto(
+    TestStylesSheetId Id,
     HexColor AccentColor,
     HexColor ErrorsColor,
     TestStylesButtons Buttons

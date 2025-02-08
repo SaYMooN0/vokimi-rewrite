@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using TestTakingService.Application;
 using TestTakingService.Infrastructure;
 using ApiShared;
+using SharedUserRelationsContext;
 using TestTakingService.Api.Endpoints;
 using TestTakingService.Infrastructure.Persistence;
 
@@ -16,6 +17,7 @@ public class Program
             .AddAuthTokenConfig(builder.Configuration)
             .AddApplication(builder.Configuration)
             .AddInfrastructure(builder.Configuration)
+            .AddSharedUserRelationsContext(builder.Configuration)
             .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
         var app = builder.Build();
 
@@ -34,6 +36,11 @@ public class Program
                 appDbContext.Database.EnsureDeleted();
                 appDbContext.Database.EnsureCreated();
                 appDbContext.SaveChanges();
+                
+                var appDbContext2 = services.GetRequiredService<UserRelationsDbContext>();
+                appDbContext2.Database.EnsureDeleted();
+                appDbContext2.Database.EnsureCreated();
+                appDbContext2.SaveChanges();
             } catch (Exception ex) {
                 app.Logger.LogError(ex, "An error occurred while initializing the database.");
                 throw;

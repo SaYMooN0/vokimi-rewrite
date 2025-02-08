@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using MediatR;
+using SharedKernel.Common.tests.test_styles;
 using SharedKernel.IntegrationEvents.test_publishing;
 using TestTakingService.Application.Common.interfaces.repositories;
 using TestTakingService.Domain.TestAggregate.general_format;
@@ -17,10 +18,14 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
     public async Task Handle(GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
         var results = CreateResultsFromNotification(notification);
         var questions = CreateQuestionsFromNotification(notification, results);
+        var styles = CreateStyleFromNotification(notification);
 
         GeneralFormatTest test = new GeneralFormatTest(
             notification.TestId,
             notification.CreatorId,
+            notification.EditorIds.ToImmutableHashSet(),
+            notification.InteractionsAccessSettings.TestAccess,
+            styles,
             questions,
             notification.ShuffleQuestions,
             results,
@@ -33,7 +38,6 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         GeneralTestPublishedIntegrationEvent notification
     ) => notification.Results.Select(r => new GeneralTestResult(
         r.Id,
-        notification.TestId,
         r.Name,
         r.Text,
         r.Image
@@ -44,14 +48,13 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         ImmutableArray<GeneralTestResult> allResults
     ) => notification.Questions.Select(q => new GeneralTestQuestion(
         q.Id,
-        notification.TestId,
         q.Order,
         q.Text,
         q.Images.ToImmutableArray(),
+        q.AnswersType,
         q.Answers.Select(a =>
             new GeneralTestAnswer(
                 a.Id,
-                q.Id,
                 a.TypeSpecificData,
                 allResults.Where(r => a.RelatedResultsIds.Contains(r.Id)).ToImmutableArray()
             )
@@ -60,4 +63,12 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         q.AnswersCountLimit,
         q.TimeLimitOption
     )).ToImmutableArray();
+
+    private TestStylesSheet CreateStyleFromNotification(GeneralTestPublishedIntegrationEvent notification) => new(
+        notification.Styles.Id,
+        notification.TestId,
+        notification.Styles.AccentColor,
+        notification.Styles.ErrorsColor,
+        notification.Styles.Buttons
+    );
 }

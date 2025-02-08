@@ -23,15 +23,4 @@ internal static class PropertyBuilderExtensions
         );
         return builder;
     }
-
-    
-
-
-    public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new HexColorConverter())
-            .HasMaxLength(7);
-    }
 }

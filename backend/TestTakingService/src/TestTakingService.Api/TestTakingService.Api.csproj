@@ -17,8 +17,4 @@
     <ProjectReference Include="..\TestTakingService.Infrastructure\TestTakingService.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
 </Project>

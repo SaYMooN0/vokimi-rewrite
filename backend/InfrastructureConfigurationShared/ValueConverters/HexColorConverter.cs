@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.tests.value_objects;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace InfrastructureConfigurationShared.ValueConverters;
 
 internal class HexColorConverter : ValueConverter<HexColor, string>
 {

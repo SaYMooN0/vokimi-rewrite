@@ -1,6 +1,10 @@
-﻿using ApiShared.extensions;
+﻿using ApiShared;
+using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain;
+using TestTakingService.Api.Contracts.general_format_test.load_test_taking_data;
+using TestTakingService.Api.Contracts.general_format_test.test_taken;
+using TestTakingService.Api.Extensions;
 using TestTakingService.Application.Tests.general_format.commands;
 
 namespace TestTakingService.Api.Endpoints;
@@ -8,12 +12,16 @@ namespace TestTakingService.Api.Endpoints;
 public static class GeneralTestTakingHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestTakingHandlers(this RouteGroupBuilder group) {
-        //group map check access
+        group
+            .GroupUserAccessToTakeTestRequired();
+
         group.MapGet("/loadTestTakingData", LoadGeneralTestTakingData);
+        group.MapPost("/testTaken", HandleGeneralTestTaken)
+            .WithRequestValidation<GeneralTestTakenRequest>();
         return group;
     }
 
-    private async static Task<IResult> LoadGeneralTestTakingData(
+    private static async Task<IResult> LoadGeneralTestTakingData(
         HttpContext httpContext,
         ISender mediator
     ) {
@@ -21,6 +29,17 @@ public static class GeneralTestTakingHandlers
         LoadGeneralTestTakingDataCommand command = new(testId);
         var result = await mediator.Send(command);
 
-        return Results.Json(new { });
+        return CustomResults.FromErrOr(
+            result,
+            (test) => Results.Json(GeneralTestTakingDataResponse.FromTest(test))
+        );
+    }
+
+    private static async Task<IResult> HandleGeneralTestTaken(
+        HttpContext httpContext,
+        ISender mediator
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+        return CustomResults.NotImplemented();
     }
 }

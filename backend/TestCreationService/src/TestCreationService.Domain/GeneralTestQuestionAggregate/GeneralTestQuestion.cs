@@ -109,22 +109,33 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         _domainEvents.Add(new RelatedResultsForGeneralTestAnswerChangedEvent(TestId, relatedResultIds));
         return ErrOrNothing.Nothing;
     }
-    public ErrOrNothing UpdateAnswerOrder(EntitiesOrderController<GeneralTestAnswerId> orderController) {
+    public ErrOrNothing UpdateAnswerOrder(EntitiesOrderController<GeneralTestAnswerId> orderController)
+    {
         var answerIds = _answers.Select(q => q.Id).ToHashSet();
         var providedIds = orderController.EntityIds().ToHashSet();
 
-        if (!answerIds.IsSubsetOf(providedIds)) {
+        var extraIds = providedIds.Except(answerIds);
+        if (extraIds.Any())
+        {
+            return Err.ErrFactory.InvalidData(
+                "Invalid answers order was provided. Some answers do not exist in the test.",
+                details: $"Extra answer Ids: {string.Join(", ", extraIds)}"
+            );
+        }
+
+        if (!answerIds.IsSubsetOf(providedIds))
+        {
             var missingIds = answerIds.Except(providedIds);
             return Err.ErrFactory.InvalidData(
-                "Invalid answers order was provided. Not all answers presented",
+                "Invalid answers order was provided. Not all answers presented.",
                 details: $"Missing answer Ids: {string.Join(", ", missingIds)}"
             );
         }
 
-        var extraIds = providedIds.Except(answerIds);
-        _answersOrderController = orderController.WithoutEntityIds(extraIds);
+        _answersOrderController = orderController.Copy();
         return ErrOrNothing.Nothing;
     }
+
     public ErrOrNothing RemoveAnswer(GeneralTestAnswerId answerId) {
         var answer = _answers.FirstOrDefault(q => q.Id == answerId);
         if (answer is null) {

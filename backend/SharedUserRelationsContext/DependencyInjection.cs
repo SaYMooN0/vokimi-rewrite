@@ -7,7 +7,7 @@ namespace SharedUserRelationsContext;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddUserRelationsInfrastructure(
+    public static IServiceCollection AddSharedUserRelationsContext(
         this IServiceCollection services,
         IConfiguration configuration
     ) {

@@ -16,12 +16,12 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
         builder
             .HasMany<GeneralTestResult>("_results")
             .WithOne()
-            .HasForeignKey("_testId");
+            .HasForeignKey();
 
         builder
-            .HasMany<GeneralTestQuestion>("_questions")
+            .HasMany(x => x.Questions)
             .WithOne()
-            .HasForeignKey("_testId");
+            .HasForeignKey();
 
         builder
             .Property<GeneralTestFeedbackOption>("_feedbackOption")

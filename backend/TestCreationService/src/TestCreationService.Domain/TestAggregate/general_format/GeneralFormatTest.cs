@@ -96,12 +96,17 @@ public class GeneralFormatTest : BaseTest
         return ErrOrNothing.Nothing;
     }
 
-    public void UpdateTestFeedback(GeneralTestFeedbackOption testFeedback) =>
-        Feedback = testFeedback;
-
     public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
         var questionIds = _questionsList.EntityIds();
         var providedIds = orderController.EntityIds().ToHashSet();
+
+        var extraIds = providedIds.Except(questionIds);
+        if (extraIds.Any()) {
+            return Err.ErrFactory.InvalidData(
+                "Invalid questions order was provided. Some questions do not exist in the test",
+                details: $"Extra question Ids: {string.Join(", ", extraIds)}"
+            );
+        }
 
         if (!questionIds.IsSubsetOf(providedIds)) {
             var missingIds = questionIds.Except(providedIds);
@@ -111,8 +116,7 @@ public class GeneralFormatTest : BaseTest
             );
         }
 
-        var extraIds = providedIds.Except(questionIds);
-        _questionsList = orderController.WithoutEntityIds(extraIds);
+        _questionsList = orderController.Copy();
         return ErrOrNothing.Nothing;
     }
 
@@ -132,6 +136,9 @@ public class GeneralFormatTest : BaseTest
 
         return _questionsList.GetItemsWithOrders(questions);
     }
+
+    public void UpdateTestFeedback(GeneralTestFeedbackOption testFeedback) =>
+        Feedback = testFeedback;
 
     public bool HasResultWithId(GeneralTestResultId resultId) =>
         _results.Any(r => r.Id == resultId);
@@ -289,6 +296,7 @@ public class GeneralFormatTest : BaseTest
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
         }
+
         TestPublishedInteractionsAccessSettingsDto interactionsAccessSettingsDto = new(
             _interactionsAccessSettings.TestAccess,
             _interactionsAccessSettings.AllowRatings,
@@ -301,7 +309,7 @@ public class GeneralFormatTest : BaseTest
             _mainInfo.Language,
             dateTimeProvider.Now,
             interactionsAccessSettingsDto,
-            new(_styles.AccentColor, _styles.ErrorsColor, _styles.Buttons),
+            new(_styles.Id, _styles.AccentColor, _styles.ErrorsColor, _styles.Buttons),
             _tags.GetTags().ToArray(),
             Feedback,
             _questionsList
@@ -318,6 +326,7 @@ public class GeneralFormatTest : BaseTest
         foreach (var questionId in _questionsList.EntityIds()) {
             this.DeleteQuestion(questionId);
         }
+
         _domainEvents.Add(new GeneralFormatTestDeletedEvent(Id, CreatorId, _editorIds));
     }
 }

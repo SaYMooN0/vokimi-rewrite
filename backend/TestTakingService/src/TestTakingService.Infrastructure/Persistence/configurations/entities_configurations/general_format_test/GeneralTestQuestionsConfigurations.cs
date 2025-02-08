@@ -24,7 +24,7 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
         builder
             .HasMany<GeneralTestAnswer>("_answers")
             .WithOne()
-            .HasForeignKey("_questionId");
+            .HasForeignKey();
 
         builder
             .Property(x => x.TimeLimit)

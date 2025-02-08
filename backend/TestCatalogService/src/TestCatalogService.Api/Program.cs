@@ -1,5 +1,6 @@
 using ApiShared;
 using System.Text.Json.Serialization;
+using SharedUserRelationsContext;
 using TestCatalogService.Application;
 using TestCatalogService.Infrastructure;
 
@@ -13,6 +14,7 @@ public class Program
             .AddAuthTokenConfig(builder.Configuration)
             .AddApplication(builder.Configuration)
             .AddInfrastructure(builder.Configuration)
+            .AddSharedUserRelationsContext(builder.Configuration)
             .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
         var app = builder.Build();
 

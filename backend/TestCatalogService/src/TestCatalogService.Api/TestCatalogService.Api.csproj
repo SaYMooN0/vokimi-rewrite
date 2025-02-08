@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\ApiShared\ApiShared.csproj" />
+    <ProjectReference Include="..\..\..\SharedUserRelationsContext\SharedUserRelationsContext.csproj" />
     <ProjectReference Include="..\TestCatalogService.Application\TestCatalogService.Application.csproj" />
     <ProjectReference Include="..\TestCatalogService.Infrastructure\TestCatalogService.Infrastructure.csproj" />
   </ItemGroup>

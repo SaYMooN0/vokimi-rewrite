@@ -7,7 +7,7 @@ public sealed class GeneralTestQuestionTimeLimitOption : BaseTimeLimitOption
 {
     private const ushort MinPossibleTimeLimitSeconds = 5;
     private const ushort MaxPossibleTimeLimitSeconds = 600;
-    
+
     private GeneralTestQuestionTimeLimitOption(bool isEnabled, ushort? seconds) : base(isEnabled, seconds) { }
 
     public static GeneralTestQuestionTimeLimitOption NoTimeLimit()
@@ -33,7 +33,7 @@ public sealed class GeneralTestQuestionTimeLimitOption : BaseTimeLimitOption
         return new GeneralTestQuestionTimeLimitOption(true, seconds);
     }
 
-    public static new ErrOr<GeneralTestQuestionTimeLimitOption> FromInt(int value) {
+    public static ErrOr<GeneralTestQuestionTimeLimitOption> FromInt(int value) {
         if (value == NoTimeLimitInt) {
             return NoTimeLimit();
         }

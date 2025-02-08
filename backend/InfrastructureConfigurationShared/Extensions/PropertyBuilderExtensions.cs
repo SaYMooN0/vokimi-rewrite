@@ -1,4 +1,5 @@
-﻿using InfrastructureConfigurationShared.ValueConverters.entity_id_related;
+﻿using InfrastructureConfigurationShared.ValueConverters;
+using InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 using InfrastructureConfigurationShared.ValueConverters.general_format_test;
 using InfrastructureConfigurationShared.ValueСonverters.entity_id_related;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -51,5 +52,13 @@ public static class PropertyBuilderExtensions
         return builder
             .HasConversion(new GeneralTestQuestionAnswersCountLimitConverter())
             .HasMaxLength(20);
+    }
+
+    public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
+        this PropertyBuilder<TProperty> builder
+    ) where TProperty : class {
+        return builder
+            .HasConversion(new HexColorConverter())
+            .HasMaxLength(7);
     }
 }
