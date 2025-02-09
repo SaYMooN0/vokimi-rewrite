@@ -1,7 +1,7 @@
 ﻿using SharedKernel.Common.domain;
 using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Application.Common.interfaces.repositories;
+namespace TestTakingService.Application.Common.interfaces.repositories.tests;
 
 public interface IGeneralFormatTestsRepository
 {

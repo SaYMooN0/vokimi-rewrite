@@ -10,11 +10,6 @@ namespace TestTakingService.Domain.TestAggregate.general_format;
 public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
-    public override TestFormat Format => TestFormat.General;
-    public virtual ImmutableArray<GeneralTestQuestion> Questions { get; init; }
-    private bool _shuffleQuestions { get; init; }
-    protected virtual ImmutableArray<GeneralTestResult> _results { get; init; }
-    public GeneralTestFeedbackOption FeedbackOption { get; init; }
 
     public GeneralFormatTest(
         TestId testId,
@@ -33,4 +28,11 @@ public class GeneralFormatTest : BaseTest
         _results = results;
         FeedbackOption = feedbackOption;
     }
+
+    public override TestFormat Format => TestFormat.General;
+    public ImmutableArray<GeneralTestQuestion> Questions { get; init; }
+    private bool _shuffleQuestions { get; init; }
+    protected ImmutableArray<GeneralTestResult> _results { get; init; }
+    public GeneralTestFeedbackOption FeedbackOption { get; init; }
+    public HashSet<AppUserId> TakenByUserIds { get; init; }
 }

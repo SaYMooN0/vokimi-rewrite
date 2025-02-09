@@ -3,6 +3,7 @@ using MediatR;
 using SharedKernel.Common.tests.test_styles;
 using SharedKernel.IntegrationEvents.test_publishing;
 using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.integration_events;

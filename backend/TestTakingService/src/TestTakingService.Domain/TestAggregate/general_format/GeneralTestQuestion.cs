@@ -8,14 +8,6 @@ namespace TestTakingService.Domain.TestAggregate.general_format;
 public class GeneralTestQuestion : Entity<GeneralTestQuestionId>
 {
     private GeneralTestQuestion() { }
-    public ushort OrderInTest { get; init; }
-    public string Text { get; init; }
-    public ImmutableArray<string> Images { get; init; }
-    public GeneralTestAnswersType AnswersType { get; init; }
-    public virtual ImmutableArray<GeneralTestAnswer> Answers { get; init; }
-    public bool ShuffleAnswers { get; init; }
-    public GeneralTestQuestionAnswersCountLimit AnswersCountLimit { get; init; }
-    public GeneralTestQuestionTimeLimitOption TimeLimit { get; init; }
 
     public GeneralTestQuestion(
         GeneralTestQuestionId questionId,
@@ -39,4 +31,12 @@ public class GeneralTestQuestion : Entity<GeneralTestQuestionId>
         TimeLimit = timeLimit;
     }
 
+    public ushort OrderInTest { get; init; }
+    public string Text { get; init; }
+    public ImmutableArray<string> Images { get; init; }
+    public GeneralTestAnswersType AnswersType { get; init; }
+    public ImmutableArray<GeneralTestAnswer> Answers { get; init; }
+    public bool ShuffleAnswers { get; init; }
+    public GeneralTestQuestionAnswersCountLimit AnswersCountLimit { get; init; }
+    public GeneralTestQuestionTimeLimitOption TimeLimit { get; init; }
 }

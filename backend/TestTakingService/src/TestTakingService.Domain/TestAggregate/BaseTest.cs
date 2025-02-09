@@ -9,12 +9,15 @@ namespace TestTakingService.Domain.TestAggregate;
 
 public abstract class BaseTest : AggregateRoot<TestId>
 {
+    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
+
+    private const string NoAccessPrivateMessage =
+        "You don't have access to this test. You need to be either the creator or an editor of this test";
+
+    private const string NoAccessFollowersMessage =
+        "You need to follow the test creator to access this test";
+
     protected BaseTest() { }
-    public abstract TestFormat Format { get; }
-    protected AppUserId _creatorId { get; init; }
-    protected ImmutableHashSet<AppUserId> _editors { get; init; }
-    protected AccessLevel _accessLevel { get; init; }
-    public TestStylesSheet Styles { get; init; }
 
     protected BaseTest(
         TestId id,
@@ -30,13 +33,11 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Styles = styles;
     }
 
-    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
-
-    private const string NoAccessPrivateMessage =
-        "You don't have access to this test. You need to be either the creator or an editor of this test";
-
-    private const string NoAccessFollowersMessage =
-        "You need to follow the test creator to access this test";
+    public abstract TestFormat Format { get; }
+    protected AppUserId _creatorId { get; init; }
+    protected ImmutableHashSet<AppUserId> _editors { get; init; }
+    protected AccessLevel _accessLevel { get; init; }
+    public TestStylesSheet Styles { get; init; }
 
     public ErrOrNothing CheckAccessToTakeTestForUnauthorized() =>
         _accessLevel switch {
@@ -52,7 +53,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     ) => _accessLevel switch {
         AccessLevel.Public => ErrOrNothing.Nothing,
         AccessLevel.Private =>
-            (_creatorId == userId || _editors.Contains(userId))
+            _creatorId == userId || _editors.Contains(userId)
                 ? ErrOrNothing.Nothing
                 : Err.ErrFactory.NoAccess(NoAccessPrivateMessage),
         AccessLevel.FollowersOnly => await CheckFollowersAccess(userId, getUserFollowingsAsync),
@@ -69,7 +70,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
             ? ErrOrNothing.Nothing
             : Err.ErrFactory.NoAccess(
                 NoAccessFollowersMessage,
-                details: $"Test creator Id: {_creatorId}"
+                $"Test creator Id: {_creatorId}"
             );
     }
 }

@@ -5,10 +5,12 @@ using SharedKernel.Common;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
 using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Infrastructure.IntegrationEvents.background_service;
 using TestTakingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestTakingService.Infrastructure.Persistence;
 using TestTakingService.Infrastructure.Persistence.repositories;
+using TestTakingService.Infrastructure.Persistence.repositories.tests;
 
 namespace TestTakingService.Infrastructure;
 
@@ -27,7 +29,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMediatR(this IServiceCollection services) {
         services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
-
+        
         return services;
     }
 
@@ -49,6 +51,7 @@ public static class DependencyInjection
 
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
 
         return services;
     }

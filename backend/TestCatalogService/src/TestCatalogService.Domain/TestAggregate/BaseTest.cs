@@ -18,4 +18,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public DateTime PublicationDate { get; init; }
     public Language Language { get; init; }
     public ImmutableHashSet<TestTagId> Tags { get; protected set; }
+
+    //comments 
+    //ratings
 }

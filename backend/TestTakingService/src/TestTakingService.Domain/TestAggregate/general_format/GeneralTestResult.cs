@@ -5,9 +5,6 @@ namespace TestTakingService.Domain.TestAggregate.general_format;
 public class GeneralTestResult : Entity<GeneralTestResultId>
 {
     private GeneralTestResult() { }
-    public string Name { get; init; }
-    public string Text { get; init; }
-    public string Image { get; init; }
 
     public GeneralTestResult(
         GeneralTestResultId resultId,
@@ -20,4 +17,8 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
         Text = text;
         Image = image;
     }
+
+    public string Name { get; init; }
+    public string Text { get; init; }
+    public string Image { get; init; }
 }

@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\ApiShared\ApiShared.csproj" />
     <ProjectReference Include="..\..\..\SharedUserRelationsContext\SharedUserRelationsContext.csproj" />
     <ProjectReference Include="..\TestCatalogService.Application\TestCatalogService.Application.csproj" />

@@ -4,6 +4,7 @@ using TestTakingService.Domain.TestAggregate.general_format;
 namespace TestTakingService.Api.Contracts.general_format_test.load_test_taking_data;
 
 public record class GeneralTestTakingQuestionData(
+    string Id,
     ushort OrderInTest,
     string Text,
     string[] Images,
@@ -17,6 +18,7 @@ public record class GeneralTestTakingQuestionData(
 )
 {
     public static GeneralTestTakingQuestionData FromQuestion(GeneralTestQuestion question) => new(
+        question.Id.ToString(),
         question.OrderInTest,
         question.Text,
         question.Images.ToArray(),
@@ -29,4 +31,3 @@ public record class GeneralTestTakingQuestionData(
         question.TimeLimit.Seconds
     );
 }
-

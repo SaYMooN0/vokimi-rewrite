@@ -5,6 +5,7 @@ using SharedKernel.Common.errors;
 using SharedKernel.Configs;
 using SharedUserRelationsContext.repository;
 using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate;
 
 namespace TestTakingService.Api.EndpointsFilters;

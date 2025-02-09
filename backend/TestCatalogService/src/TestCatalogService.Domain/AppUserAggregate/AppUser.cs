@@ -6,10 +6,10 @@ namespace TestCatalogService.Domain.AppUserAggregate;
 public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
-    private readonly HashSet<TestId> _createdTestIds = [];
+    private readonly HashSet<TestId> _createdTestIds;
     public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
 
-    private readonly HashSet<TestId> _editorAssignedTests = [];
+    private readonly HashSet<TestId> _editorAssignedTests;
     public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
 
     public AppUser(AppUserId id) {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain;
-using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Infrastructure.Persistence.repositories;
+namespace TestTakingService.Infrastructure.Persistence.repositories.tests;
 
 public class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 {

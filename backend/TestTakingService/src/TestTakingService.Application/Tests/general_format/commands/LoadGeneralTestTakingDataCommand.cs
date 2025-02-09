@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.general_format.commands;

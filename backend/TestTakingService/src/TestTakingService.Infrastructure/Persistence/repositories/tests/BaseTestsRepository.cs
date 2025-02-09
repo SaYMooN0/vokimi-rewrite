@@ -1,8 +1,8 @@
 ﻿using SharedKernel.Common.domain;
-using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.repositories;
+namespace TestTakingService.Infrastructure.Persistence.repositories.tests;
 
 public class BaseTestsRepository : IBaseTestsRepository
 {

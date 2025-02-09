@@ -29,6 +29,7 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
+        
         using (var scope = app.Services.CreateScope()) {
             var services = scope.ServiceProvider;
             try {

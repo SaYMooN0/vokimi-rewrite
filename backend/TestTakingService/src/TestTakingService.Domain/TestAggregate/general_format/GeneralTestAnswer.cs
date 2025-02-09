@@ -7,9 +7,6 @@ namespace TestTakingService.Domain.TestAggregate.general_format;
 public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
 {
     private GeneralTestAnswer() { }
-    public ushort OrderInQuestion { get; init; }
-    public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; init; }
-    protected virtual ImmutableArray<GeneralTestResult> RelatedResults { get; init; }
 
     public GeneralTestAnswer(
         GeneralTestAnswerId id,
@@ -20,4 +17,8 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
         TypeSpecificData = typeSpecificData;
         RelatedResults = relatedResults;
     }
+
+    public ushort OrderInQuestion { get; init; }
+    public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; init; }
+    protected ImmutableArray<GeneralTestResult> RelatedResults { get; init; }
 }

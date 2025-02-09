@@ -21,7 +21,7 @@ public class GeneralFormatTest : BaseTest
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
     protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
-    protected virtual List<GeneralTestResult> _results { get; init; }
+    protected List<GeneralTestResult> _results { get; init; }
 
     public ImmutableArray<GeneralTestResult> Results => _results
         .OrderBy(r => r.Id)
