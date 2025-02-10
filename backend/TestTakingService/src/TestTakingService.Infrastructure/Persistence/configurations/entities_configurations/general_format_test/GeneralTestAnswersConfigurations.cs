@@ -16,8 +16,8 @@ internal class GeneralTestAnswersConfigurations : IEntityTypeConfiguration<Gener
             .HasEntityIdConversion();
 
         builder
-            .HasMany<GeneralTestResult>("_relatedResults")
-            .WithOne();
+            .HasMany<GeneralTestResult>("RelatedResults")
+            .WithMany();
 
         builder
             .Property(x => x.TypeSpecificData)

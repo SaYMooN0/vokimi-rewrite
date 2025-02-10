@@ -14,10 +14,10 @@ public static class GeneralTestFeedbackRules
                 message: "Accompanying text cannot be empty"
             );
         }
-        if (len > MaxPossibleFeedbackLength) {
+        if (len > MaxAccompanyingTextLength) {
             return Err.ErrFactory.InvalidData(
-                $"Accompanying text is too long. Maximum length is {MaxPossibleFeedbackLength}",
-                details: $"Maximum length is {MaxPossibleFeedbackLength}. Current length is {len}"
+                $"Accompanying text is too long. Maximum length is {MaxAccompanyingTextLength}",
+                details: $"Maximum length is {MaxAccompanyingTextLength}. Current length is {len}"
             );
         }
         return ErrOrNothing.Nothing;

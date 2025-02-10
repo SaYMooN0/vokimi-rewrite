@@ -7,7 +7,7 @@ using TestTakingService.Domain.AppUserAggregate;
 using TestTakingService.Domain.TestAggregate;
 using TestTakingService.Domain.TestAggregate.general_format;
 using TestTakingService.Domain.TestTakenRecordAggregate;
-using TestTakingService.Domain.TestTakenRecordAggregate.general_format_test;
+using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
 namespace TestTakingService.Infrastructure.Persistence;
 

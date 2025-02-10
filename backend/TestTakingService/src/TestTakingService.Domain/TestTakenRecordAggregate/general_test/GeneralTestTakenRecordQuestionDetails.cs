@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.domain;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Domain.TestTakenRecordAggregate.general_format_test;
+namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
 public class GeneralTestTakenRecordQuestionDetails : Entity<GeneralTestTakenRecordQuestionDetailsId>
 {

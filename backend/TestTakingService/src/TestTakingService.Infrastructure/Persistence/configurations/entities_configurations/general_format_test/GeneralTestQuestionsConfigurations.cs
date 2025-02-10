@@ -22,9 +22,9 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasEntityIdConversion();
 
         builder
-            .HasMany<GeneralTestAnswer>("_answers")
+            .HasMany<GeneralTestAnswer>(x => x.Answers)
             .WithOne()
-            .HasForeignKey();
+            .HasForeignKey("QuestionId");
 
         builder
             .Property(x => x.TimeLimit)

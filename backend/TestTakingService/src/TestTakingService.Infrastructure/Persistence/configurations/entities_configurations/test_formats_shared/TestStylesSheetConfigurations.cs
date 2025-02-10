@@ -18,7 +18,7 @@ internal class TestStylesSheetConfigurations : IEntityTypeConfiguration<TestStyl
 
         builder
             .HasOne<BaseTest>()
-            .WithOne("_styles")
+            .WithOne(x=>x.Styles)
             .HasForeignKey<TestStylesSheet>("TestId");
         
         builder

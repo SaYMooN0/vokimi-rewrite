@@ -12,16 +12,4 @@ public abstract class BaseTestTakenRecord : AggregateRoot<TestTakenRecordId>
     public DateTime TestTakingStart { get; init; }
     public DateTime TestTakingEnd { get; init; }
 
-    protected BaseTestTakenRecord(
-        AppUserId userId,
-        TestId testId,
-        DateTime testTakingStart,
-        DateTime testTakingEnd
-    ) {
-        Id = TestTakenRecordId.CreateNew();
-        UserId = userId;
-        TestId = testId;
-        TestTakingStart = testTakingStart;
-        TestTakingEnd = testTakingEnd;
-    }
 }

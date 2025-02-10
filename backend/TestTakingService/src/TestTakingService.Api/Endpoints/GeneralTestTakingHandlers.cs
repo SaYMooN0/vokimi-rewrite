@@ -2,6 +2,7 @@
 using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain;
+using SharedKernel.Configs;
 using TestTakingService.Api.Contracts.general_format_test.load_test_taking_data;
 using TestTakingService.Api.Contracts.general_format_test.test_taken;
 using TestTakingService.Api.Extensions;
@@ -37,9 +38,13 @@ public static class GeneralTestTakingHandlers
 
     private static async Task<IResult> HandleGeneralTestTaken(
         HttpContext httpContext,
-        ISender mediator
+        ISender mediator,
+        JwtTokenConfig jwtConfig
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        return CustomResults.NotImplemented();
+        AppUserId? userId = httpContext.ParseUserIdFromJwtToken(jwtConfig).IsSuccess(out var userIdVal)
+            ? userIdVal
+            : null;
+        GeneralTestTakenCommand command = new(testId);
     }
 }
