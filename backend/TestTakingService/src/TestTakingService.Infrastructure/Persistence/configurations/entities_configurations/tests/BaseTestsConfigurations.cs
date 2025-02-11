@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
 using TestTakingService.Domain.TestAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests;
 
 internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
 {

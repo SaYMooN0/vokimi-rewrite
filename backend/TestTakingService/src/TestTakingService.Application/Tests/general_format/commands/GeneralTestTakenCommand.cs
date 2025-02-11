@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
+using TestTakingService.Domain.Common;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.general_format.commands;
@@ -10,7 +11,7 @@ public record class GeneralTestTakenCommand(
     TestId TestId,
     AppUserId? TestTakerId,
     Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> ChosenAnswers,
-    //feedback
+    GeneralTestTakenFeedbackData FeedbackData
 ) : IRequest<ErrOr<GeneralFormatTest>>;
 
 public class GeneralTestTakenCommandHandler
@@ -27,7 +28,9 @@ public class GeneralTestTakenCommandHandler
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
 
-        var testTakenRes = test.TestTaken();
+        return Err.ErrFactory.NotImplemented();
+        // var testTakenRes = test.TestTaken();
+        // await _generalFormatRepository.Add()
         return ErrOr<GeneralFormatTest>.Success(test);
     }
 }

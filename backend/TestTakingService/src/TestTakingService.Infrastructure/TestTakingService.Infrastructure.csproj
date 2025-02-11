@@ -14,4 +14,9 @@
 		<ProjectReference Include="..\TestTakingService.Application\TestTakingService.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Persistence\configurations\entities_configurations\test_feedback_records\" />
+	  <Folder Include="Persistence\configurations\entities_configurations\test_taken_records\" />
+	</ItemGroup>
+
 </Project>

@@ -4,7 +4,7 @@ using TestTakingService.Domain.TestAggregate;
 
 namespace TestTakingService.Infrastructure.Persistence.repositories.tests;
 
-public class BaseTestsRepository : IBaseTestsRepository
+internal class BaseTestsRepository : IBaseTestsRepository
 {
     private readonly TestTakingDbContext _db;
 

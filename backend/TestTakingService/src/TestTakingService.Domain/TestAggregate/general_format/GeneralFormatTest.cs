@@ -6,7 +6,7 @@ using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.Common.tests.test_styles;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.TestTakenRecordAggregate.general_test.events;
+using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
 namespace TestTakingService.Domain.TestAggregate.general_format;
 
@@ -14,11 +14,11 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-    public ImmutableArray<GeneralTestQuestion> Questions { get; init; }
+    public IReadOnlyCollection<GeneralTestQuestion> Questions { get; init; }
     private bool _shuffleQuestions { get; init; }
-    protected ImmutableArray<GeneralTestResult> _results { get; init; }
+    protected IReadOnlyCollection<GeneralTestResult> _results { get; init; }
     public GeneralTestFeedbackOption FeedbackOption { get; init; }
-    public HashSet<AppUserId> TakenByUserIds { get; init; }
+    public HashSet<GeneralTestTakenRecord> TestTakings { get; init; }
 
     public GeneralFormatTest(
         TestId testId,
@@ -27,9 +27,9 @@ public class GeneralFormatTest : BaseTest
         AccessLevel accessLevel,
         TestStylesSheet styles,
         //general format specific
-        ImmutableArray<GeneralTestQuestion> questions,
+        IReadOnlyCollection<GeneralTestQuestion> questions,
         bool shuffleQuestions,
-        ImmutableArray<GeneralTestResult> results,
+        IReadOnlyCollection<GeneralTestResult> results,
         GeneralTestFeedbackOption feedbackOption
     ) : base(testId, creatorId, editors, accessLevel, styles) {
         Questions = questions;
@@ -39,21 +39,25 @@ public class GeneralFormatTest : BaseTest
     }
 
 
-    public ErrOr<GeneralTestResult> TestTaken(
-        AppUserId? testTakerId,
-        Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> chosenAnswers,
-        GeneralTestTakenFeedbackData? feedback
-    ) {
-        if (feedback is not null) {
-            var feedbackCheckRes = ValidateFeedbackForTestTakenRequest(testTakerId, feedback);
-            if (feedbackCheckRes.IsErr(out var feedbackErr)) {
-                return feedbackErr;
-            }
-        }
-
-        //check 
-        _domainEvents.Add(new GeneralTestTakenEvent());
-    }
+    // public ErrOr<GeneralTestResult> TestTaken(
+    //     AppUserId? testTakerId,
+    //     Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> chosenAnswers,
+    //     GeneralTestTakenFeedbackData? feedback
+    // ) {
+    //     if (feedback is not null) {
+    //         var feedbackCheckRes = ValidateFeedbackForTestTakenRequest(testTakerId, feedback);
+    //         if (feedbackCheckRes.IsErr(out var feedbackErr)) {
+    //             return feedbackErr;
+    //         }
+    //     }
+    //
+    //     //check 
+    //     
+    //     _domainEvents.Add(new GeneralBaseTestTakenEvent());
+    //     if (feedback is not null) {
+    //         _domainEvents.Add(new FeedbackForGeneralTestLeftEvent());
+    //     }
+    // }
 
     private ErrOrNothing ValidateFeedbackForTestTakenRequest(
         AppUserId? testTakerId,

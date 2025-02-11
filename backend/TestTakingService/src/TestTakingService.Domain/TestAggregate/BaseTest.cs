@@ -4,19 +4,12 @@ using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.test_styles;
+using TestTakingService.Domain.Common;
 
 namespace TestTakingService.Domain.TestAggregate;
 
 public abstract class BaseTest : AggregateRoot<TestId>
 {
-    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
-
-    private const string NoAccessPrivateMessage =
-        "You don't have access to this test. You need to be either the creator or an editor of this test";
-
-    private const string NoAccessFollowersMessage =
-        "You need to follow the test creator to access this test";
-
     protected BaseTest() { }
 
     protected BaseTest(
@@ -31,6 +24,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _editors = editors;
         _accessLevel = accessLevel;
         Styles = styles;
+        _takenByUserIds = [];
+        _testTakenRecordIds = [];
+        _feedbackRecordIds = [];
     }
 
     public abstract TestFormat Format { get; }
@@ -38,6 +34,21 @@ public abstract class BaseTest : AggregateRoot<TestId>
     protected ImmutableHashSet<AppUserId> _editors { get; init; }
     protected AccessLevel _accessLevel { get; init; }
     public TestStylesSheet Styles { get; init; }
+    private readonly HashSet<AppUserId> _takenByUserIds;
+    private readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
+    private readonly HashSet<TestFeedbackRecordId> _feedbackRecordIds;
+    public ImmutableHashSet<AppUserId> TakenByUserIds => _takenByUserIds.ToImmutableHashSet();
+    public ImmutableHashSet<TestTakenRecordId> TestTakenRecordIds => _testTakenRecordIds.ToImmutableHashSet();
+    public ImmutableHashSet<TestFeedbackRecordId> FeedbackRecordIds => _feedbackRecordIds.ToImmutableHashSet();
+
+
+    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
+
+    private const string NoAccessPrivateMessage =
+        "You don't have access to this test. You need to be either the creator or an editor of this test";
+
+    private const string NoAccessFollowersMessage =
+        "You need to follow the test creator to access this test";
 
     public ErrOrNothing CheckAccessToTakeTestForUnauthorized() =>
         _accessLevel switch {

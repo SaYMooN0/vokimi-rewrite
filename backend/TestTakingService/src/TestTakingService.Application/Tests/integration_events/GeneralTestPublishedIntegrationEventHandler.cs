@@ -35,35 +35,35 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         await _generalFormatTestsRepository.Add(test);
     }
 
-    private ImmutableArray<GeneralTestResult> CreateResultsFromNotification(
+    private GeneralTestResult[] CreateResultsFromNotification(
         GeneralTestPublishedIntegrationEvent notification
     ) => notification.Results.Select(r => new GeneralTestResult(
         r.Id,
         r.Name,
         r.Text,
         r.Image
-    )).ToImmutableArray();
+    )).ToArray();
 
-    private ImmutableArray<GeneralTestQuestion> CreateQuestionsFromNotification(
+    private GeneralTestQuestion[] CreateQuestionsFromNotification(
         GeneralTestPublishedIntegrationEvent notification,
-        ImmutableArray<GeneralTestResult> allResults
+        GeneralTestResult[] allResults
     ) => notification.Questions.Select(q => new GeneralTestQuestion(
         q.Id,
         q.Order,
         q.Text,
-        q.Images.ToImmutableArray(),
+        q.Images.ToArray(),
         q.AnswersType,
         q.Answers.Select(a =>
             new GeneralTestAnswer(
                 a.Id,
                 a.TypeSpecificData,
-                allResults.Where(r => a.RelatedResultsIds.Contains(r.Id)).ToImmutableArray()
+                allResults.Where(r => a.RelatedResultsIds.Contains(r.Id)).ToArray()
             )
-        ).ToImmutableArray(),
+        ).ToArray(),
         q.ShuffleAnswers,
         q.AnswersCountLimit,
         q.TimeLimitOption
-    )).ToImmutableArray();
+    )).ToArray();
 
     private TestStylesSheet CreateStyleFromNotification(GeneralTestPublishedIntegrationEvent notification) => new(
         notification.Styles.Id,

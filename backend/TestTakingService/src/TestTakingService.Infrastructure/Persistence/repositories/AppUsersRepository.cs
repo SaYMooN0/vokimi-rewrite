@@ -4,7 +4,7 @@ using TestTakingService.Domain.AppUserAggregate;
 
 namespace TestTakingService.Infrastructure.Persistence.repositories;
 
-public class AppUsersRepository: IAppUsersRepository
+internal class AppUsersRepository: IAppUsersRepository
 {
     private TestTakingDbContext _db;
     public AppUsersRepository(TestTakingDbContext db) {

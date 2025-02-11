@@ -7,19 +7,7 @@ public abstract class BaseTestFeedbackRecord : AggregateRoot<TestFeedbackRecordI
 {
     protected BaseTestFeedbackRecord() { }
     public TestId TestId { get; init; }
-    public AppUserId UserId { get; init; }
+    public AppUserId? UserId { get; init; }
     public TestTakenRecordId TestTakenRecordId { get; init; }
     public DateTime CreatedOn { get; init; }
-
-    protected BaseTestFeedbackRecord(
-        TestId testId,
-        AppUserId userId,
-        TestTakenRecordId testTakenRecordId,
-        DateTime createdOn
-    ) {
-        TestId = testId;
-        UserId = userId;
-        TestTakenRecordId = testTakenRecordId;
-        CreatedOn = createdOn;
-    }
 }

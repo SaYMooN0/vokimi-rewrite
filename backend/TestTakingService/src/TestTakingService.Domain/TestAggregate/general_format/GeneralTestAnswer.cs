@@ -11,7 +11,7 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
     public GeneralTestAnswer(
         GeneralTestAnswerId id,
         GeneralTestAnswerTypeSpecificData typeSpecificData,
-        ImmutableArray<GeneralTestResult> relatedResults
+        IReadOnlyCollection<GeneralTestResult> relatedResults
     ) {
         Id = id;
         TypeSpecificData = typeSpecificData;
@@ -20,5 +20,5 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
 
     public ushort OrderInQuestion { get; init; }
     public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; init; }
-    protected ImmutableArray<GeneralTestResult> RelatedResults { get; init; }
+    protected IReadOnlyCollection<GeneralTestResult> RelatedResults { get; init; }
 }

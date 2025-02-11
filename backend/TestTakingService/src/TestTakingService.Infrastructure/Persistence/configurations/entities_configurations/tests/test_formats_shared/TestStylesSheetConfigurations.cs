@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.tests.test_styles;
 using TestTakingService.Domain.TestAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.test_formats_shared;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.test_formats_shared;
 
 internal class TestStylesSheetConfigurations : IEntityTypeConfiguration<TestStylesSheet>
 {

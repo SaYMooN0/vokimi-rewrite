@@ -7,17 +7,25 @@ namespace TestTakingService.Domain.TestFeedbackRecordAggregate.general_test;
 
 public class GeneralTestFeedbackRecord : BaseTestFeedbackRecord
 {
+    private GeneralTestFeedbackRecord() { }
     public bool WasLeftAnonymously { get; private init; }
     public string Text { get; private init; }
 
     public static ErrOr<GeneralTestFeedbackRecord> CreateNew(
         TestId testId,
-        AppUserId userId,
+        AppUserId? userId,
         TestTakenRecordId testTakenRecordId,
         DateTime createdOn,
         string text,
         bool wasLeftAnonymously
     ) {
+        if (!wasLeftAnonymously && userId is null) {
+            return new Err(
+                "Non-anonymous feedback cannot be created with user id unset",
+                details: "User id is null"
+            );
+        }
+
         int textLen = string.IsNullOrEmpty(text) ? 0 : text.Length;
         if (textLen == 0) {
             return Err.ErrFactory.InvalidData(

@@ -6,7 +6,7 @@ using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Infrastructure.Persistence.repositories.tests;
 
-public class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
+internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 {
     private readonly TestTakingDbContext _db;
 
@@ -19,8 +19,16 @@ public class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<GeneralFormatTest?> GetWithQuestionWithAnswers(TestId testId) => await _db.GeneralFormatTests
-        .Include(t => EF.Property<ImmutableArray<GeneralTestQuestion>>(t, "_questions"))
-            .ThenInclude(q => EF.Property<ImmutableArray<GeneralTestQuestion>>(q, "_answers"))
-        .FirstOrDefaultAsync(t => t.Id == testId);
+    public async Task<GeneralFormatTest?> GetWithQuestionWithAnswers(TestId testId) =>
+        await _db.GeneralFormatTests
+            .Include(t => t.Questions)
+            .ThenInclude(q => q.Answers)
+            .FirstOrDefaultAsync(t => t.Id == testId);
+
+    public async Task<GeneralFormatTest?> GetWithQuestionsAnswersAndResults(TestId testId) =>
+        await _db.GeneralFormatTests
+            .Include(t => t.Questions)
+            .ThenInclude(q => q.Answers)
+            .Include(t => EF.Property<ImmutableArray<GeneralTestQuestion>>(t, "_results"))
+            .FirstOrDefaultAsync(t => t.Id == testId);
 }

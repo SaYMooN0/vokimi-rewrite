@@ -1,17 +1,19 @@
 ﻿using SharedKernel.Common.domain;
 using TestTakingService.Domain.Common;
 
-namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test.events;
+namespace TestTakingService.Domain.TestTakenRecordAggregate.events;
 
-public record class GeneralTestTakenEvent(
+public abstract record class GeneralBaseTestTakenEvent(
+    TestTakenRecordId TestTakenRecordId,
     TestId TestId,
-    AppUserId UserId,
+    AppUserId? AppUserId,
     DateTime TestTakingStart,
     DateTime TestTakingEnd,
+    
     GeneralTestResultId ReceivedResultId,
     Dictionary<GeneralTestQuestionId, GeneralTestTakenEventQuestionDetails> QuestionDetails,
     GeneralTestTakenFeedbackData? Feedback
-) : IDomainEvent;
+) : BaseTestTakenEvent(TestTakenRecordId, TestId, AppUserId, TestTakingStart, TestTakingEnd);
 
 public record class GeneralTestTakenEventQuestionDetails(
     IEnumerable<GeneralTestAnswerId> ChosenAnswerIds,
