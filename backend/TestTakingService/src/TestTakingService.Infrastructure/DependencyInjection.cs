@@ -5,11 +5,15 @@ using SharedKernel.Common;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
 using TestTakingService.Application.Common.interfaces.repositories;
+using TestTakingService.Application.Common.interfaces.repositories.feedback_records;
+using TestTakingService.Application.Common.interfaces.repositories.test_taken_records;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Infrastructure.IntegrationEvents.background_service;
 using TestTakingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestTakingService.Infrastructure.Persistence;
 using TestTakingService.Infrastructure.Persistence.repositories;
+using TestTakingService.Infrastructure.Persistence.repositories.feedback_records;
+using TestTakingService.Infrastructure.Persistence.repositories.test_taken_records;
 using TestTakingService.Infrastructure.Persistence.repositories.tests;
 
 namespace TestTakingService.Infrastructure;
@@ -49,9 +53,16 @@ public static class DependencyInjection
                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnetionString));
 
-        services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
-        services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+        
+        services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
+        services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
+        
+        services.AddScoped<IBaseTestTakenRecordsRepository, BaseTestTakenRecordsRepository>();
+        services.AddScoped<IGeneralTestTakenRecordsRepository, GeneralTestTakenRecordsRepository>();
+        
+        services.AddScoped<IBaseTestFeedbackRecordsRepository, BaseTestFeedbackRecordsRepository>();
+        services.AddScoped<IGeneralTestFeedbackRecordsRepository, GeneralTestFeedbackRecordsRepository>();
 
         return services;
     }

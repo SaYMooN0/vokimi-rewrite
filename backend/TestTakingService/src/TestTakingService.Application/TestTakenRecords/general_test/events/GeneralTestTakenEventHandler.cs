@@ -25,8 +25,7 @@ public class GeneralTestTakenEventHandler : INotificationHandler<GeneralBaseTest
                     idDet.Key,
                     idDet.Value.ChosenAnswerIds,
                     idDet.Value.TimeOnQuestionSpent)
-            ),
-            notification.Feedback
+            )
         );
         await _generalTestTakenRecordsRepository.Add(record);
     }

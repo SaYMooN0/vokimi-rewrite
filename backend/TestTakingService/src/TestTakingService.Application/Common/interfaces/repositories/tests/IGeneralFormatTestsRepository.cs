@@ -8,4 +8,5 @@ public interface IGeneralFormatTestsRepository
     public Task Add(GeneralFormatTest test);
     public Task<GeneralFormatTest?> GetWithQuestionWithAnswers(TestId testId);
     public Task<GeneralFormatTest?> GetWithQuestionsAnswersAndResults(TestId testId);
+    public Task<GeneralFormatTest?> GetWithResults(TestId testId);
 }

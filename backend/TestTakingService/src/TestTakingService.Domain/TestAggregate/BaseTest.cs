@@ -34,9 +34,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
     protected ImmutableHashSet<AppUserId> _editors { get; init; }
     protected AccessLevel _accessLevel { get; init; }
     public TestStylesSheet Styles { get; init; }
-    private readonly HashSet<AppUserId> _takenByUserIds;
-    private readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
-    private readonly HashSet<TestFeedbackRecordId> _feedbackRecordIds;
+    protected readonly HashSet<AppUserId> _takenByUserIds;
+    protected readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
+    protected readonly HashSet<TestFeedbackRecordId> _feedbackRecordIds;
     public ImmutableHashSet<AppUserId> TakenByUserIds => _takenByUserIds.ToImmutableHashSet();
     public ImmutableHashSet<TestTakenRecordId> TestTakenRecordIds => _testTakenRecordIds.ToImmutableHashSet();
     public ImmutableHashSet<TestFeedbackRecordId> FeedbackRecordIds => _feedbackRecordIds.ToImmutableHashSet();

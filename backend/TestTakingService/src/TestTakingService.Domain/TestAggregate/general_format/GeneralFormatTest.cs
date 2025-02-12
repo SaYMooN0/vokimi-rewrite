@@ -6,6 +6,10 @@ using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.Common.tests.test_styles;
 using TestTakingService.Domain.Common;
+using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Domain.TestAggregate.general_format.helpers;
+using TestTakingService.Domain.TestFeedbackRecordAggregate.events;
+using TestTakingService.Domain.TestTakenRecordAggregate.events;
 using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
 namespace TestTakingService.Domain.TestAggregate.general_format;
@@ -16,9 +20,8 @@ public class GeneralFormatTest : BaseTest
     public override TestFormat Format => TestFormat.General;
     public IReadOnlyCollection<GeneralTestQuestion> Questions { get; init; }
     private bool _shuffleQuestions { get; init; }
-    protected IReadOnlyCollection<GeneralTestResult> _results { get; init; }
+    public IReadOnlyCollection<GeneralTestResult> Results { get; init; }
     public GeneralTestFeedbackOption FeedbackOption { get; init; }
-    public HashSet<GeneralTestTakenRecord> TestTakings { get; init; }
 
     public GeneralFormatTest(
         TestId testId,
@@ -34,91 +37,115 @@ public class GeneralFormatTest : BaseTest
     ) : base(testId, creatorId, editors, accessLevel, styles) {
         Questions = questions;
         _shuffleQuestions = shuffleQuestions;
-        _results = results;
+        Results = results;
         FeedbackOption = feedbackOption;
     }
 
-
-    // public ErrOr<GeneralTestResult> TestTaken(
-    //     AppUserId? testTakerId,
-    //     Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> chosenAnswers,
-    //     GeneralTestTakenFeedbackData? feedback
-    // ) {
-    //     if (feedback is not null) {
-    //         var feedbackCheckRes = ValidateFeedbackForTestTakenRequest(testTakerId, feedback);
-    //         if (feedbackCheckRes.IsErr(out var feedbackErr)) {
-    //             return feedbackErr;
-    //         }
-    //     }
-    //
-    //     //check 
-    //     
-    //     _domainEvents.Add(new GeneralBaseTestTakenEvent());
-    //     if (feedback is not null) {
-    //         _domainEvents.Add(new FeedbackForGeneralTestLeftEvent());
-    //     }
-    // }
-
-    private ErrOrNothing ValidateFeedbackForTestTakenRequest(
+    public ErrOr<GeneralTestResult> TestTaken(
         AppUserId? testTakerId,
-        GeneralTestTakenFeedbackData feedback
+        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap,
+        DateTime testTakingStart,
+        DateTime testTakingEnd,
+        GeneralTestTakenFeedbackData? feedback
     ) {
-        if (FeedbackOption is GeneralTestFeedbackOption.Disabled) {
-            return new Err("Feedback for this test is disabled");
+        if (
+            GeneralTestTakingValidatorHelper
+            .ValidatePossibleFeedbackForTestTakenRequest(testTakerId, feedback, FeedbackOption)
+            .IsErr(out var feedbackErr)
+        ) {
+            return feedbackErr;
         }
 
-        if (testTakerId is null && feedback.LeftAnonymously == false) {
-            return new Err(
-                "The feedback was left non-anonymously, but the user ID is not provided",
-                details: "Ensure that you are logged in"
-            );
+        Dictionary<GeneralTestQuestionId, GeneralTestTakenEventQuestionDetails> testTakenQuestionDetails = [];
+        Dictionary<GeneralTestResultId, ushort> resultsWithPoints = [];
+
+        foreach (var testQuestion in this.Questions) {
+            var questionDataRes =
+                GeneralTestTakingValidatorHelper.GetValidQuestionData(questionsDataMap, testQuestion);
+            if (questionDataRes.IsErr(out var err)) {
+                return err;
+            }
+
+            var questionData = questionDataRes.GetSuccess();
+            foreach (var qChosenAnswerId in questionData.ChosenAnswers) {
+                var resultIdsToAddPoints = testQuestion.Answers
+                    .First(a => a.Id == qChosenAnswerId).RelatedResultIds;
+                foreach (var resId in resultIdsToAddPoints) {
+                    resultsWithPoints[resId] = (ushort)(resultsWithPoints.TryGetValue(resId, out var points)
+                            ? points + 1
+                            : 1
+                        );
+                }
+            }
+
+            testTakenQuestionDetails.Add(testQuestion.Id, new GeneralTestTakenEventQuestionDetails(
+                questionData.ChosenAnswers, questionData.TimeOnQuestionSpent
+            ));
         }
 
-        var thisFeedbackOption = FeedbackOption as GeneralTestFeedbackOption.Enabled;
-        if (thisFeedbackOption is null) {
-            return new Err("Invalid feedback option configuration");
+        GeneralTestResult receivedRes = GetResultWithMaxPoints(resultsWithPoints);
+
+        var testTakenRecordId = TestTakenRecordId.CreateNew();
+        CreateTestTakenEvent(testTakerId, testTakingStart, testTakingEnd,
+            testTakenRecordId, receivedRes.Id, testTakenQuestionDetails
+        );
+        if (feedback is not null) {
+            CreateFeedbackLeftEvent(testTakerId, testTakingEnd, feedback, testTakenRecordId);
         }
 
-        if (ValidateFeedbackAnonymity(feedback, thisFeedbackOption.Anonymity).IsErr(out var err)) {
-            return err;
-        }
-
-        if (ValidateFeedbackLength(feedback, thisFeedbackOption).IsErr(out err)) {
-            return err;
-        }
-
-        return ErrOrNothing.Nothing;
+        return receivedRes;
     }
 
-    private ErrOrNothing ValidateFeedbackAnonymity(
-        GeneralTestTakenFeedbackData feedback,
-        AnonymityValues thisFeedbackOptionAnonymity
-    ) => (feedback.LeftAnonymously, thisFeedbackOptionAnonymity) switch {
-        (LeftAnonymously: true, AnonymityValues.NonAnonymousOnly) => new Err(
-            "You are trying to leave anonymous feedback, but this test only supports non-anonymous feedback"
-        ),
-        (LeftAnonymously: false, AnonymityValues.AnonymousOnly) => new Err(
-            "You are trying to leave non-anonymous feedback, but this test only supports anonymous feedback"
-        ),
-        _ => ErrOrNothing.Nothing
-    };
-
-    private ErrOrNothing ValidateFeedbackLength(
-        GeneralTestTakenFeedbackData feedback,
-        GeneralTestFeedbackOption.Enabled thisFeedbackOption
+    private void CreateTestTakenEvent(
+        AppUserId? testTakerId,
+        DateTime testTakingStart,
+        DateTime testTakingEnd,
+        TestTakenRecordId testTakenRecordId,
+        GeneralTestResultId receivedResId,
+        Dictionary<GeneralTestQuestionId, GeneralTestTakenEventQuestionDetails> testTakenQuestionDetails
     ) {
-        int feedbackTextLen = feedback.FeedbackText?.Length ?? 0;
-        if (feedbackTextLen == 0) {
-            return new Err("You are trying to leave feedback, but it's empty");
+        if (testTakerId is not null) {
+            _takenByUserIds.Add(testTakerId);
         }
 
-        if (feedbackTextLen > thisFeedbackOption.MaxFeedbackLength) {
-            return new Err(
-                $"Your feedback text is too long. Maximum length of feedback is {thisFeedbackOption.MaxFeedbackLength}",
-                details: $"Current feedback text is {feedbackTextLen} characters"
-            );
+        _testTakenRecordIds.Add(testTakenRecordId);
+
+        var testTakenEvent = new GeneralBaseTestTakenEvent(
+            testTakenRecordId, Id, testTakerId,
+            testTakingStart, testTakingEnd,
+            receivedResId, testTakenQuestionDetails
+        );
+        _domainEvents.Add(testTakenEvent);
+    }
+
+    private void CreateFeedbackLeftEvent(
+        AppUserId? testTakerId,
+        DateTime testTakingEnd,
+        GeneralTestTakenFeedbackData feedback,
+        TestTakenRecordId testTakenRecordId
+    ) {
+        var feedbackRecordId = TestFeedbackRecordId.CreateNew();
+        _feedbackRecordIds.Add(feedbackRecordId);
+
+        var feedbackLeftEvent = new FeedbackForGeneralTestLeftEvent(
+            feedbackRecordId,
+            Id, testTakerId, testTakenRecordId, testTakingEnd,
+            feedback.FeedbackText, feedback.LeftAnonymously
+        );
+        _domainEvents.Add(feedbackLeftEvent);
+    }
+
+    private GeneralTestResult GetResultWithMaxPoints(Dictionary<GeneralTestResultId, ushort> resultsWithPoints) {
+        ushort maxPoints = 0;
+        GeneralTestResultId resToReceiveId = Results.First().Id;
+
+        foreach (var (resId, points) in resultsWithPoints) {
+            if (points > maxPoints) {
+                maxPoints = points;
+                resToReceiveId = resId;
+            }
         }
 
-        return ErrOrNothing.Nothing;
+        return Results.First(r => r.Id == resToReceiveId);
     }
 }

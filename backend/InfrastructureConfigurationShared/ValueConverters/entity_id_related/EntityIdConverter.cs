@@ -7,5 +7,6 @@ public class EntityIdConverter<TId> : ValueConverter<TId, Guid> where TId : Enti
 {
     public EntityIdConverter() : base(
         id => id.Value,
-        value => (TId)Activator.CreateInstance(typeof(TId), value)) { }
+        value => (TId)Activator.CreateInstance(typeof(TId), value)
+    ) { }
 }

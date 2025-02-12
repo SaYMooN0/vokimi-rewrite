@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
-using TestTakingService.Domain.Common;
+using TestTakingService.Domain.Common.general_test_taken_data;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.general_format.commands;
@@ -10,16 +10,21 @@ namespace TestTakingService.Application.Tests.general_format.commands;
 public record class GeneralTestTakenCommand(
     TestId TestId,
     AppUserId? TestTakerId,
-    Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> ChosenAnswers,
-    GeneralTestTakenFeedbackData FeedbackData
-) : IRequest<ErrOr<GeneralFormatTest>>;
+    Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> QuestionsData,
+    GeneralTestTakenFeedbackData? FeedbackData,
+    DateTime TestTakingStart,
+    DateTime TestTakingEnd
+) : IRequest<ErrOr<GeneralTestResult>>;
 
 public class GeneralTestTakenCommandHandler
-    : IRequestHandler<GeneralTestTakenCommand, ErrOr<GeneralFormatTest>>
+    : IRequestHandler<GeneralTestTakenCommand, ErrOr<GeneralTestResult>>
 {
     private IGeneralFormatTestsRepository _generalFormatRepository;
+    public GeneralTestTakenCommandHandler(IGeneralFormatTestsRepository generalFormatRepository) {
+        _generalFormatRepository = generalFormatRepository;
+    }
 
-    public async Task<ErrOr<GeneralFormatTest>> Handle(
+    public async Task<ErrOr<GeneralTestResult>> Handle(
         GeneralTestTakenCommand request,
         CancellationToken cancellationToken
     ) {
@@ -28,9 +33,17 @@ public class GeneralTestTakenCommandHandler
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
 
-        return Err.ErrFactory.NotImplemented();
-        // var testTakenRes = test.TestTaken();
-        // await _generalFormatRepository.Add()
-        return ErrOr<GeneralFormatTest>.Success(test);
+        var testTakenRes = test.TestTaken(
+            request.TestTakerId,
+            request.QuestionsData,
+            testTakingStart: request.TestTakingStart,
+            testTakingEnd: request.TestTakingEnd,
+            request.FeedbackData
+        );
+        if (testTakenRes.IsErr(out var err)) {
+            return err;
+        }
+
+        return testTakenRes.GetSuccess();
     }
 }

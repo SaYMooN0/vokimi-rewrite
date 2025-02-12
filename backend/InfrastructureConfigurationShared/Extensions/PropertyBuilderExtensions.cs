@@ -15,6 +15,11 @@ public static class PropertyBuilderExtensions
         return builder.HasConversion(new EntityIdConverter<TId>());
     }
 
+    public static PropertyBuilder<TId?> HasNullableEntityIdConversion<TId>(this PropertyBuilder<TId?> builder)
+        where TId : EntityId {
+        return builder.HasConversion(new NullableEntityIdConverter<TId>());
+    }
+
     public static PropertyBuilder<HashSet<T>> HasEntityIdsHashSetConversion<T>(
         this PropertyBuilder<HashSet<T>> builder) where T : EntityId {
         builder.HasConversion(

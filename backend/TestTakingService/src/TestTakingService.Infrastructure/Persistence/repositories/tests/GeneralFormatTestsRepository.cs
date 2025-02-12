@@ -29,6 +29,10 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.GeneralFormatTests
             .Include(t => t.Questions)
             .ThenInclude(q => q.Answers)
-            .Include(t => EF.Property<ImmutableArray<GeneralTestQuestion>>(t, "_results"))
+            .Include(t => t.Results)
             .FirstOrDefaultAsync(t => t.Id == testId);
+
+    public async Task<GeneralFormatTest?> GetWithResults(TestId testId) => await _db.GeneralFormatTests
+        .Include(t => t.Results)
+        .FirstOrDefaultAsync(t => t.Id == testId);
 }

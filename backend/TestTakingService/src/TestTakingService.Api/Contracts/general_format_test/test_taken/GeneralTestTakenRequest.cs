@@ -1,74 +1,98 @@
 using ApiShared.interfaces;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
+using TestTakingService.Domain.Common.general_test_taken_data;
 
 namespace TestTakingService.Api.Contracts.general_format_test.test_taken;
 
-internal class GeneralTestTakenRequest(
-    Dictionary<string, string[]> ChosenAnswers,
-    GeneralTestTakenRequestFeedbackData? Feedback
+internal record class GeneralTestTakenRequest(
+    GeneralTestTakenRequestQuestionInfo[] Questions,
+    GeneralTestTakenFeedbackData? Feedback,
+    DateTime StartDateTime,
+    DateTime EndDateTime
 ) : IRequestWithValidationNeeded
 {
-    private const int _maxChosenAnswersEntriesCount = 100;
+    private const int _maxQuestionsCount = 100;
 
     public RequestValidationResult Validate() {
-        if (ChosenAnswers is null || !ChosenAnswers.Any()) {
+        if (Questions is null || !Questions.Any()) {
             return new ErrList(Err.ErrFactory.InvalidData(
-                "Chosen answers are not provided")
+                "Info about question is not provided")
             );
         }
 
-        if (ChosenAnswers.Count > _maxChosenAnswersEntriesCount) {
+        if (Questions.Length > _maxQuestionsCount) {
             return new ErrList(Err.ErrFactory.InvalidData(
-                "Too many questions provided in the chosen answers map")
+                "Too many question info provided")
             );
         }
 
         ErrList errs = new();
 
-        foreach (var (qId, answerIds) in ChosenAnswers) {
-            if (!Guid.TryParse(qId, out _)) {
-                errs.Add(Err.ErrFactory.InvalidData(
-                    "Invalid chosen answers entry. Incorrect question Id",
-                    $"Provided value: {qId}"
-                ));
-                continue;
-            }
+        foreach (var q in Questions) {
+            errs.AddPossibleErr(q.CheckForErr());
+        }
 
-            if (answerIds.Length > _maxChosenAnswersEntriesCount) {
-                errs.Add(Err.ErrFactory.InvalidData(
-                    "Too many answers provided as chosen for the question",
-                    $"Question id: {qId}"));
-                continue;
-            }
+        if (Feedback is not null && (Feedback.FeedbackText?.Length ?? 0) == 0) {
+            errs.Add(Err.ErrFactory.InvalidData("Seems like feedback should be provided, but its text is empty"));
+        }
 
-            HashSet<string> uniqueAnswers = new();
-            foreach (var aId in answerIds) {
-                if (!Guid.TryParse(aId, out _)) {
-                    errs.Add(Err.ErrFactory.InvalidData(
-                        "Invalid chosen answers entry. Incorrect chosen answer Id",
-                        $"Invalid answer id: {aId} for question with Id: {qId}"
-                    ));
-                    continue;
-                }
-
-                if (!uniqueAnswers.Add(aId)) {
-                    errs.Add(Err.ErrFactory.InvalidData(
-                        "Duplicate answer detected for the same question",
-                        $"Duplicate answer id: {aId} for question with Id: {qId}"
-                    ));
-                }
-            }
+        if (StartDateTime >= EndDateTime) {
+            errs.Add(Err.ErrFactory.InvalidData("Start date must be before end date"));
         }
 
         return errs;
     }
 
-    private Dictionary<GeneralTestQuestionId, HashSet<GeneralTestAnswerId>> ParsedChosenAnswers() {
-        return ChosenAnswers.ToDictionary(
-            kvp => new GeneralTestQuestionId(Guid.Parse(kvp.Key)),
-            kvp => kvp.Value.Select(aId => new GeneralTestAnswerId(Guid.Parse(aId))).ToHashSet()
-        );
-    }
+    public Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> ParsedQuestionInfo => Questions.ToDictionary(
+        q => new GeneralTestQuestionId(Guid.Parse(q.QuestionId)),
+        q => new GeneralTestTakenQuestionData(
+            q.ChosenAnswerIds.Select(a => new GeneralTestAnswerId(new(a))).ToHashSet(),
+            q.TimeSpentOnQuestion
+        ));
 }
 
+internal record class GeneralTestTakenRequestQuestionInfo(
+    string QuestionId,
+    string[] ChosenAnswerIds,
+    TimeSpan TimeSpentOnQuestion
+)
+{
+    private const int _maxAnswersCount = 100;
+
+    public ErrOrNothing CheckForErr() {
+        if (!Guid.TryParse(QuestionId, out _)) {
+            return Err.ErrFactory.InvalidData(
+                "Invalid chosen answers entry. Incorrect question Id",
+                $"Provided value: {QuestionId}"
+            );
+        }
+
+        if (ChosenAnswerIds.Length > _maxAnswersCount) {
+            return Err.ErrFactory.InvalidData(
+                "Too many answers provided as chosen for the question",
+                $"Question id: {QuestionId}"
+            );
+        }
+
+        HashSet<string> uniqueAnswers = new();
+        foreach (var aId in ChosenAnswerIds) {
+            if (!Guid.TryParse(aId, out _)) {
+                return Err.ErrFactory.InvalidData(
+                    "Invalid chosen answers entry. Incorrect chosen answer Id",
+                    $"Invalid answer id: {aId} for question with Id: {QuestionId}"
+                );
+                continue;
+            }
+
+            if (!uniqueAnswers.Add(aId)) {
+                return Err.ErrFactory.InvalidData(
+                    "Duplicate answer detected for the same question",
+                    $"Duplicate answer id: {aId} for question with Id: {QuestionId}"
+                );
+            }
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+}

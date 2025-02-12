@@ -19,6 +19,7 @@ public static class GeneralTestTakingHandlers
         group.MapGet("/loadTestTakingData", LoadGeneralTestTakingData);
         group.MapPost("/testTaken", HandleGeneralTestTaken)
             .WithRequestValidation<GeneralTestTakenRequest>();
+        group.MapGet("/loadAllResultsForTest", LoadAllResultsForGeneralTest);
         return group;
     }
 
@@ -45,6 +46,37 @@ public static class GeneralTestTakingHandlers
         AppUserId? userId = httpContext.ParseUserIdFromJwtToken(jwtConfig).IsSuccess(out var userIdVal)
             ? userIdVal
             : null;
-        GeneralTestTakenCommand command = new(testId);
+        GeneralTestTakenRequest request = httpContext.GetValidatedRequest<GeneralTestTakenRequest>();
+
+        GeneralTestTakenCommand command = new(
+            testId,
+            userId,
+            request.ParsedQuestionInfo,
+            request.Feedback,
+            TestTakingStart: request.StartDateTime,
+            TestTakingEnd: request.EndDateTime
+        );
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(
+            result,
+            (receivedRes) => Results.Json(GeneralTestTakenReceivedResultResponse.FromResult(receivedRes))
+        );
+    }
+
+    private static async Task<IResult> LoadAllResultsForGeneralTest(
+        HttpContext httpContext,
+        ISender mediator
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+        LoadAllResultsForGeneralTestCommand command = new(testId);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(
+            result,
+            (results) => Results.Json(new {
+                Results = results.Select(GeneralTestResultInfoResponse.FromResult)
+            })
+        );
     }
 }

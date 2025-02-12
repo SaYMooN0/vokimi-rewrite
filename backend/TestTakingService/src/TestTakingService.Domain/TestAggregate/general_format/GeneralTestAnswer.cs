@@ -21,4 +21,8 @@ public class GeneralTestAnswer : Entity<GeneralTestAnswerId>
     public ushort OrderInQuestion { get; init; }
     public GeneralTestAnswerTypeSpecificData TypeSpecificData { get; init; }
     protected IReadOnlyCollection<GeneralTestResult> RelatedResults { get; init; }
+
+    public IReadOnlyCollection<GeneralTestResultId> RelatedResultIds => RelatedResults
+        .Select(r => r.Id)
+        .ToArray();
 }

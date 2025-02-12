@@ -10,11 +10,10 @@ namespace TestTakingService.Infrastructure.Persistence.configurations.entities_c
 internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<GeneralFormatTest>
 {
     public void Configure(EntityTypeBuilder<GeneralFormatTest> builder) {
-        builder.ToTable("GeneralFormatTests");
         builder.HasBaseType<BaseTest>();
 
         builder
-            .HasMany<GeneralTestResult>("_results")
+            .HasMany<GeneralTestResult>(x=>x.Results)
             .WithOne()
             .HasForeignKey("TestId");
 

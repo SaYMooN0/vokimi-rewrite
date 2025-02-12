@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using TestTakingService.Domain.Common;
+using TestTakingService.Domain.Common.general_test_taken_data;
 using TestTakingService.Domain.TestFeedbackRecordAggregate.events;
 
 namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test;
@@ -10,8 +11,9 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
 {
     private GeneralTestTakenRecord() { }
     public override TestFormat TestFormat => TestFormat.General;
-    private GeneralTestResultId ReceivedResultId { get; init; }
+    public GeneralTestResultId ReceivedResultId { get; init; }
     public ImmutableArray<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; init; }
+
     public static GeneralTestTakenRecord CreateNew(
         AppUserId? userId,
         TestId testId,
@@ -19,11 +21,10 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
         DateTime testTakingEnd,
         //general record specific
         GeneralTestResultId receivedResultId,
-        IEnumerable<GeneralTestTakenRecordQuestionDetails> questionDetails,
-        GeneralTestTakenFeedbackData? feedbackData
+        IEnumerable<GeneralTestTakenRecordQuestionDetails> questionDetails
     ) {
         GeneralTestTakenRecord record = new() {
-            Id= TestTakenRecordId.CreateNew(),
+            Id = TestTakenRecordId.CreateNew(),
             UserId = userId,
             TestId = testId,
             TestTakingStart = testTakingStart,
@@ -31,12 +32,6 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
             ReceivedResultId = receivedResultId,
             QuestionDetails = questionDetails.ToImmutableArray()
         };
-        if (feedbackData is not null) {
-            record._domainEvents.Add(new FeedbackForGeneralTestLeftEvent(
-                testId, userId, record.Id, testTakingEnd,
-                feedbackData.FeedbackText, feedbackData.LeftAnonymously
-            ));
-        }
 
         return record;
     }

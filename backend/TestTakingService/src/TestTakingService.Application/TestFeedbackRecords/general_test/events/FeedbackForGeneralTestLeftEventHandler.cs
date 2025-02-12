@@ -17,6 +17,7 @@ public class FeedbackForGeneralTestLeftEventHandler : INotificationHandler<Feedb
 
     public async Task Handle(FeedbackForGeneralTestLeftEvent notification, CancellationToken cancellationToken) {
         var creationRes = GeneralTestFeedbackRecord.CreateNew(
+            notification.FeedbackRecordId,
             notification.TestId,
             notification.AppUserId,
             notification.TestTakenRecordId,

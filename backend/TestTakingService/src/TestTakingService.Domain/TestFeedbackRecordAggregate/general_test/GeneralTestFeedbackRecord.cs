@@ -12,6 +12,7 @@ public class GeneralTestFeedbackRecord : BaseTestFeedbackRecord
     public string Text { get; private init; }
 
     public static ErrOr<GeneralTestFeedbackRecord> CreateNew(
+        TestFeedbackRecordId FeedbackRecordId,
         TestId testId,
         AppUserId? userId,
         TestTakenRecordId testTakenRecordId,
@@ -40,7 +41,7 @@ public class GeneralTestFeedbackRecord : BaseTestFeedbackRecord
         }
 
         return new GeneralTestFeedbackRecord() {
-            Id = TestFeedbackRecordId.CreateNew(),
+            Id = FeedbackRecordId,
             TestId = testId,
             UserId = userId,
             TestTakenRecordId = testTakenRecordId,

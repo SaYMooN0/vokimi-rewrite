@@ -1,6 +1,13 @@
+using TestTakingService.Domain.TestAggregate.general_format;
+
 namespace TestTakingService.Api.Contracts.general_format_test.test_taken;
 
-public class GeneralTestTakenReceivedResultResponse
+public record class GeneralTestTakenReceivedResultResponse(
+    string ReceivedResId
+)
 {
-    //received res + all other resuls
+    //received res 
+    public static GeneralTestTakenReceivedResultResponse FromResult(GeneralTestResult result) => new(
+        result.Id.ToString()
+    );
 }

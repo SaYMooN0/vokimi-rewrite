@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
+using TestTakingService.Domain.AppUserAggregate;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.TestAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations;
 
-internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
+public class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {
-    public void Configure(EntityTypeBuilder<BaseTest> builder) {
+    public void Configure(EntityTypeBuilder<AppUser> builder) {
         builder
             .HasKey(x => x.Id);
         builder
@@ -17,24 +17,18 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .ValueGeneratedNever()
             .HasEntityIdConversion();
 
+        builder.Ignore(x => x.TakenTestIds);
         builder
-            .Property<AppUserId>("_creatorId")
-            .HasColumnName("CreatorId")
-            .ValueGeneratedNever()
-            .HasEntityIdConversion();
-        
-        builder.Ignore(x => x.TakenByUserIds);
-        builder
-            .Property<HashSet<AppUserId>>("_takenByUserIds")
-            .HasColumnName("TakenByUserIds")
+            .Property<HashSet<TestId>>("_takenTestIds")
+            .HasColumnName("TakenTestIds")
             .HasEntityIdsHashSetConversion();
-        
+
         builder.Ignore(x => x.TestTakenRecordIds);
         builder
             .Property<HashSet<TestTakenRecordId>>("_testTakenRecordIds")
             .HasColumnName("TestTakenRecordIds")
             .HasEntityIdsHashSetConversion();
-        
+
         builder.Ignore(x => x.FeedbackRecordIds);
         builder
             .Property<HashSet<TestFeedbackRecordId>>("_feedbackRecordIds")
