@@ -1,6 +1,3 @@
-﻿namespace TestCatalogService.Api.Endpoints
-{
-    public class RootHandlers
-    {
-    }
-}
+﻿namespace TestCatalogService.Api.Endpoints;
+
+internal class RootHandlers { }

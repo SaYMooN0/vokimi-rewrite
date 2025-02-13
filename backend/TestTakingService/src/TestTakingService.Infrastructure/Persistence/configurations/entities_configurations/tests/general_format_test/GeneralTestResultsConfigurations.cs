@@ -15,10 +15,5 @@ internal class GeneralTestResultsConfigurations : IEntityTypeConfiguration<Gener
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-
-        builder
-            .Property<TestId>("_testId")
-            .ValueGeneratedNever()
-            .HasEntityIdConversion();
     }
 }

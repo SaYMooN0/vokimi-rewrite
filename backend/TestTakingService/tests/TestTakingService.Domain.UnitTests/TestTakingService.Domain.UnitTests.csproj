@@ -18,4 +18,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\..\src\TestTakingService.Domain\TestTakingService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

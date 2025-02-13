@@ -7,7 +7,7 @@ namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 public class GeneralTestTakenRecordQuestionDetails : Entity<GeneralTestTakenRecordQuestionDetailsId>
 {
     private GeneralTestTakenRecordQuestionDetails() { }
-    private GeneralTestQuestionId QuestionId { get; init; }
+    public GeneralTestQuestionId QuestionId { get; init; }
     public ImmutableArray<GeneralTestAnswerId> ChosenAnswerIds { get; init; }
     public TimeSpan TimeOnQuestionSpent { get; init; }
 

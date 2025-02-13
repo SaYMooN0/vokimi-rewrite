@@ -9,5 +9,7 @@ public class GeneralTestFeedbackRecordsConfigurations: IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<GeneralTestFeedbackRecord> builder) {
         builder.HasBaseType<BaseTestFeedbackRecord>();
+        builder.ToTable("GeneralTestFeedbackRecords");
+
     }
 }

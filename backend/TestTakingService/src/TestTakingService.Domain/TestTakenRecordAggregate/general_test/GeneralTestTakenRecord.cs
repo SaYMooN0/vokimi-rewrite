@@ -2,8 +2,6 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.Common.general_test_taken_data;
-using TestTakingService.Domain.TestFeedbackRecordAggregate.events;
 
 namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
@@ -12,7 +10,7 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
     private GeneralTestTakenRecord() { }
     public override TestFormat TestFormat => TestFormat.General;
     public GeneralTestResultId ReceivedResultId { get; init; }
-    public ImmutableArray<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; init; }
+    public IReadOnlyCollection<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; init; }
 
     public static GeneralTestTakenRecord CreateNew(
         AppUserId? userId,

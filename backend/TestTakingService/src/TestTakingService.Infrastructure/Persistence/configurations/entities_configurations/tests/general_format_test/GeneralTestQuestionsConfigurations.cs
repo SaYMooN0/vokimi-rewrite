@@ -17,12 +17,7 @@ internal class GeneralTestQuestionsConfigurations : IEntityTypeConfiguration<Gen
             .HasEntityIdConversion();
 
         builder
-            .Property<TestId>("_testId")
-            .ValueGeneratedNever()
-            .HasEntityIdConversion();
-
-        builder
-            .HasMany<GeneralTestAnswer>(x => x.Answers)
+            .HasMany(x => x.Answers)
             .WithOne()
             .HasForeignKey("QuestionId");
 

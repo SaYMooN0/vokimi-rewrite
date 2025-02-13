@@ -1,7 +1,6 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.tests.general_format;
 using TestTakingService.Domain.TestAggregate;
 using TestTakingService.Domain.TestAggregate.general_format;
 
@@ -11,9 +10,10 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
 {
     public void Configure(EntityTypeBuilder<GeneralFormatTest> builder) {
         builder.HasBaseType<BaseTest>();
-
+        builder.ToTable("GeneralFormatTests");
+        
         builder
-            .HasMany<GeneralTestResult>(x=>x.Results)
+            .HasMany<GeneralTestResult>(x => x.Results)
             .WithOne()
             .HasForeignKey("TestId");
 
@@ -23,7 +23,7 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
             .HasForeignKey("TestId");
 
         builder
-            .Property<GeneralTestFeedbackOption>("_feedbackOption")
+            .Property(x => x.FeedbackOption)
             .HasGeneralTestFeedbackOptionConverter()
             .HasColumnName("Feedback");
     }

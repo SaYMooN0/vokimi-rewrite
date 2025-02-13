@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using System.Collections.Immutable;
+using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common;
 
 namespace TestCatalogService.Domain.TestAggregate;
@@ -21,4 +22,25 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
     //comments 
     //ratings
+    public ErrOrNothing CheckAccessToViewTestForUnauthorized() {
+    }
+
+    public async Task<ErrOrNothing> CheckUserAccessToViewTest(AppUserId userId, Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings) {
+    }
+
+    public async Task<ErrOrNothing> CheckUserAccessToViewTestComments(AppUserId userId, Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings) {
+    }
+
+    public ErrOrNothing CheckAccessToViewTestCommentsForUnauthorized() {
+    }
+
+    public async Task<ErrOrNothing> CheckUserAccessToCommentTest(AppUserId userId, Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings) {
+    }
+
+    public ErrOrNothing CheckAccessToCommentTestForUnauthorized() {
+        throw new ();
+    }
+
+    public ErrOrNothing CheckUserAccessToRate() {
+    }
 }

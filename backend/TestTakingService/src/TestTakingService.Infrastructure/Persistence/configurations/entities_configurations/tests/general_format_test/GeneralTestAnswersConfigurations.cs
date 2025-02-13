@@ -15,9 +15,11 @@ internal class GeneralTestAnswersConfigurations : IEntityTypeConfiguration<Gener
             .ValueGeneratedNever()
             .HasEntityIdConversion();
 
+        builder.Ignore(x=>x.RelatedResultIds);
         builder
             .HasMany<GeneralTestResult>("RelatedResults")
-            .WithMany();
+            .WithMany()
+            .UsingEntity(j => j.ToTable("rel_RelatedGeneralTestResultsForAnswer"));
 
         builder
             .Property(x => x.TypeSpecificData)
