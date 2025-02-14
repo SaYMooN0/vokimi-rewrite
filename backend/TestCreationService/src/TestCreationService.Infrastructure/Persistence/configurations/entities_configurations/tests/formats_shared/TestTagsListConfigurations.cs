@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Common.tests.test_styles;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate;
 using InfrastructureConfigurationShared.Extensions;

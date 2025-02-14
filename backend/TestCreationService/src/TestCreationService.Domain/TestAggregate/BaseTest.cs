@@ -2,9 +2,10 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
-using SharedKernel.Common.tests.test_styles;
 using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
+using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
@@ -25,7 +26,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
     protected BaseTest(
         TestId id,
-        AppUserId creatorId,
+        AppUserId creatorId,    
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
     ) {
@@ -33,7 +34,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         CreatorId = creatorId;
         _editorIds = editorIds;
         _mainInfo = mainInfo;
-        _interactionsAccessSettings = TestInteractionsAccessSettings.CreateNew(id);
+        _interactionsAccessSettings = TestInteractionsAccessSettings.CreateNew();
         _styles = TestStylesSheet.CreateNew(id);
         _tags = TestTagsList.CreateNew(id);
     }
@@ -98,13 +99,13 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public ErrListOrNothing UpdateInteractionsAccessSettings(
         AccessLevel testAccessLevel,
         ResourceAvailabilitySetting ratingsSetting,
-        ResourceAvailabilitySetting discussionsSetting,
+        ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
         ResourceAvailabilitySetting tagsSuggestionsSetting
     ) => _interactionsAccessSettings.Update(
         testAccessLevel,
         ratingsSetting: ratingsSetting,
-        discussionsSetting: discussionsSetting,
+        commentsSetting: commentsSetting,
         allowTestTakenPosts,
         tagsSuggestionsSetting
     );

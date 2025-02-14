@@ -3,7 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestTakingService.Domain.Common;
 
 namespace TestTakingService.Domain.TestAggregate;
@@ -42,8 +42,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public ImmutableHashSet<TestFeedbackRecordId> FeedbackRecordIds => _feedbackRecordIds.ToImmutableHashSet();
 
 
-    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
-
     private const string NoAccessPrivateMessage =
         "You don't have access to this test. You need to be either the creator or an editor of this test";
 
@@ -57,7 +55,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
             AccessLevel.FollowersOnly => Err.ErrFactory.NoAccess(NoAccessFollowersMessage),
             _ => Err.ErrFactory.NoAccess("This test has unknown access level")
         };
-
+    public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
     public async Task<ErrOrNothing> CheckUserAccessToTakeTest(
         AppUserId userId,
         GetUserFollowingsAsyncDelegate getUserFollowingsAsync

@@ -1,5 +1,4 @@
-﻿using OneOf.Types;
-using SharedKernel.Common.domain;
+﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
@@ -8,7 +7,6 @@ using System.Collections.Immutable;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.general_format.events;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TestCreationService.Domain.GeneralTestQuestionAggregate;
 
@@ -46,8 +44,10 @@ public class GeneralTestQuestion : AggregateRoot<GeneralTestQuestionId>
         ErrList errs = new();
         errs.AddPossibleErr(GeneralTestQuestionRules.CheckQuestionTextForErrs(text));
         errs.AddPossibleErr(GeneralTestQuestionRules.CheckQuestionImagesForErrs(images));
-        if (answerCountLimit.IsMultipleChoice &&
-            answerCountLimit.MaxAnswers > GeneralTestQuestionRules.MaxAnswersCount) {
+        if (
+            answerCountLimit.IsMultipleChoice &&
+            answerCountLimit.MaxAnswers > GeneralTestQuestionRules.MaxAnswersCount
+        ) {
             errs.Add(Err.ErrFactory.InvalidData(
                 $"Multiple choice question cannot have more than {GeneralTestQuestionRules.MaxAnswersCount} answers, because it is the maximum count of answers that question can have")
             );

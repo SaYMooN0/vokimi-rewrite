@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate;
 using InfrastructureConfigurationShared.Extensions;
+using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;
@@ -20,17 +22,16 @@ internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfigu
         builder
             .HasOne<BaseTest>()
             .WithOne("_interactionsAccessSettings")
-            .HasForeignKey<TestInteractionsAccessSettings>("_testId");
+            .HasForeignKey("TestId");
 
         builder
             .Property(s => s.AllowRatings)
             .HasResourceAvailabilitySettingConversion();
         builder
-            .Property(s => s.AllowDiscussions)
+            .Property(s => s.AllowComments)
             .HasResourceAvailabilitySettingConversion();
         builder
             .Property(s => s.AllowTagsSuggestions)
             .HasResourceAvailabilitySettingConversion();
-
     }
 }

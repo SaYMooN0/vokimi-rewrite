@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using MediatR;
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.IntegrationEvents.test_publishing;
 using TestTakingService.Application.Common.interfaces.repositories;
 using TestTakingService.Application.Common.interfaces.repositories.tests;

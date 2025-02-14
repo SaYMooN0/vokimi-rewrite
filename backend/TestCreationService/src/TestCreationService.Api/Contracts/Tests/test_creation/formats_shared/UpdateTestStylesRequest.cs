@@ -1,6 +1,6 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.value_objects;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;

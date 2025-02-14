@@ -1,8 +1,8 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.tests.test_styles;
 using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 
 namespace SharedKernel.IntegrationEvents.test_publishing;
 

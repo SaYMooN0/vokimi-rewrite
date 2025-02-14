@@ -300,7 +300,7 @@ public class GeneralFormatTest : BaseTest
         TestPublishedInteractionsAccessSettingsDto interactionsAccessSettingsDto = new(
             _interactionsAccessSettings.TestAccess,
             _interactionsAccessSettings.AllowRatings,
-            _interactionsAccessSettings.AllowDiscussions,
+            _interactionsAccessSettings.AllowComments,
             _interactionsAccessSettings.AllowTestTakenPosts,
             _interactionsAccessSettings.AllowTagsSuggestions
         );

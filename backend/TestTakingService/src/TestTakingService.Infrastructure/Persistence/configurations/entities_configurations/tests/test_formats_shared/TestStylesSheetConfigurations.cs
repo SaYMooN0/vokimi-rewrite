@@ -1,7 +1,7 @@
 using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestTakingService.Domain.TestAggregate;
 
 namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.test_formats_shared;

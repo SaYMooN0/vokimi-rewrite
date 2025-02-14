@@ -2,7 +2,7 @@
 
 using SharedKernel.Common.domain;
 
-namespace SharedKernel.Common.tests.test_styles;
+namespace SharedKernel.Common.tests.formats_shared.test_styles;
 
 public class TestStylesButtons : ValueObject
 {

@@ -28,9 +28,8 @@ public class CheckUserAccessRateTestEndpointFilter: IEndpointFilter
             return CustomResults.ErrorResponse(Err.ErrPresets.TestNotFound(testId));
         }
 
-        var userIdRes = context.HttpContext.GetAuthenticatedUserId();
-
-        ErrOrNothing access = test.CheckUserAccessToRate();
+        var userId = context.HttpContext.GetAuthenticatedUserId();
+        ErrOrNothing access = test.CheckUserAccessToRate(userId, _userFollowingsRepository.GetUserFollowings);
 
         return access.IsErr(out var err)
             ? CustomResults.ErrorResponse(err)

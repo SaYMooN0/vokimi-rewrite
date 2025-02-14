@@ -4,6 +4,7 @@ using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestTagAggregate.events;
 
@@ -29,6 +30,7 @@ public class GeneralFormatTest : BaseTest
         ushort questionsCount,
         ushort resultsCount,
         bool anyAudioAnswers,
+        TestInteractionsAccessSettings interactionsAccessSettings,
         ImmutableHashSet<TestTagId> tags
     ) {
         if (string.IsNullOrWhiteSpace(name))
@@ -48,6 +50,7 @@ public class GeneralFormatTest : BaseTest
             QuestionsCount = questionsCount,
             ResultsCount = resultsCount,
             AnyAudioAnswers = anyAudioAnswers,
+            InteractionsAccessSettings = interactionsAccessSettings,
             Tags = tags
         };
         newTest._domainEvents.Add(new TestTagsChangedEvent(newTest.Id, new HashSet<TestTagId>(), tags));

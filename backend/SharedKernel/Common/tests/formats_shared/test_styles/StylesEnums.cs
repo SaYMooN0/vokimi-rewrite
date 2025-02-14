@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Common.tests.test_styles;
+﻿namespace SharedKernel.Common.tests.formats_shared.test_styles;
 
 public enum TestStylesButtonContent
 {

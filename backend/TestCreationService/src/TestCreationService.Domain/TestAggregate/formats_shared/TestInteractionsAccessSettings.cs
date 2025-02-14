@@ -1,50 +1,57 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.value_objects;
 using TestCreationService.Domain.Common;
-using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 
-public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>
+public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>, ITestInteractionsAccessSettings
 {
     private TestInteractionsAccessSettings() { }
-    private TestId _testId { get; init; }
     public AccessLevel TestAccess { get; private set; }
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
-    public ResourceAvailabilitySetting AllowDiscussions { get; private set; }
+    public ResourceAvailabilitySetting AllowComments { get; private set; }
     public bool AllowTestTakenPosts { get; private set; }
     public ResourceAvailabilitySetting AllowTagsSuggestions { get; private set; }
 
-    public static TestInteractionsAccessSettings CreateNew(TestId testId) => new() {
+    public static TestInteractionsAccessSettings CreateNew() => new() {
         Id = TestInteractionsAccessSettingsId.CreateNew(),
-        _testId = testId,
         TestAccess = AccessLevel.Public,
         AllowRatings = ResourceAvailabilitySetting.EnabledPublic,
-        AllowDiscussions = ResourceAvailabilitySetting.EnabledPublic,
+        AllowComments = ResourceAvailabilitySetting.EnabledPublic,
         AllowTestTakenPosts = true,
         AllowTagsSuggestions = ResourceAvailabilitySetting.EnabledFollowersOnly
     };
+
     public ErrListOrNothing Update(
         AccessLevel testAccessLevel,
         ResourceAvailabilitySetting ratingsSetting,
-        ResourceAvailabilitySetting discussionsSetting,
+        ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
         ResourceAvailabilitySetting tagsSuggestionsSetting
     ) {
         ErrList errs = new();
-        errs.AddPossibleErr(TestRules.CheckIfRatingsAvailabilityIsCorrect(testAccessLevel, ratingsSetting.IsEnabled, ratingsSetting.Access));
-        errs.AddPossibleErr(TestRules.CheckIfDiscussionsAvailabilityIsCorrect(testAccessLevel, discussionsSetting.IsEnabled, discussionsSetting.Access));
-        errs.AddPossibleErr(TestRules.CheckIfTestTakenPostsAvailabilityIsCorrect(testAccessLevel, allowTestTakenPosts));
-        errs.AddPossibleErr(TestRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(testAccessLevel, tagsSuggestionsSetting.IsEnabled, tagsSuggestionsSetting.Access));
+        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfRatingsAvailabilityIsCorrect(
+            testAccessLevel, ratingsSetting
+        ));
+        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfCommentsAvailabilityIsCorrect(
+            testAccessLevel, commentsSetting
+        ));
+        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTestTakenPostsAvailabilityIsCorrect(
+            testAccessLevel, allowTestTakenPosts
+        ));
+        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(
+            testAccessLevel, tagsSuggestionsSetting
+        ));
         if (errs.Any()) {
             return errs;
         }
 
         TestAccess = testAccessLevel;
         AllowRatings = ratingsSetting;
-        AllowDiscussions = discussionsSetting;
+        AllowComments = commentsSetting;
         AllowTestTakenPosts = allowTestTakenPosts;
         AllowTagsSuggestions = tagsSuggestionsSetting;
 

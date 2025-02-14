@@ -33,14 +33,8 @@ public class CheckUserAccessToCommentTestEndpointFilter : IEndpointFilter
             return CustomResults.ErrorResponse(Err.ErrPresets.TestNotFound(testId));
         }
 
-        var userIdRes = context.HttpContext.ParseUserIdFromJwtToken(_jwtConfig);
-        ErrOrNothing access;
-        if (userIdRes.IsSuccess(out var userId)) {
-            access = await test.CheckUserAccessToCommentTest(userId, _userFollowingsRepository.GetUserFollowings);
-        }
-        else {
-            access = test.CheckAccessToCommentTestForUnauthorized();
-        }
+        var userId = context.HttpContext.GetAuthenticatedUserId();
+        ErrOrNothing access = test.CheckUserAccessToComment(userId, _userFollowingsRepository.GetUserFollowings);
 
         return access.IsErr(out var err)
             ? CustomResults.ErrorResponse(err)

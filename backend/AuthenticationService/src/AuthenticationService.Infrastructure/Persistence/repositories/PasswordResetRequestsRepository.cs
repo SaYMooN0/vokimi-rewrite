@@ -6,7 +6,7 @@ namespace AuthenticationService.Infrastructure.Persistence.repositories;
 
 internal class PasswordResetRequestsRepository : IPasswordUpdateRequestsRepository
 {
-    public Task<ErrOrNothing> AddPasswordUpdateRequest(AppUserId appUserId, string email) {
+    public Task<ErrOrNothing> Add(AppUserId appUserId, string email) {
         throw new NotImplementedException();
     }
 }

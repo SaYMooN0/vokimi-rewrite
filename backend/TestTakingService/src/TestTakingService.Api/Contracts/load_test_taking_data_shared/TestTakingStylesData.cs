@@ -1,4 +1,4 @@
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 
 namespace TestTakingService.Api.Contracts.load_test_taking_data_shared;
 

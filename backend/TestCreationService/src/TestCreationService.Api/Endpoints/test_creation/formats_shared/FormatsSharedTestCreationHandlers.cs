@@ -112,7 +112,7 @@ internal static class FormatsSharedTestCreationHandlers
             testId,
             TestAccessLevel: request.TestAccess,
             RatingsSetting: request.RatingsSetting,
-            DiscussionsSetting: request.DiscussionsSetting,
+            CommentsSetting: request.CommentsSetting,
             AllowTestTakenPosts: request.AllowTestTakenPosts,
             TagSuggestionsSetting: request.TagSuggestionsSetting
         );

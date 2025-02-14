@@ -5,7 +5,7 @@ namespace AuthenticationService.Application.Common.interfaces.repositories;
 
 public interface IPasswordUpdateRequestsRepository
 {
-    Task<ErrOrNothing> AddPasswordUpdateRequest(AppUserId appUserId, string email);
+    Task<ErrOrNothing> Add(AppUserId appUserId, string email);
     //get password update request by userId
     //remove password update request by requestIds
 }

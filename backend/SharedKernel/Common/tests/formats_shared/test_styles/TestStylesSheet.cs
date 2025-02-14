@@ -1,7 +1,7 @@
 ﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.tests.value_objects;
 
-namespace SharedKernel.Common.tests.test_styles;
+namespace SharedKernel.Common.tests.formats_shared.test_styles;
 
 public class TestStylesSheet : Entity<TestStylesSheetId>
 {

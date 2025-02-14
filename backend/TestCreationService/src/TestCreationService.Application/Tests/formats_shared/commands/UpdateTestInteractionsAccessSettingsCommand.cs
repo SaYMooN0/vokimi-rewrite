@@ -12,7 +12,7 @@ public record class UpdateTestInteractionsAccessSettingsCommand(
     TestId TestId,
     AccessLevel TestAccessLevel,
     ResourceAvailabilitySetting RatingsSetting,
-    ResourceAvailabilitySetting DiscussionsSetting,
+    ResourceAvailabilitySetting CommentsSetting,
     bool AllowTestTakenPosts,
     ResourceAvailabilitySetting TagSuggestionsSetting
 ) : IRequest<ErrListOrNothing>;
@@ -33,7 +33,7 @@ public class UpdateTestInteractionsAccessSettingsCommandHandler
         var updateRes = test.UpdateInteractionsAccessSettings(
             request.TestAccessLevel,
             ratingsSetting: request.RatingsSetting,
-            discussionsSetting: request.DiscussionsSetting,
+            commentsSetting: request.CommentsSetting,
             request.AllowTestTakenPosts,
             request.TagSuggestionsSetting
         );

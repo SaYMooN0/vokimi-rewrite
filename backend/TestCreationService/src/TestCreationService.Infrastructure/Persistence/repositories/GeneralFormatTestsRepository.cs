@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.tests.test_styles;
+using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.general_format;
