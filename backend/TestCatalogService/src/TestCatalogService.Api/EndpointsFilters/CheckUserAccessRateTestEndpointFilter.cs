@@ -1,9 +1,11 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.errors;
 using SharedUserRelationsContext.repository;
 using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 
 namespace TestCatalogService.Api.EndpointsFilters;

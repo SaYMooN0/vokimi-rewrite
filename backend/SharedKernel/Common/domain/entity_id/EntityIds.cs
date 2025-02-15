@@ -1,6 +1,6 @@
-﻿using SharedKernel.Common.domain.interfaces;
+﻿using SharedKernel.Common.domain.value_object;
 
-namespace SharedKernel.Common.domain;
+namespace SharedKernel.Common.domain.entity_id;
 
 public abstract class EntityId : ValueObject, IComparable, IEntityId
 {

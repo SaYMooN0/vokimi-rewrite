@@ -4,6 +4,7 @@ using InfrastructureConfigurationShared.ValueConverters.general_format_test;
 using InfrastructureConfigurationShared.ValueСonverters.entity_id_related;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 namespace InfrastructureConfigurationShared.Extensions;

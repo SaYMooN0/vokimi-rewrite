@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.general_format;
 using TestTakingService.Domain.TestAggregate.general_format;

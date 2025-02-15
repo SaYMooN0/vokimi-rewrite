@@ -1,5 +1,6 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
 
 namespace SharedKernel.Common.tests.general_format;

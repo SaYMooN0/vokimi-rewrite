@@ -1,7 +1,8 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Domain.TestAggregate;
 
-namespace TestCatalogService.Application.Common.interfaces.repositories;
+namespace TestCatalogService.Application.Common.interfaces.repositories.tests;
 
 public interface IBaseTestsRepository
 {

@@ -1,5 +1,7 @@
 ﻿using SharedKernel.Common.domain;
 using System.Collections.Immutable;
+using SharedKernel.Common.domain.aggregate_root;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCatalogService.Domain.AppUserAggregate;
 

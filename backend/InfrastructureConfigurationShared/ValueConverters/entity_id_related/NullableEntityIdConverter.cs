@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 

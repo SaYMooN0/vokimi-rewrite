@@ -1,6 +1,7 @@
-﻿using System.Collections.Immutable;
-using SharedKernel.Common.common_enums;
+﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.value_objects;
@@ -33,9 +34,10 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         yield return AllowTestTakenPosts;
         yield return AllowTagsSuggestions;
     }
+
     public delegate Task<bool> CheckUserFollowsCreatorAsyncDelegate(AppUserId userId);
 
-    public delegate Task<bool> IsUserCreatorOrEditorDelegate(AppUserId userId);
+    public delegate bool IsUserCreatorOrEditorDelegate(AppUserId userId);
 
     public async Task<ErrOrNothing> CheckUserAccessToComment(
         AppUserId userId,
@@ -94,7 +96,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         AppUserId userId,
         string errMessage,
         IsUserCreatorOrEditorDelegate checkUserCreatorOrEditor
-    ) => (await checkUserCreatorOrEditor(userId)) ? ErrOrNothing.Nothing : Err.ErrFactory.NoAccess(errMessage);
+    ) => checkUserCreatorOrEditor(userId) ? ErrOrNothing.Nothing : Err.ErrFactory.NoAccess(errMessage);
 
     public ErrListOrNothing Update(
         AccessLevel testAccessLevel,
@@ -128,5 +130,4 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
 
         return ErrListOrNothing.Nothing;
     }
-
 }

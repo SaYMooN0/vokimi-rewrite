@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.domain;
 using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
 internal class EntityIdsImmutableArrayConverter<T> : ValueConverter<ImmutableArray<T>, string> where T : EntityId

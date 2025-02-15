@@ -6,6 +6,7 @@ using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands;
 using TestCreationService.Application.Tests.general_format.commands.questions;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 

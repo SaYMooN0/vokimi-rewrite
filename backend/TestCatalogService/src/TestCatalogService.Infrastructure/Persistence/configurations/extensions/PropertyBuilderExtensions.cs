@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
 using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
 

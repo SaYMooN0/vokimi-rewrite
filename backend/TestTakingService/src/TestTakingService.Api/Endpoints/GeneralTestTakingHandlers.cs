@@ -2,6 +2,7 @@
 using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Configs;
 using TestTakingService.Api.Contracts.general_format_test.load_test_taking_data;
 using TestTakingService.Api.Contracts.general_format_test.test_taken;

@@ -5,6 +5,7 @@ using TestCreationService.Domain.TestAggregate.general_format;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.Common;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;

@@ -1,6 +1,4 @@
-using SharedKernel.Common.domain.interfaces;
-
-namespace SharedKernel.Common.domain;
+namespace SharedKernel.Common.domain.entity_id;
 public abstract class Entity<IdType> where IdType : IEntityId
 {
     public IdType Id { get; init; }

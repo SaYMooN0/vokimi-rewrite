@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using TestCatalogService.Domain.Common;
@@ -12,11 +13,24 @@ namespace TestCatalogService.Domain.TestAggregate.general_format;
 
 public class GeneralFormatTest : BaseTest
 {
-    private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
     public ushort QuestionsCount { get; init; }
     public ushort ResultsCount { get; init; }
     public bool AnyAudioAnswers { get; init; }
+
+    private GeneralFormatTest(
+        TestId testId, string name, string coverImg, string description, AppUserId creatorId,
+        ImmutableArray<AppUserId> editorIds, DateTime publicationDate, Language language,
+        ImmutableHashSet<TestTagId> tags, TestInteractionsAccessSettings interactionsAccessSettings,
+        ushort questionsCount, ushort resultsCount, bool anyAudioAnswers
+    ) : base(
+        testId, name, coverImg, description, creatorId, editorIds,
+        publicationDate, language, tags, interactionsAccessSettings
+    ) {
+        QuestionsCount = questionsCount;
+        ResultsCount = resultsCount;
+        AnyAudioAnswers = anyAudioAnswers;
+    }
 
     public static ErrOr<GeneralFormatTest> CreateNew(
         TestId testId,
@@ -33,29 +47,18 @@ public class GeneralFormatTest : BaseTest
         TestInteractionsAccessSettings interactionsAccessSettings,
         ImmutableHashSet<TestTagId> tags
     ) {
-        if (string.IsNullOrWhiteSpace(name))
-        {
+        if (string.IsNullOrWhiteSpace(name)) {
             return Err.ErrFactory.InvalidData("Name is required");
         }
 
-        var newTest = new GeneralFormatTest() {
-            Id = testId,
-            Name = name,
-            CoverImg = coverImg,
-            Description = description,
-            CreatorId = creatorId,
-            EditorIds = editorIds,
-            PublicationDate = publicationDate,
-            Language = language,
-            QuestionsCount = questionsCount,
-            ResultsCount = resultsCount,
-            AnyAudioAnswers = anyAudioAnswers,
-            InteractionsAccessSettings = interactionsAccessSettings,
-            Tags = tags
-        };
+        GeneralFormatTest newTest = new(
+            testId, name, coverImg, description, creatorId, editorIds, publicationDate,
+            language, tags, interactionsAccessSettings, questionsCount, resultsCount, anyAudioAnswers
+        );
         newTest._domainEvents.Add(new TestTagsChangedEvent(newTest.Id, new HashSet<TestTagId>(), tags));
-        newTest._domainEvents.Add(new NewPublishedTestCreatedEvent(newTest.Id, creatorId,
-            editorIds.ToImmutableHashSet()));
+        newTest._domainEvents.Add(
+            new NewPublishedTestCreatedEvent(newTest.Id, creatorId, editorIds.ToImmutableHashSet())
+        );
         return newTest;
     }
 }

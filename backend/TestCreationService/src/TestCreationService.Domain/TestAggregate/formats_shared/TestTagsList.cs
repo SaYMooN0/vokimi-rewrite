@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.errors;
 using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity_id;
 using TestCreationService.Domain.Common;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;

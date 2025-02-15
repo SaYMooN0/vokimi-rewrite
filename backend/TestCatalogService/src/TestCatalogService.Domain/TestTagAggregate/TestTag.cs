@@ -1,5 +1,6 @@
 ﻿using SharedKernel.Common;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common;
 

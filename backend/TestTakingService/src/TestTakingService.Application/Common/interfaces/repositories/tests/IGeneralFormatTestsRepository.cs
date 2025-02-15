@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Common.interfaces.repositories.tests;

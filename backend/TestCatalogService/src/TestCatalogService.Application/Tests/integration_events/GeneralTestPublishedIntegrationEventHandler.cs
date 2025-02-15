@@ -4,6 +4,7 @@ using SharedKernel.Common.general_test_questions;
 using SharedKernel.IntegrationEvents.test_publishing;
 using System.Collections.Immutable;
 using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.general_format;
 

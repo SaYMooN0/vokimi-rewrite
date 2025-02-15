@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestTakingService.Domain.Common;
 using TestTakingService.Domain.TestAggregate;
 

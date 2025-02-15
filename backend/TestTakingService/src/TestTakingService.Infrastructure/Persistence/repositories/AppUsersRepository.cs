@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestTakingService.Application.Common.interfaces.repositories;
 using TestTakingService.Domain.AppUserAggregate;
 

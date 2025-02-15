@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InfrastructureConfigurationShared.Extensions;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Domain.AppUserAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
@@ -21,6 +22,7 @@ internal class AppUserConfigurations : IEntityTypeConfiguration<AppUser>
             .Property<HashSet<TestId>>("_createdTestIds")
             .HasColumnName("CreatedTestIds")
             .HasEntityIdsHashSetConversion();
+        
 
         builder.Ignore(x => x.EditorAssignedTests);
         builder

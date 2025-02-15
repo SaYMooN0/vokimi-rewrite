@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.interfaces;
 using System.Reflection;
+using SharedKernel.Common.domain.aggregate_root;
 using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestAggregate.general_format;

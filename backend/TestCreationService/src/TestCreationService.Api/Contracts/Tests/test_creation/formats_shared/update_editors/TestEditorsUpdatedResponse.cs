@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 

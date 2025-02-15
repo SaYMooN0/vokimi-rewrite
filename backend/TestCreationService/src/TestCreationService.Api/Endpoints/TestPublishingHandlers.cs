@@ -3,6 +3,7 @@ using ApiShared;
 using MediatR;
 using TestCreationService.Api.Extensions;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCreationService.Api.Endpoints;
 

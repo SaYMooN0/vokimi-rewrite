@@ -1,4 +1,6 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.aggregate_root;
+using SharedKernel.Common.domain.entity_id;
 
 namespace SharedUserRelationsContext.Entities;
 

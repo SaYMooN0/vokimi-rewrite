@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace SharedUserRelationsContext.repository;
 

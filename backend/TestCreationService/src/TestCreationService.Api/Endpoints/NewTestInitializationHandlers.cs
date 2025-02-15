@@ -8,6 +8,7 @@ using OneOf.Types;
 using TestCreationService.Application.Tests.scoring_format.commands;
 using TestCreationService.Application.Tests.general_format.commands;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 
 namespace TestCreationService.Api.Endpoints;
 

@@ -5,6 +5,7 @@ using TestCreationService.Infrastructure.Persistence.configurations.value_conver
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using SharedKernel.Common.domain;
 using InfrastructureConfigurationShared.Extensions;
+using SharedKernel.Common.domain.entity_id;
 using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests;

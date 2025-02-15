@@ -1,6 +1,7 @@
 ﻿using ApiShared.interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.errors;
 using TestCreationService.Domain.Rules;
 

@@ -5,6 +5,7 @@ using SharedKernel.Common.interfaces;
 using SharedKernel.Common;
 using SharedKernel.Configs;
 using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Infrastructure.IntegrationEvents.background_service;
 using TestCatalogService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestCatalogService.Infrastructure.Persistence;

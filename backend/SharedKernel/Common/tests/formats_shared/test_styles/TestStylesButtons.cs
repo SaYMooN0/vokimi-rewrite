@@ -1,6 +1,7 @@
 ﻿
 
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.value_object;
 
 namespace SharedKernel.Common.tests.formats_shared.test_styles;
 

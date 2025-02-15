@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using TestCreationService.Domain.TestAggregate.formats_shared;

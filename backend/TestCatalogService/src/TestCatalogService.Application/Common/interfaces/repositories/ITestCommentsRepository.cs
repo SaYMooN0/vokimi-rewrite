@@ -1,5 +1,6 @@
 ﻿namespace TestCatalogService.Application.Common.interfaces.repositories;
 
-public interface IGeneralFormatTestsRepository
+public interface ITestCommentsRepository
 {
+    
 }

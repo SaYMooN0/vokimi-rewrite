@@ -1,7 +1,7 @@
-using SharedKernel.Common.domain.interfaces;
 using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity_id;
 
-namespace SharedKernel.Common.domain;
+namespace SharedKernel.Common.domain.aggregate_root;
 
 public abstract class AggregateRoot<IdType> : Entity<IdType>, IAggregateRoot where IdType : IEntityId
 {

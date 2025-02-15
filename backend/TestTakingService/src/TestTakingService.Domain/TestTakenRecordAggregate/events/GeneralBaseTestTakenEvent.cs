@@ -1,4 +1,5 @@
 ﻿using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestTakingService.Domain.Common;
 using TestTakingService.Domain.Common.general_test_taken_data;
 

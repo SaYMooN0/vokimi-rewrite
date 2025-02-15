@@ -1,6 +1,7 @@
 ﻿using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain;
+using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Api.Contracts.view_test;
 using TestCatalogService.Api.Extensions;
 
