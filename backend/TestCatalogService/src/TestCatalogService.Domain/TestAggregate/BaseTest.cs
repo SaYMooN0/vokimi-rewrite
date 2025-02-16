@@ -7,6 +7,7 @@ using SharedKernel.Common.domain.entity_id;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestRatingAggregate;
 
 namespace TestCatalogService.Domain.TestAggregate;
 
@@ -22,9 +23,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public DateTime PublicationDate { get; init; }
     public Language Language { get; init; }
     public ImmutableHashSet<TestTagId> Tags { get; protected set; }
-    protected TestInteractionsAccessSettings InteractionsAccessSettings { get; init; }
+    public TestInteractionsAccessSettings InteractionsAccessSettings { get; protected init; }
     private HashSet<TestCommentId> _commentIds { get; init; }
-    private HashSet<TestRatingId> _ratingIds { get; init; }
+    private ICollection<TestRating> _ratings { get; init; }
 
     protected BaseTest(
         TestId testId,
@@ -44,12 +45,12 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Tags = tags;
         InteractionsAccessSettings = interactionsAccessSettings;
         _commentIds = [];
-        _ratingIds = [];
+        _ratings = [];
     }
 
     public ImmutableHashSet<TestCommentId> CommentIds => _commentIds.ToImmutableHashSet();
 
-    public ImmutableHashSet<TestRatingId> RatingIds => _ratingIds.ToImmutableHashSet();
+    public ImmutableArray<TestRating> Ratings => _ratings.ToImmutableArray();
 
     private bool IsUserCreatorOrEditor(AppUserId userId) =>
         userId == CreatorId || EditorIds.Contains(userId);
@@ -59,8 +60,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
         AppUserId userId
     ) => (await getUserFollowings(userId)).Contains(userId);
 
-    //comments 
-    //ratings
     public ErrOrNothing CheckAccessToViewTestForUnauthorized() => InteractionsAccessSettings.TestAccess switch {
         AccessLevel.Public => ErrOrNothing.Nothing,
         AccessLevel.Private => Err.ErrFactory.NoAccess(
@@ -99,4 +98,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         userId, IsUserCreatorOrEditor,
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
     );
+
+    public void AddComment(TestCommentId commentId) => _commentIds.Add(commentId);
+
+    public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue) { }
+    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue) { }
 }

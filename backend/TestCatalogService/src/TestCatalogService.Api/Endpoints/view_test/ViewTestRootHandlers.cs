@@ -1,20 +1,21 @@
-﻿using ApiShared.extensions;
+﻿using ApiShared;
+using ApiShared.extensions;
 using MediatR;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Api.Contracts.view_test;
 using TestCatalogService.Api.Extensions;
+using TestCatalogService.Application.Tests.formats_shared.commands;
 
 namespace TestCatalogService.Api.Endpoints.view_test;
 
-internal  static class ViewTestRootHandlers
+internal static class ViewTestRootHandlers
 {
     internal static RouteGroupBuilder MapViewTestRootHandlers(this RouteGroupBuilder group) {
         group
             .GroupUserAccessToViewTestRequired();
 
         group.MapGet("/", LoadViewTestData);
-        
+
         return group;
     }
 
@@ -26,6 +27,9 @@ internal  static class ViewTestRootHandlers
         LoadViewTestDataCommand command = new(testId);
         var result = await mediator.Send(command);
 
-        return Results.Json(ViewTestLoadDataResponse.Create());
+        return CustomResults.FromErrOr(
+            result,
+            (test) => Results.Json(ViewTestLoadDataResponse.Create(test)
+            ));
     }
 }

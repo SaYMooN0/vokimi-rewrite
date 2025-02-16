@@ -5,6 +5,7 @@ namespace TestCatalogService.Domain.Rules;
 public static class TestCommentRules
 {
     public const int MaxCommentLength = 2000;
+    public const int MaxAttachmentImagePathLen = 500;
 
     public static ErrOrNothing CheckCommentTextForErrs(string text) {
         if (text is null) {
@@ -16,6 +17,19 @@ public static class TestCommentRules
             return Err.ErrFactory.InvalidData(
                 $"Comment text is too long. Maximum length is {MaxCommentLength}. Current length is {len}"
             );
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public static ErrOrNothing CheckAttachmentImagePathForErrs(string imagePath) {
+        int len = string.IsNullOrWhiteSpace(imagePath) ? 0 : imagePath.Length;
+        if (len == 0) {
+            return new Err("Image path is empty");
+        }
+
+        if (len > MaxAttachmentImagePathLen) {
+            return new Err("Image path is too long", details: "Try to somehow shorten it ");
         }
 
         return ErrOrNothing.Nothing;

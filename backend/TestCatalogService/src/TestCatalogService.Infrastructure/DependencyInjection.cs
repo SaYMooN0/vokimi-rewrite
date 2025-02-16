@@ -10,6 +10,7 @@ using TestCatalogService.Infrastructure.IntegrationEvents.background_service;
 using TestCatalogService.Infrastructure.IntegrationEvents.integration_events_publisher;
 using TestCatalogService.Infrastructure.Persistence;
 using TestCatalogService.Infrastructure.Persistence.repositories;
+using TestCatalogService.Infrastructure.Persistence.repositories.tests;
 
 namespace TestCatalogService.Infrastructure;
 
@@ -46,10 +47,15 @@ public static class DependencyInjection
                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnetionString));
 
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
+
         services.AddScoped<ITestTagsRepository, TestTagsRepository>();
-        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+        services.AddScoped<ITestCommentsRepository, TestCommentsRepository>();
+        services.AddScoped<ITestRatingsRepository, TestRatingsRepository>();
+
 
         return services;
     }

@@ -10,7 +10,7 @@ using TestCatalogService.Domain.TestAggregate;
 
 namespace TestCatalogService.Api.EndpointsFilters;
 
-public class CheckUserAccessRateTestEndpointFilter: IEndpointFilter
+public class CheckUserAccessRateTestEndpointFilter : IEndpointFilter
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
     private readonly IUserFollowingsRepository _userFollowingsRepository;
@@ -31,7 +31,7 @@ public class CheckUserAccessRateTestEndpointFilter: IEndpointFilter
         }
 
         var userId = context.HttpContext.GetAuthenticatedUserId();
-        ErrOrNothing access = test.CheckUserAccessToRate(userId, _userFollowingsRepository.GetUserFollowings);
+        ErrOrNothing access = await test.CheckUserAccessToRate(userId, _userFollowingsRepository.GetUserFollowings);
 
         return access.IsErr(out var err)
             ? CustomResults.ErrorResponse(err)

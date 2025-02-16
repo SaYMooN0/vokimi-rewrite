@@ -30,9 +30,9 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
             .Property(x => x.Attachment)
             .HasConversion(new TestCommentAttachmentConverter());
 
-        builder.Ignore(x => x.ChildComments);
+        builder.Ignore(x => x.Answers);
         builder
-            .HasMany<TestComment>("_childComments")
+            .HasMany<TestComment>("_answers")
             .WithOne(x => x.ParentComment)
             .HasForeignKey("ParentCommentId");
     }

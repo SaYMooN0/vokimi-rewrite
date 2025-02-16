@@ -24,7 +24,7 @@ public abstract record BaseTestPublishedIntegrationEvent(
 public record TestPublishedInteractionsAccessSettingsDto(
     AccessLevel TestAccess,
     ResourceAvailabilitySetting AllowRatings,
-    ResourceAvailabilitySetting AllowDiscussions,
+    ResourceAvailabilitySetting AllowComments,
     bool AllowTestTakenPosts,
     ResourceAvailabilitySetting AllowTagsSuggestions
 );

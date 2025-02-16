@@ -36,7 +36,7 @@ public class CheckUserAccessToCommentTestEndpointFilter : IEndpointFilter
         }
 
         var userId = context.HttpContext.GetAuthenticatedUserId();
-        ErrOrNothing access = test.CheckUserAccessToComment(userId, _userFollowingsRepository.GetUserFollowings);
+        ErrOrNothing access =await test.CheckUserAccessToComment(userId, _userFollowingsRepository.GetUserFollowings);
 
         return access.IsErr(out var err)
             ? CustomResults.ErrorResponse(err)

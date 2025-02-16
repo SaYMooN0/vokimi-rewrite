@@ -1,10 +1,14 @@
-﻿namespace TestCatalogService.Api.Contracts.view_test;
+﻿using TestCatalogService.Domain.TestAggregate;
+
+namespace TestCatalogService.Api.Contracts.view_test;
 
 internal record class ViewTestLoadDataResponse(
     bool RatingsEnabled,
-    bool CommentsViewEnabled,
-    bool CommentsLeavingEnabled
+    bool CommentsEnabled
 )
 {
-    internal static ViewTestLoadDataResponse Create() => new();
+    internal static ViewTestLoadDataResponse Create(BaseTest test) => new(
+        test.InteractionsAccessSettings.AllowRatings.IsEnabled,
+        test.InteractionsAccessSettings.AllowComments.IsEnabled
+    );
 }

@@ -1,10 +1,8 @@
-﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
-using TestCatalogService.Application.Common.interfaces.repositories;
+﻿using SharedKernel.Common.domain.entity_id;
 using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 
-namespace TestCatalogService.Infrastructure.Persistence.repositories;
+namespace TestCatalogService.Infrastructure.Persistence.repositories.tests;
 
 internal class BaseTestsRepository : IBaseTestsRepository
 {

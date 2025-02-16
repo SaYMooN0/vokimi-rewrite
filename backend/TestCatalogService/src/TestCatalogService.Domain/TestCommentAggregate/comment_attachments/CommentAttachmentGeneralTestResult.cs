@@ -18,13 +18,8 @@ public class CommentAttachmentGeneralTestResult : TestCommentAttachment
 
     public override string ToStorageString() => ResultId.ToString();
 
-    public static ErrOr<CommentAttachmentGeneralTestResult> FromStorageString(string storageString) =>
-        Guid.TryParse(storageString, out var guid)
-            ? new CommentAttachmentGeneralTestResult() { ResultId = new(guid) }
-            : new Err(
-                $"Provided storage string is not a valid result id",
-                details: $"Provided storage string: {storageString}"
-            );
+    public static CommentAttachmentGeneralTestResult CreateFromStorageString(string resultId) =>
+        new(new(new Guid(resultId)));
 
     public override IEnumerable<object> GetEqualityComponents() {
         yield return RelatedEnumType;
