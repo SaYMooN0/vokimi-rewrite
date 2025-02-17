@@ -5,7 +5,7 @@ using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
 using SharedKernel.Common.domain.aggregate_root;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestCreationService.Domain.Rules;

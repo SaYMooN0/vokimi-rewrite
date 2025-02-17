@@ -2,7 +2,7 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.aggregate_root;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.formats_shared.test_styles;

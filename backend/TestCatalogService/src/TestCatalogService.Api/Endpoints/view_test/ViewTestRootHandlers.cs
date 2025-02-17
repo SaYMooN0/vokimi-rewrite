@@ -1,7 +1,7 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using MediatR;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCatalogService.Api.Contracts.view_test;
 using TestCatalogService.Api.Extensions;
 using TestCatalogService.Application.Tests.formats_shared.commands;
@@ -29,7 +29,7 @@ internal static class ViewTestRootHandlers
 
         return CustomResults.FromErrOr(
             result,
-            (test) => Results.Json(ViewTestLoadDataResponse.Create(test)
-            ));
+            (test) => Results.Json(ViewTestLoadDataResponse.Create(test))
+        );
     }
 }

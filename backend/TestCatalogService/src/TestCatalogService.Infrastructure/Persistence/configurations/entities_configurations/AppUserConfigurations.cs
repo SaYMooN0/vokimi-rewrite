@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InfrastructureConfigurationShared.Extensions;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.AppUserAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;

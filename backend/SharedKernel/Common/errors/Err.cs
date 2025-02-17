@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.domain;
 using System.Text;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace SharedKernel.Common.errors;
 

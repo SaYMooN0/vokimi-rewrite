@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.tests.value_objects;
 using System.Collections.Immutable;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 
 namespace SharedKernel.IntegrationEvents.test_publishing;

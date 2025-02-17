@@ -4,11 +4,10 @@ using MediatR;
 using TestCreationService.Application.Tests.general_format;
 using SharedKernel.Common.errors;
 using TestCreationService.Api.Contracts.Tests.test_initialization;
-using OneOf.Types;
 using TestCreationService.Application.Tests.scoring_format.commands;
 using TestCreationService.Application.Tests.general_format.commands;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestCreationService.Api.Endpoints;
 

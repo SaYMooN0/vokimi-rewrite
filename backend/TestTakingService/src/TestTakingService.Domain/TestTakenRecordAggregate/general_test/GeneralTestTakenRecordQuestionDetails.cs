@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestTakingService.Domain.Common;
 
 namespace TestTakingService.Domain.TestTakenRecordAggregate.general_test;

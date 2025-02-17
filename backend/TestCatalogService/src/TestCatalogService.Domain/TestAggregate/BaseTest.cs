@@ -3,11 +3,10 @@ using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using System.Collections.Immutable;
 using SharedKernel.Common.domain.aggregate_root;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
-using TestCatalogService.Domain.TestRatingAggregate;
 
 namespace TestCatalogService.Domain.TestAggregate;
 

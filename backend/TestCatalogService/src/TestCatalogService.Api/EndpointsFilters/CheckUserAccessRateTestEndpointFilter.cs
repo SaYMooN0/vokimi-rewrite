@@ -1,7 +1,7 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedUserRelationsContext.repository;
 using TestCatalogService.Application.Common.interfaces.repositories;

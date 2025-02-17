@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace SharedKernel.Common.domain.aggregate_root;
 

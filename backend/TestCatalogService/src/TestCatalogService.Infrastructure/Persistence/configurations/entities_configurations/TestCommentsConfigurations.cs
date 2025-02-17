@@ -22,7 +22,7 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
             .HasEntityIdConversion();
         
         builder
-            .Property(x => x.Author)
+            .Property(x => x.AuthorId)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
         

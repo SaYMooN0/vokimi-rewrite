@@ -5,7 +5,7 @@ using TestCreationService.Api.Extensions;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Application.Common.interfaces.repositories;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestCreationService.Api.EndpointsFilters;
 

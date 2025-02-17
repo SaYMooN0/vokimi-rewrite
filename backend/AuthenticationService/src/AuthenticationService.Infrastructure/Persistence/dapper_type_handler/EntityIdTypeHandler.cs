@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using SharedKernel.Common.domain;
 using System.Data;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 internal class GuidEntityIdTypeHandler<T> : SqlMapper.TypeHandler<T> where T : EntityId

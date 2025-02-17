@@ -7,7 +7,7 @@ using TestCreationService.Application.Tests.formats_shared.commands;
 using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared.update_editors;
 using TestCreationService.Api.Extensions;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestCreationService.Api.Endpoints.test_creation.formats_shared;
 

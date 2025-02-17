@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 using TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 

@@ -1,6 +1,6 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;

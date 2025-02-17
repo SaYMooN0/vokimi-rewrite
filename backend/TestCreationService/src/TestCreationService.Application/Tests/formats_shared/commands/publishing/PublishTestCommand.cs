@@ -1,12 +1,14 @@
 ﻿using MediatR;
-using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using TestCreationService.Application.Common.interfaces.repositories;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.TestAggregate.general_format;
+
+namespace TestCreationService.Application.Tests.formats_shared.commands.publishing;
+
 public record class PublishTestCommand(TestId TestId) : IRequest<ErrOrNothing>;
 
 public class PublishTestCommandHandler : IRequestHandler<PublishTestCommand, ErrOrNothing>

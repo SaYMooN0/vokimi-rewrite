@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 
 namespace TestCreationService.Application.Tests.formats_shared.commands;

@@ -5,7 +5,7 @@ using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using SharedKernel.IntegrationEvents.test_publishing;
 using System.Collections.Immutable;
 using SharedKernel.Common.domain.aggregate_root;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.general_format.events;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.GeneralTestQuestionAggregate;
 using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;

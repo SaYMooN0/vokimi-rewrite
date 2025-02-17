@@ -1,9 +1,9 @@
-﻿using SharedKernel.Common.domain.entity_id;
+﻿using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.Common;
 
-namespace TestCatalogService.Domain.TestRatingAggregate;
+namespace TestCatalogService.Domain.TestAggregate.formats_shared;
 
 public class TestRating : Entity<TestRatingId>
 {

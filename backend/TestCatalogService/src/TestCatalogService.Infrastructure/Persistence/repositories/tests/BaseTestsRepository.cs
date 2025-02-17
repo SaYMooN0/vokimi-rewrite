@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.domain.entity_id;
+﻿using SharedKernel.Common.domain.entity;
 using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 

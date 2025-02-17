@@ -5,7 +5,7 @@ using SharedKernel.Common.errors;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Configs;
 
 namespace ApiShared.extensions;

@@ -1,7 +1,7 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCreationService.Application.Common.interfaces.repositories;
 

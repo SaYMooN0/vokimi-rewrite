@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.IntegrationEvents.test_publishing;
 

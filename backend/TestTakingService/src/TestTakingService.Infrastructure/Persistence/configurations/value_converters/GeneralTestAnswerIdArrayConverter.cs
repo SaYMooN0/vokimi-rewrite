@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestTakingService.Infrastructure.Persistence.configurations.value_converters;
 

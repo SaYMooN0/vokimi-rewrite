@@ -1,4 +1,4 @@
-﻿using SharedKernel.Common.domain.entity_id;
+﻿using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common;
 

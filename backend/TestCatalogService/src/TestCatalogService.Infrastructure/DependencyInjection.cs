@@ -54,7 +54,6 @@ public static class DependencyInjection
 
         services.AddScoped<ITestTagsRepository, TestTagsRepository>();
         services.AddScoped<ITestCommentsRepository, TestCommentsRepository>();
-        services.AddScoped<ITestRatingsRepository, TestRatingsRepository>();
 
 
         return services;

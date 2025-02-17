@@ -5,7 +5,7 @@ using TestCreationService.Api.Extensions;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;
 using TestCreationService.Application.GeneralTestQuestions.commands.answers;
 using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestCreationService.Api.Endpoints.test_creation.general;
 internal static class GeneralTestCreationAnswersHandlers

@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
 using TestCreationService.Domain.TestAggregate.general_format;

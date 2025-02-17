@@ -13,6 +13,14 @@ internal class NewTestCommentCreatedEventHandler : INotificationHandler<NewTestC
     private readonly IBaseTestsRepository _baseTestsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
 
+    public NewTestCommentCreatedEventHandler(
+        IAppUsersRepository appUsersRepository,
+        IBaseTestsRepository baseTestsRepository
+    ) {
+        _appUsersRepository = appUsersRepository;
+        _baseTestsRepository = baseTestsRepository;
+    }
+
     public async Task Handle(NewTestCommentCreatedEvent notification, CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(notification.TestId);
         if (test is null) {

@@ -1,7 +1,7 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestCatalogService.Domain.TestRatingAggregate;
+using TestCatalogService.Domain.TestAggregate.formats_shared;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
 

@@ -5,7 +5,7 @@ namespace TestCatalogService.Domain.TestCommentAggregate;
 
 public enum CommentAttachmentType
 {
-    Images,
+    Images, 
     GeneralTestResult
 }
 

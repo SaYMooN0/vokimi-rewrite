@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity_id;
+using SharedKernel.Common.domain.entity;
 
 namespace TestCreationService.Api.Contracts.Tests.test_initialization;
 
