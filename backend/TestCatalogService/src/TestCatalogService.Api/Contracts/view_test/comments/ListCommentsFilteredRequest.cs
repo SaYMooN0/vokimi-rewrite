@@ -20,10 +20,7 @@ public class ListCommentsFilteredRequest : IRequestWithValidationNeeded
     public DateTime? DateTo { get; init; }
     public bool ShowHidden { get; init; }
     public bool ShowDeleted { get; init; }
-    public FilterTriState ByUser { get; init; }
     public FilterTriState WithAttachments { get; init; }
-    public FilterTriState ByUserFollowings { get; init; }
-    public FilterTriState ByUserFollowers { get; init; }
     public TestCommentsSortOption Sorting { get; init; }
 
     public RequestValidationResult Validate() {
@@ -76,19 +73,6 @@ public class ListCommentsFilteredRequest : IRequestWithValidationNeeded
             return Err.ErrFactory.InvalidData("Date To cannot be later than current date");
         }
 
-        if (ByUser != FilterTriState.Unset && viewer is null) {
-            return Err.ErrFactory.InvalidData("Authentication is required to filter by User's comments");
-        }
-
-        if (ByUserFollowings != FilterTriState.Unset && viewer is null) {
-            return Err.ErrFactory.InvalidData("Authentication is required to filter by User Followings' comments");
-        }
-
-        if (ByUserFollowers != FilterTriState.Unset && viewer is null) {
-            return Err.ErrFactory.InvalidData("Authentication is required to filter by User Followers' comments");
-        }
-
-
         return new ListTestCommentsFilter(
             (uint?)MinAnswersCount,
             (uint?)MaxAnswersCount,
@@ -101,9 +85,6 @@ public class ListCommentsFilteredRequest : IRequestWithValidationNeeded
             ShowHidden: ShowHidden,
             ShowDeleted: ShowDeleted,
             WithAttachments,
-            ByUser: ByUser,
-            ByUserFollowings: ByUserFollowings,
-            ByUserFollowers: ByUserFollowers,
             Sorting
         );
     }

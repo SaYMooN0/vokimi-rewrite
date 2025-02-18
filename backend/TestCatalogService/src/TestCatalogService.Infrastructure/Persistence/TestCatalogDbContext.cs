@@ -7,6 +7,7 @@ using SharedKernel.Common.domain.aggregate_root;
 using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestAggregate.general_format;
+using TestCatalogService.Domain.TestCommentAggregate;
 using TestCatalogService.Domain.TestTagAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence;
@@ -15,10 +16,11 @@ public class TestCatalogDbContext : DbContext
 {
     private readonly IPublisher _publisher;
 
+    public DbSet<AppUser> AppUsers { get; set; } = null!;
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
     public DbSet<TestTag> TestTags { get; set; } = null!;
-    public DbSet<AppUser> AppUsers { get; set; } = null!;
+    public DbSet<TestComment> TestComments { get; set; } = null!;
 
     public TestCatalogDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
         _publisher = publisher;

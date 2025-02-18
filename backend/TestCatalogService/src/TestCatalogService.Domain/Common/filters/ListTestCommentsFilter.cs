@@ -14,10 +14,11 @@ public record class ListTestCommentsFilter(
     bool ShowHidden,
     bool ShowDeleted,
     FilterTriState WithAttachments,
-    //auth requiring
-    FilterTriState ByUser,
-    FilterTriState ByUserFollowings,
-    FilterTriState ByUserFollowers,
     
+    //auth requiring
+    // FilterTriState ByUser,
+    // FilterTriState ByUserFollowings,
+    // FilterTriState ByUserFollowers,
+
     TestCommentsSortOption Sorting
 );

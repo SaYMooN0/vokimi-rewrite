@@ -5,8 +5,12 @@ using System.Collections.Immutable;
 using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
+using TestCatalogService.Application.Common.interfaces.repositories;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestAggregate.formats_shared.events;
+using TestCatalogService.Domain.TestCommentAggregate;
 
 namespace TestCatalogService.Domain.TestAggregate;
 
@@ -82,8 +86,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
     public async Task<ErrOrNothing> CheckUserAccessToRate(
         AppUserId userId,
-        Func<AppUserId,
-            Task<ImmutableArray<AppUserId>>> getUserFollowings
+        Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings
     ) => await InteractionsAccessSettings.CheckUserAccessToRate(
         userId, IsUserCreatorOrEditor,
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
@@ -91,15 +94,72 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
     public async Task<ErrOrNothing> CheckUserAccessToComment(
         AppUserId userId,
-        Func<AppUserId,
-            Task<ImmutableArray<AppUserId>>> getUserFollowings
+        Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings
     ) => await InteractionsAccessSettings.CheckUserAccessToComment(
         userId, IsUserCreatorOrEditor,
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
     );
 
-    public void AddComment(TestCommentId commentId) => _commentIds.Add(commentId);
+    //CheckUserAccessToComment must be checked before
+    public async Task<ErrOr<TestComment>> AddComment(
+        AppUserId authorId,
+        string commentText,
+        TestCommentAttachment? attachment,
+        bool markedAsSpoiler,
+        ITestCommentsRepository testCommentsRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        if (attachment is not null && !attachment.RelatedEnumType.IsPossibleForTestFormat(Format)) {
+            return new Err(
+                $"Test with format {Format} does not support comment attachments with type {attachment.RelatedEnumType}"
+            );
+        }
 
-    public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue) { }
-    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue) { }
+        var creationRes = TestComment.CreateNew(
+            Id, authorId, commentText, attachment, markedAsSpoiler, dateTimeProvider
+        );
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        var comment = creationRes.GetSuccess();
+        await testCommentsRepository.Add(comment);
+        _commentIds.Add(comment.Id);
+        _domainEvents.Add(new TestCommentToTestAddedEvent(comment.Id, comment.AuthorId));
+        return comment;
+    }
+
+    //CheckUserAccessToComment must be checked before
+    public async Task<ErrOr<TestComment>> AddAnswerToComment(
+        TestCommentId parentCommentId,
+        AppUserId authorId,
+        string commentText,
+        TestCommentAttachment? attachment,
+        bool markedAsSpoiler,
+        ITestCommentsRepository testCommentsRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        TestComment? parentComment = await testCommentsRepository.GetById(parentCommentId);
+        if (parentComment is null) {
+            return Err.ErrFactory.NotFound("Cannot find parent comment");
+        }
+
+        if (parentComment.TestId != Id) {
+            return new Err("Parent comment doesn't belong to this test");
+        }
+
+        var answerCreationRes = await AddComment(
+            authorId, commentText, attachment, markedAsSpoiler, testCommentsRepository, dateTimeProvider
+        );
+        if (answerCreationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        parentComment.AddAnswer(answerCreationRes.GetSuccess());
+        await testCommentsRepository.Add(parentComment);
+        return answerCreationRes.GetSuccess();
+    }
+
+    // public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue) { }
+    // public ErrOrNothing UpdateRating(AppUserId userId,Func<>, ushort ratingValue) { }
 }

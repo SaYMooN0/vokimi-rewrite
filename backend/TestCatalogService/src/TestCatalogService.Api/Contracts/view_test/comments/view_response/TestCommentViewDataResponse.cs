@@ -1,4 +1,5 @@
-﻿using TestCatalogService.Domain.TestCommentAggregate;
+﻿using System.Text.Json;
+using TestCatalogService.Domain.TestCommentAggregate;
 
 namespace TestCatalogService.Api.Contracts.view_test.comments.view_response;
 
@@ -12,7 +13,7 @@ internal record class TestCommentViewDataResponse(
     uint DownVotesCount,
     bool MarkedAsSpoiler,
     string Text,
-    string? AttachmentStorageString
+    string? AttachmentJson
 ) : ITestCommentDataViewResponse
 {
     public static TestCommentViewDataResponse FromComment(TestComment comment, bool? userVoteValue) => new(
@@ -27,4 +28,7 @@ internal record class TestCommentViewDataResponse(
         comment.Text.GetSuccess(),
         comment.Attachment.GetSuccess()?.ToStorageString() ?? null
     );
+
+    private static string? GetAttachmentJson(TestCommentAttachment? attachment) =>
+        attachment is null ? null : JsonSerializer.Serialize(attachment);
 }

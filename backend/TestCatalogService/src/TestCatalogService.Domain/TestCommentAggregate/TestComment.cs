@@ -5,7 +5,6 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Rules;
-using TestCatalogService.Domain.TestCommentAggregate.events;
 
 namespace TestCatalogService.Domain.TestCommentAggregate;
 
@@ -34,13 +33,15 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     public ErrOr<TestCommentAttachment?> Attachment =>
         IsDeleted ? Err.ErrFactory.NoAccess("Cannot access deleted comment attachment") : _attachment;
 
-    public ImmutableArray<TestComment> Answers => _answers.ToImmutableArray();
-    public ImmutableArray<CommentVote> Votes => _votes.ToImmutableArray();
+    public IReadOnlyCollection<TestComment> Answers => _answers.ToImmutableArray();
+    public IReadOnlyCollection<CommentVote> Votes => _votes.ToImmutableArray();
     public bool HasAttachment => _attachment is not null;
 
     public static ErrOr<TestComment> CreateNew(
-        TestId testId, AppUserId author,
-        string text, TestCommentAttachment? attachment,
+        TestId testId,
+        AppUserId authorId,
+        string text,
+        TestCommentAttachment? attachment,
         bool markAsSpoiler,
         IDateTimeProvider dateTimeProvider
     ) {
@@ -52,11 +53,10 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
             return err;
         }
 
-        TestComment comment = new() {
+        return new TestComment() {
             Id = TestCommentId.CreateNew(),
             TestId = testId,
-            AuthorId = author,
-            ParentComment = null,
+            AuthorId = authorId,
             _answers = [],
             CurrentAnswersCount = 0,
             _votes = [],
@@ -68,8 +68,6 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
             IsHidden = false,
             MarkedAsSpoiler = markAsSpoiler
         };
-        comment._domainEvents.Add(new NewTestCommentCreatedEvent(comment.Id, testId, author));
-        return comment;
     }
 
     public ErrOrNothing Vote(AppUserId user, bool isUp) {
@@ -113,20 +111,9 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
         throw new Exception("Not every comment votes behaviour is defined");
     }
 
-    public ErrOr<TestComment> AddAnswer(
-        AppUserId author, string text,
-        TestCommentAttachment? attachment,
-        bool markAsSpoiler,
-        IDateTimeProvider dateTimeProvider
-    ) {
-        var answer = CreateNew(TestId, author, text, attachment, markAsSpoiler, dateTimeProvider);
-        if (answer.IsErr(out var err)) {
-            return err;
-        }
-
-        _answers.Add(answer.GetSuccess());
+    public void AddAnswer(TestComment answer) {
+        _answers.Add(answer);
         CurrentAnswersCount += 1;
-        return answer.GetSuccess();
     }
 
     public ErrOrNothing Delete(IDateTimeProvider timeProvider) {
