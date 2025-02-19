@@ -1,4 +1,4 @@
-﻿namespace TestCatalogService.Application.Common;
+﻿namespace TestCatalogService.Domain.Common;
 
 public enum FilterTriState
 {

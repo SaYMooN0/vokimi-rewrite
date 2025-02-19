@@ -1,4 +1,4 @@
-﻿using TestCatalogService.Application.Common.interfaces.repositories.tests;
+﻿using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate.general_format;
 
 namespace TestCatalogService.Infrastructure.Persistence.repositories.tests;

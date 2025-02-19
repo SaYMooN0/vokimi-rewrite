@@ -7,18 +7,18 @@ internal record class DeletedCommentViewResponse(
     string AuthorId,
     uint AnswersCount,
     DateTime CreatedAt,
-    bool? ViewerVoteValue,
+    UserCommentVoteState ViewerVote,
     uint UpVotesCount,
     uint DownVotesCount,
     bool HadAttachment
 ) : ITestCommentDataViewResponse
 {
-    public static DeletedCommentViewResponse FromComment(TestComment comment, bool? userVoteValue) => new(
+    public static DeletedCommentViewResponse FromComment(TestComment comment, UserCommentVoteState userVote) => new(
         comment.Id.ToString(),
         comment.AuthorId.ToString(),
         comment.CurrentAnswersCount,
         comment.CreatedAt,
-        userVoteValue,
+        userVote,
         comment.UpVotesCount,
         comment.DownVotesCount,
         comment.HasAttachment

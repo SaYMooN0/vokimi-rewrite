@@ -1,7 +1,7 @@
 using MediatR;
 using SharedKernel.IntegrationEvents.authentication;
-using TestCatalogService.Application.Common.interfaces.repositories;
 using TestCatalogService.Domain.AppUserAggregate;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 
 namespace TestCatalogService.Application.AppUsers.integration_events;
 

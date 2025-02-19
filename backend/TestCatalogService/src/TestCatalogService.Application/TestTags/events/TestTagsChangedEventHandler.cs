@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestTagAggregate;
 using TestCatalogService.Domain.TestTagAggregate.events;
 namespace TestCatalogService.Application.TestTags.events;

@@ -74,7 +74,7 @@ public class Err
         public const ushort NoAccess = 1004;
     }
 
-    public static class ErrPresets
+    public static  class ErrPresets
     {
         public static Err UserNotFound(AppUserId userId) => ErrFactory.NotFound(
             "User not found",

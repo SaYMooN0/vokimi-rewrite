@@ -12,7 +12,7 @@ public class NewTestCommentRequest : IRequestWithValidationNeeded
     public CommentAttachmentType? AttachmentType { get; init; }
     public string? AttachmentJsonString { get; init; }
     public string Text { get; init; }
-    public bool MarkedAsSpoiler { get; init; } 
+    public bool MarkedAsSpoiler { get; init; }
 
     public RequestValidationResult Validate() {
         if (TestCommentRules.CheckCommentTextForErrs(Text).IsErr(out var err)) {
@@ -28,7 +28,22 @@ public class NewTestCommentRequest : IRequestWithValidationNeeded
         return RequestValidationResult.Success;
     }
 
-    private static ErrOr<TestCommentAttachment> ParseCommentAttachment(
+    public TestCommentAttachment? ParsedAttachment() {
+        if (AttachmentType is null) {
+            return null;
+        }
+
+        TestCommentAttachment attachment = AttachmentType.Value switch {
+            CommentAttachmentType.Images =>
+                JsonSerializer.Deserialize<CommentAttachmentImages>(AttachmentJsonString),
+            CommentAttachmentType.GeneralTestResult =>
+                JsonSerializer.Deserialize<CommentAttachmentGeneralTestResult>(AttachmentJsonString),
+            _ => throw new ArgumentException()
+        };
+        return attachment;
+    }
+
+    private ErrOr<TestCommentAttachment> ParseCommentAttachment(
         CommentAttachmentType attachmentType, string? json
     ) {
         if (string.IsNullOrWhiteSpace(json)) {
@@ -36,18 +51,11 @@ public class NewTestCommentRequest : IRequestWithValidationNeeded
         }
 
         try {
-            TestCommentAttachment? attachment = attachmentType switch {
-                CommentAttachmentType.Images =>
-                    JsonSerializer.Deserialize<CommentAttachmentImages>(json),
-                CommentAttachmentType.GeneralTestResult =>
-                    JsonSerializer.Deserialize<CommentAttachmentGeneralTestResult>(json),
-                _ => throw new ArgumentException()
-            };
+            TestCommentAttachment? attachment = ParsedAttachment();
             if (attachment is null) {
                 return new Err("Unable to correctly parse comment attachment data");
             }
 
-            return attachment;
             return attachment;
         }
         catch (ArgumentException) {

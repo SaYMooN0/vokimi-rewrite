@@ -70,7 +70,7 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
         };
     }
 
-    public ErrOrNothing Vote(AppUserId user, bool isUp) {
+    public ErrOr<UserCommentVoteState> Vote(AppUserId user, bool isUp) {
         CommentVote? existingVote = _votes.FirstOrDefault(v => v.UserId == user);
         if (existingVote is null) {
             CommentVote vote = new(user, isUp);
@@ -82,7 +82,7 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
                 DownVotesCount++;
             }
 
-            return ErrOrNothing.Nothing;
+            return isUp ? UserCommentVoteState.Up : UserCommentVoteState.Down;
         }
         else if (existingVote.IsUp == isUp) {
             _votes.Remove(existingVote);
@@ -93,7 +93,7 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
                 DownVotesCount--;
             }
 
-            return ErrOrNothing.Nothing;
+            return UserCommentVoteState.None;
         }
         else if (existingVote.IsUp != isUp) {
             if (isUp) {
@@ -105,10 +105,15 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
                 DownVotesCount++;
             }
 
-            return existingVote.ChangeIsUpValue(isUp);
+            var res = existingVote.ChangeIsUpValue(isUp);
+            if (res.IsErr(out var err)) {
+                return err;
+            }
+
+            return isUp ? UserCommentVoteState.Up : UserCommentVoteState.Down;
         }
 
-        throw new Exception("Not every comment votes behaviour is defined");
+        return new Err("Unexpected comment's vote behaviour");
     }
 
     public void AddAnswer(TestComment answer) {

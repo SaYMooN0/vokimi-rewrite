@@ -1,6 +1,6 @@
 ﻿using TestCatalogService.Domain.TestAggregate.general_format;
 
-namespace TestCatalogService.Application.Common.interfaces.repositories.tests;
+namespace TestCatalogService.Domain.Common.interfaces.repositories.tests;
 
 public interface IGeneralFormatTestsRepository
 {

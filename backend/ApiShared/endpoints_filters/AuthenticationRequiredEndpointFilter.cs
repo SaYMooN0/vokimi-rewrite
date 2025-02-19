@@ -21,7 +21,7 @@ internal class AuthenticationRequiredEndpointFilter : IEndpointFilter
         {
             return CustomResults.Unauthorized(err.WithPrefix("Access denied. Authentication required"));
         }
-        httpContext.Items["AppUserId"] = userIdOrErr.GetSuccess();
+        httpContext.Items["appUserId"] = userIdOrErr.GetSuccess();
 
         return await next(context);
     }

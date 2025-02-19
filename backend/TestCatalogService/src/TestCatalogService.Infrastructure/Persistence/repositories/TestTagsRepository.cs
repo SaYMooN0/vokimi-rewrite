@@ -1,5 +1,5 @@
-﻿using TestCatalogService.Application.Common.interfaces.repositories;
-using TestCatalogService.Domain.Common;
+﻿using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestTagAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence.repositories;

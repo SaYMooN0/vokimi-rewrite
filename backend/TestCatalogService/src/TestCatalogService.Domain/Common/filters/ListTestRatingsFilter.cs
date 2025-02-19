@@ -1,6 +1,4 @@
-﻿using TestCatalogService.Domain.Common;
-
-namespace TestCatalogService.Application.Common.filters;
+﻿namespace TestCatalogService.Domain.Common.filters;
 
 public record class ListTestRatingsFilter(
     ushort? MinRatingValue,

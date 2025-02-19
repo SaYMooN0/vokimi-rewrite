@@ -2,7 +2,7 @@
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 
 namespace TestCatalogService.Application.TestComments.commands.list;
 

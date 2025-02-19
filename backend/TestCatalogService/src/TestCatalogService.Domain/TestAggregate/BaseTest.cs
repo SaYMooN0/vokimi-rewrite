@@ -6,8 +6,8 @@ using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using TestCatalogService.Application.Common.interfaces.repositories;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestCommentAggregate;
@@ -156,7 +156,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         parentComment.AddAnswer(answerCreationRes.GetSuccess());
-        await testCommentsRepository.Add(parentComment);
+        await testCommentsRepository.Update(parentComment);
         return answerCreationRes.GetSuccess();
     }
 

@@ -1,6 +1,6 @@
-﻿using TestCatalogService.Application.Common.sort_options;
+﻿using TestCatalogService.Domain.Common.sort_options;
 
-namespace TestCatalogService.Application.Common.filters;
+namespace TestCatalogService.Domain.Common.filters;
 
 public record class ListTestCommentsFilter(
     uint? MinAnswersCount,

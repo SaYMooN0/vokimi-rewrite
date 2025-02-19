@@ -1,7 +1,6 @@
-﻿using TestCatalogService.Domain.Common;
-using TestCatalogService.Domain.TestTagAggregate;
+﻿using TestCatalogService.Domain.TestTagAggregate;
 
-namespace TestCatalogService.Application.Common.interfaces.repositories;
+namespace TestCatalogService.Domain.Common.interfaces.repositories;
 
 public interface ITestTagsRepository
 {

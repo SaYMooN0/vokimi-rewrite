@@ -2,9 +2,9 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using TestCatalogService.Application.Common;
-using TestCatalogService.Application.Common.filters;
-using TestCatalogService.Application.Common.sort_options;
+using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.filters;
+using TestCatalogService.Domain.Common.sort_options;
 
 namespace TestCatalogService.Api.Contracts.view_test.comments;
 

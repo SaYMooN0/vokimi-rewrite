@@ -5,13 +5,12 @@ namespace TestCatalogService.Domain.TestCommentAggregate;
 
 public enum CommentAttachmentType
 {
-    Images, 
+    Images,
     GeneralTestResult
 }
 
 public static class CommentAttachmentTypeExtensions
 {
-
     public static bool IsPossibleForTestFormat(this CommentAttachmentType attachmentType, TestFormat format) =>
         attachmentType switch {
             CommentAttachmentType.Images => true,

@@ -4,8 +4,7 @@ using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedUserRelationsContext.repository;
-using TestCatalogService.Application.Common.interfaces.repositories;
-using TestCatalogService.Application.Common.interfaces.repositories.tests;
+using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 
 namespace TestCatalogService.Api.EndpointsFilters;

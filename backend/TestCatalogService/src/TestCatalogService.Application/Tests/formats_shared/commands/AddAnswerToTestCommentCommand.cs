@@ -2,9 +2,9 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using TestCatalogService.Application.Common.interfaces.repositories;
-using TestCatalogService.Application.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestCommentAggregate;
 
@@ -25,6 +25,16 @@ public class AddAnswerToTestCommentCommandHandler : IRequestHandler<AddAnswerToT
     private readonly ITestCommentsRepository _testCommentsRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
+    public AddAnswerToTestCommentCommandHandler(
+        IBaseTestsRepository baseTestsRepository,
+        ITestCommentsRepository testCommentsRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        _baseTestsRepository = baseTestsRepository;
+        _testCommentsRepository = testCommentsRepository;
+        _dateTimeProvider = dateTimeProvider;
+    }
+
     public async Task<ErrOr<TestComment>> Handle(AddAnswerToTestCommentCommand request,
         CancellationToken cancellationToken) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
@@ -32,7 +42,7 @@ public class AddAnswerToTestCommentCommandHandler : IRequestHandler<AddAnswerToT
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
 
-        return await test.AddAnswerToComment(
+        var res = await test.AddAnswerToComment(
             request.ParentCommentId,
             request.AuthorId,
             request.Text,
@@ -41,5 +51,11 @@ public class AddAnswerToTestCommentCommandHandler : IRequestHandler<AddAnswerToT
             _testCommentsRepository,
             _dateTimeProvider
         );
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
+        await _baseTestsRepository.Update(test);
+        return res.GetSuccess();
     }
 }

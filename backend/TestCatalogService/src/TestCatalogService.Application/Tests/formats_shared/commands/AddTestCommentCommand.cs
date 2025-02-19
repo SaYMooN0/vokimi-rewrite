@@ -2,8 +2,8 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using TestCatalogService.Application.Common.interfaces.repositories;
-using TestCatalogService.Application.Common.interfaces.repositories.tests;
+using TestCatalogService.Domain.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestCommentAggregate;
 

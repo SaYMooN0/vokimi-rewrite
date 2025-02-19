@@ -1,7 +1,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
-using TestCatalogService.Application.Common.interfaces.repositories;
 using TestCatalogService.Domain.AppUserAggregate;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 
 namespace TestCatalogService.Infrastructure.Persistence.repositories;
 

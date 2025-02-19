@@ -1,11 +1,10 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain.entity;
-using TestCatalogService.Application.Common;
-using TestCatalogService.Application.Common.filters;
-using TestCatalogService.Application.Common.interfaces.repositories;
-using TestCatalogService.Application.Common.sort_options;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.filters;
+using TestCatalogService.Domain.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.sort_options;
 using TestCatalogService.Domain.TestCommentAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence.repositories;
@@ -18,7 +17,7 @@ internal class TestCommentsRepository : ITestCommentsRepository
         _db = db;
     }
 
-    private const int packageSize = 50;
+    private const int PackageSize = 50;
 
     public async Task Add(TestComment comment) {
         await _db.TestComments.AddAsync(comment);
@@ -28,16 +27,21 @@ internal class TestCommentsRepository : ITestCommentsRepository
     public async Task<TestComment?> GetById(TestCommentId commentId) =>
         await _db.TestComments.FindAsync(commentId);
 
+    public async Task Update(TestComment comment) {
+        _db.TestComments.Update(comment);
+        await _db.SaveChangesAsync();
+    }
+
     public async Task<ImmutableArray<TestCommentWithViewerVote>> GetCommentsPackageForViewer(
         TestId testId, uint packageNumber, AppUserId? viewer
     ) => (await _db.TestComments
             .Where(c => c.TestId == testId)
-            .Skip((int)packageNumber * packageSize)
-            .Take(packageSize)
+            .Skip((int)packageNumber * PackageSize)
+            .Take(PackageSize)
             .Select(c => new { Comment = c, Vote = c.Votes.FirstOrDefault(v => v.UserId == viewer) })
             .ToArrayAsync()
         )
-        .Select(c => new TestCommentWithViewerVote(c.Comment, c.Vote?.IsUp ?? null))
+        .Select(c => TestCommentWithViewerVote.Create(c.Comment, c.Vote))
         .ToImmutableArray();
 
     public async Task<ImmutableArray<TestCommentWithViewerVote>> GetFilteredCommentsPackageForViewer(TestId testId,
@@ -46,16 +50,16 @@ internal class TestCommentsRepository : ITestCommentsRepository
     ) => (await _db.TestComments
             .Where(c => c.TestId == testId)
             .WithFilterAndSorting(filter)
-            .Skip((int)packageNumber * packageSize)
-            .Take(packageSize)
+            .Skip((int)packageNumber * PackageSize)
+            .Take(PackageSize)
             .Select(c => new { Comment = c, Vote = c.Votes.FirstOrDefault(v => v.UserId == viewer) })
             .ToArrayAsync()
         )
-        .Select(c => new TestCommentWithViewerVote(c.Comment, c.Vote?.IsUp ?? null))
+        .Select(c => TestCommentWithViewerVote.Create(c.Comment, c.Vote))
         .ToImmutableArray();
 }
 
-public static class TestCommentsQueryExtensions
+file static class TestCommentsQueryExtensions
 {
     public static IQueryable<TestComment> WithFilterAndSorting(
         this IQueryable<TestComment> query, ListTestCommentsFilter filter

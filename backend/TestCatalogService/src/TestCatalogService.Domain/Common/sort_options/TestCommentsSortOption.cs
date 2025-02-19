@@ -1,4 +1,4 @@
-﻿namespace TestCatalogService.Application.Common.sort_options;
+﻿namespace TestCatalogService.Domain.Common.sort_options;
 
 public enum TestCommentsSortOption
 {

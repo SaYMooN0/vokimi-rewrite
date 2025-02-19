@@ -8,7 +8,7 @@ internal record class TestCommentViewDataResponse(
     string AuthorId,
     uint AnswersCount,
     DateTime CreatedAt,
-    bool? ViewerVoteValue,
+    UserCommentVoteState ViewerVote,
     uint UpVotesCount,
     uint DownVotesCount,
     bool MarkedAsSpoiler,
@@ -16,12 +16,12 @@ internal record class TestCommentViewDataResponse(
     string? AttachmentJson
 ) : ITestCommentDataViewResponse
 {
-    public static TestCommentViewDataResponse FromComment(TestComment comment, bool? userVoteValue) => new(
+    public static TestCommentViewDataResponse FromComment(TestComment comment, UserCommentVoteState userVote) => new(
         comment.Id.ToString(),
         comment.AuthorId.ToString(),
         comment.CurrentAnswersCount,
         comment.CreatedAt,
-        userVoteValue,
+        userVote,
         comment.UpVotesCount,
         comment.DownVotesCount,
         comment.MarkedAsSpoiler,

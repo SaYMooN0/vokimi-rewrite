@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SharedKernel.Common.errors;
-using TestCatalogService.Application.Common.interfaces.repositories;
 using TestCatalogService.Domain.AppUserAggregate;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 
 namespace TestCatalogService.Application.Tests.formats_shared.events;

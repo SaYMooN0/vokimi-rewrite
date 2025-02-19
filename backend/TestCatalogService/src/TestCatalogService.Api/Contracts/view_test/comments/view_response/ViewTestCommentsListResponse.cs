@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using TestCatalogService.Application.Common.interfaces.repositories;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 
 namespace TestCatalogService.Api.Contracts.view_test.comments.view_response;
 
