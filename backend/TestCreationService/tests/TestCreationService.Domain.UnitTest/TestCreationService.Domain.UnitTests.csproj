@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestAggregateRoot\formats_shared\" />
     <Folder Include="TestAggregateRoot\scoring_format\" />
   </ItemGroup>
 

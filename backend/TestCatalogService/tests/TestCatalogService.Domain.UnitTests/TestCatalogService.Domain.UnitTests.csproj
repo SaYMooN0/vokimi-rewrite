@@ -18,4 +18,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestAggregateRoot\general_format\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TestCatalogService.Domain\TestCatalogService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

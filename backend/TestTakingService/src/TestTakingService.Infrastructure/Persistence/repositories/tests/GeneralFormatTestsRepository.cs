@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.EntityFrameworkCore;
-using SharedKernel.Common.domain;
+﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain.entity;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.general_format;
@@ -17,6 +15,11 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 
     public async Task Add(GeneralFormatTest test) {
         await _db.GeneralFormatTests.AddAsync(test);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task Update(GeneralFormatTest test) {
+        _db.GeneralFormatTests.Update(test);
         await _db.SaveChangesAsync();
     }
 

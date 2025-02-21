@@ -1,5 +1,6 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
 using TestTakingService.Domain.Common.general_test_taken_data;
 
@@ -7,9 +8,10 @@ namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
 
 public class GeneralTestTakingFeedbackTests
 {
-    private static  GeneralTestFeedbackOption BasicFeedbackOption=>GeneralTestFeedbackOption.Enabled.CreateNew(
+    private static GeneralTestFeedbackOption BasicFeedbackOption => GeneralTestFeedbackOption.Enabled.CreateNew(
         AnonymityValues.Any, "text text text text text", 100
-        ).GetSuccess();
+    ).GetSuccess();
+
     [Fact]
     public void TestTaken_FeedbackDisabled_ReturnsError() {
         // Arrange
@@ -23,9 +25,10 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
-
+    
         // Assert
         Assert.True(result.IsErr(out var err));
         Assert.Equal("Feedback for this test is disabled", err.Message);
@@ -44,7 +47,8 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -69,7 +73,8 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -95,7 +100,8 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -117,7 +123,8 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -140,7 +147,8 @@ public class GeneralTestTakingFeedbackTests
             questionsDataMap,
             GeneralTestTestsConsts.TestTakingStart,
             GeneralTestTestsConsts.TestTakingEnd,
-            feedback
+            feedback,
+            GeneralTestTestsConsts.DateTimeProviderInstance
         );
 
         // Assert

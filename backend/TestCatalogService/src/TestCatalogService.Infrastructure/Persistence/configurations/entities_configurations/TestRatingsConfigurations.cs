@@ -21,7 +21,7 @@ public class TestRatingsConfigurations : IEntityTypeConfiguration<TestRating>
             .HasEntityIdConversion();
         
         builder
-            .Property(x => x.AuthorId)
+            .Property(x => x.UserId)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
     }

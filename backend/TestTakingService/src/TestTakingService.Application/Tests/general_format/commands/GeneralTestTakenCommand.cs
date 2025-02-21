@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.Common.general_test_taken_data;
 using TestTakingService.Domain.TestAggregate.general_format;
@@ -20,9 +21,15 @@ public record class GeneralTestTakenCommand(
 public class GeneralTestTakenCommandHandler
     : IRequestHandler<GeneralTestTakenCommand, ErrOr<GeneralTestResult>>
 {
-    private IGeneralFormatTestsRepository _generalFormatRepository;
-    public GeneralTestTakenCommandHandler(IGeneralFormatTestsRepository generalFormatRepository) {
+    private readonly IGeneralFormatTestsRepository _generalFormatRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public GeneralTestTakenCommandHandler(
+        IGeneralFormatTestsRepository generalFormatRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
         _generalFormatRepository = generalFormatRepository;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrOr<GeneralTestResult>> Handle(
@@ -39,12 +46,14 @@ public class GeneralTestTakenCommandHandler
             request.QuestionsData,
             testTakingStart: request.TestTakingStart,
             testTakingEnd: request.TestTakingEnd,
-            request.FeedbackData
+            request.FeedbackData,
+            _dateTimeProvider
         );
         if (testTakenRes.IsErr(out var err)) {
             return err;
         }
 
+        await _generalFormatRepository.Update(test);
         return testTakenRes.GetSuccess();
     }
 }

@@ -6,6 +6,7 @@ using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
+using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
@@ -160,6 +161,25 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return answerCreationRes.GetSuccess();
     }
 
-    // public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue) { }
-    // public ErrOrNothing UpdateRating(AppUserId userId,Func<>, ushort ratingValue) { }
+    public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) {
+        TestRating? existing = _ratings.FirstOrDefault(r => r.UserId == userId);
+        if (existing is not null) {
+            return new Err(
+                $"This user has already rated this test. Current rating: {existing.Value}",
+                details: $"Rating creation time: {existing.CreatedAt.ToShortDateString()}"
+            );
+        }
+
+        var ratingCreationRes = TestRating.CreateNew(ratingValue, userId, Id, dateTimeProvider);
+        if (ratingCreationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        TestRating rating = ratingCreationRes.GetSuccess();
+        _ratings.Add(rating);
+        _domainEvents.Add(new AppUserLeftTestRatingEvent(userId, rating.Id));
+        return rating;
+    }
+
+    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) { }
 }

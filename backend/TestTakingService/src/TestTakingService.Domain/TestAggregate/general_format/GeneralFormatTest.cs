@@ -3,6 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.formats_shared.test_styles;
@@ -48,8 +49,20 @@ public class GeneralFormatTest : BaseTest
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap,
         DateTime testTakingStart,
         DateTime testTakingEnd,
-        GeneralTestTakenFeedbackData? feedback
+        GeneralTestTakenFeedbackData? feedback,
+        IDateTimeProvider dateTimeProvider
     ) {
+        if (
+            GeneralTestTakingValidatorHelper.CheckForTestTimeDurationErrs(
+                dateTimeProvider,
+                questionsDataMap.Values.Select(q => q.TimeOnQuestionSpent),
+                testStartTime: testTakingStart,
+                testEndTime: testTakingEnd
+            ).IsErr(out var timeErr)
+        ) {
+            return timeErr;
+        }
+
         if (
             GeneralTestTakingValidatorHelper
             .ValidatePossibleFeedbackForTestTakenRequest(testTakerId, feedback, FeedbackOption)
@@ -88,7 +101,8 @@ public class GeneralFormatTest : BaseTest
         GeneralTestResult receivedRes = GetResultWithMaxPoints(resultsWithPoints);
 
         var testTakenRecordId = TestTakenRecordId.CreateNew();
-        CreateTestTakenEvent(testTakerId, testTakingStart, testTakingEnd,
+        CreateTestTakenEvent(
+            testTakerId, testTakingStart, testTakingEnd,
             testTakenRecordId, receivedRes.Id, testTakenQuestionDetails
         );
         if (feedback is not null) {

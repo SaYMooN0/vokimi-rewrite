@@ -1,7 +1,7 @@
 ﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
 using TestTakingService.Domain.Common.general_test_taken_data;
 
@@ -131,6 +131,30 @@ internal static class GeneralTestTakingValidatorHelper
                 details:
                 $"Question id: {question.Id}, maximum answers count: {question.AnswersCountLimit.MaxAnswers}"
             );
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    internal static ErrOrNothing CheckForTestTimeDurationErrs(
+        IDateTimeProvider dateTimeProvider,
+        IEnumerable<TimeSpan> timeSpentOnQuestions,
+        DateTime testStartTime,
+        DateTime testEndTime
+    ) {
+        if (testStartTime > testEndTime) {
+            return new Err("Test start time cannot be later than end time");
+        }
+
+        if (testStartTime > dateTimeProvider.Now) {
+            return new Err("Test couldn't start in a future");
+        }
+
+        double totalTimeSpentOnQuestions = timeSpentOnQuestions.Sum(q => q.TotalSeconds);
+        double testDuration = (testEndTime - testStartTime).TotalSeconds;
+
+        if (totalTimeSpentOnQuestions > testDuration) {
+            return new Err("Somehow total time spent on questions exceeds the total test duration");
         }
 
         return ErrOrNothing.Nothing;

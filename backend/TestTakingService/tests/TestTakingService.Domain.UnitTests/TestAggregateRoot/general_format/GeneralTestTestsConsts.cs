@@ -3,6 +3,7 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.Common.tests.value_objects;
@@ -181,4 +182,12 @@ public static class GeneralTestTestsConsts
     public static readonly AppUserId TestTakerId = new(Guid.NewGuid());
     public static DateTime TestTakingStart => DateTime.Now.AddHours(-1);
     public static DateTime TestTakingEnd => DateTime.Now;
+
+    public static IDateTimeProvider DateTimeProviderInstance = new DateTimeProvider();
+
+    private class DateTimeProvider : IDateTimeProvider
+    {
+        public DateTime Now => DateTime.Now;
+        public DateOnly NowDateOnly => DateOnly.FromDateTime(DateTime.Now);
+    }
 }
