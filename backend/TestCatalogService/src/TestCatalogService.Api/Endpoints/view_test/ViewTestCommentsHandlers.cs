@@ -8,6 +8,7 @@ using TestCatalogService.Api.Contracts.view_test.comments;
 using TestCatalogService.Api.Contracts.view_test.comments.view_response;
 using TestCatalogService.Api.Extensions;
 using TestCatalogService.Application.TestComments.commands;
+using TestCatalogService.Application.TestComments.commands.list_answers;
 using TestCatalogService.Application.TestComments.commands.list;
 using TestCatalogService.Application.Tests.formats_shared.commands;
 using TestCatalogService.Domain.Common;
@@ -20,21 +21,27 @@ internal static class ViewTestCommentsHandlers
     internal static RouteGroupBuilder MapViewTestCommentsHandlers(this RouteGroupBuilder group) {
         group
             .GroupUserAccessToViewTestRequired();
-        
-        group.MapGet("/{package}", ListComments);
-        group.MapPost("/filtered/{package}", ListCommentsFiltered)
+
+        group.MapGet("/list/{package}", ListComments);
+        group.MapPost("/listFiltered/{package}", ListCommentsFiltered)
             .WithRequestValidation<ListCommentsFilteredRequest>();
         group.MapPost("/add", CreateNewComment)
             .AuthenticationRequired()
             .WithAccessCheckToCommentTest()
             .WithRequestValidation<NewTestCommentRequest>();
+
         group.MapPost("/{commentId}/vote/{isUp}", VoteComment)
             .AuthenticationRequired()
             .WithCommentBelongsToTestCheck();
-        // group.MapGet("/{commentId}/answers/{package}",ListCommentsAnswers )
-        //     .WithRequestValidation<>();
-        // group.MapPost("/{commentId}/answers/filtered/{package}",ListCommentAnswersFiltered )
-        // //     .WithRequestValidation<>();     
+        group.MapPost("/{commentId}/markAsSpoiler", MarkCommentAsSpoiler)
+            .AuthenticationRequired()
+            .WithCommentBelongsToTestCheck();
+
+        group.MapGet("/{commentId}/answers/list/{package}", ListCommentsAnswers)
+            .WithCommentBelongsToTestCheck();
+        group.MapPost("/{commentId}/answers/listFiltered/{package}", ListCommentAnswersFiltered)
+            .WithCommentBelongsToTestCheck()
+            .WithRequestValidation<ListCommentsFilteredRequest>();
         group.MapPost("/{commentId}/answers/add", AddAnswerToComment)
             .AuthenticationRequired()
             .WithCommentBelongsToTestCheck()
@@ -44,6 +51,7 @@ internal static class ViewTestCommentsHandlers
         //mark as spoiler
         return group;
     }
+
 
     private static async Task<IResult> ListComments(
         HttpContext httpContext,
@@ -91,25 +99,8 @@ internal static class ViewTestCommentsHandlers
         );
     }
 
-    private static async Task<IResult> VoteComment(
-        HttpContext httpContext,
-        ISender mediator,
-        bool isUp
-    ) {
-        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
-        AppUserId userId = httpContext.GetAuthenticatedUserId();
-
-
-        VoteForCommentCommand command = new(commentId, userId, isUp);
-        var result = await mediator.Send(command);
-        return CustomResults.FromErrOr(result,
-            (state) => Results.Json(new { VoteState = state })
-        );
-    }
-
     private static async Task<IResult> CreateNewComment(
-        HttpContext httpContext,
-        ISender mediator
+        HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
         AppUserId userId = httpContext.GetAuthenticatedUserId();
@@ -124,6 +115,81 @@ internal static class ViewTestCommentsHandlers
             (newComment) => Results.Json(new {
                 Comment = TestCommentViewDataResponse.FromComment(newComment, UserCommentVoteState.None)
             })
+        );
+    }
+
+    private static async Task<IResult> VoteComment(
+        HttpContext httpContext, ISender mediator, bool isUp
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+
+
+        VoteForCommentCommand command = new(commentId, userId, isUp);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOr(result,
+            (state) => Results.Json(new { VoteState = state })
+        );
+    }
+
+    private static async Task<IResult> MarkCommentAsSpoiler(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+
+
+        MarkCommentAsSpoilerCommand command = new(commentId, userId);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOrNothing(result,
+            () => Results.Ok()
+        );
+    }
+
+    private static async Task<IResult> ListCommentsAnswers(
+        HttpContext httpContext,
+        ISender mediator,
+        JwtTokenConfig jwtTokenConfig,
+        int package
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId? viewerId = null;
+        httpContext.ParseUserIdFromJwtToken(jwtTokenConfig).IsSuccess(out viewerId);
+
+        ListCommentAnswersCommand command = new(commentId, package, viewerId);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(result,
+            (comments) => Results.Json(
+                ViewTestCommentsListResponse.FromCommentsWithVotes(comments)
+            )
+        );
+    }
+
+    private static async Task<IResult> ListCommentAnswersFiltered(
+        HttpContext httpContext,
+        ISender mediator,
+        JwtTokenConfig jwtTokenConfig,
+        IDateTimeProvider dateTimeProvider,
+        int package
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId? viewerId = null;
+        httpContext.ParseUserIdFromJwtToken(jwtTokenConfig).IsSuccess(out viewerId);
+        var req = httpContext.GetValidatedRequest<ListCommentsFilteredRequest>();
+
+        var filter = req.ParseToFilter(dateTimeProvider, viewerId);
+        if (filter.IsErr(out var filterErr)) {
+            return CustomResults.ErrorResponse(filterErr);
+        }
+
+        ListFilteredCommentAnswersCommand command = new(commentId, filter.GetSuccess(), package, viewerId);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(result,
+            (comments) => Results.Json(
+                ViewTestCommentsListResponse.FromCommentsWithVotes(comments)
+            )
         );
     }
 

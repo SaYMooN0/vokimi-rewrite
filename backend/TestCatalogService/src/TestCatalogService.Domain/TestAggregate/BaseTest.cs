@@ -181,5 +181,17 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return rating;
     }
 
-    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) { }
+    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) {
+        TestRating? existing = _ratings.FirstOrDefault(r => r.UserId == userId);
+        if (existing is null) {
+            return Err.ErrFactory.NotFound($"Cannot update rating because user has not rated this test");
+        }
+
+        var updatingRes = existing.Update(ratingValue, dateTimeProvider);
+        if (updatingRes.IsErr(out var err)) {
+            return err;
+        }
+
+        return ErrOrNothing.Nothing;
+    }
 }

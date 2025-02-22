@@ -35,8 +35,10 @@ public class AddAnswerToTestCommentCommandHandler : IRequestHandler<AddAnswerToT
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<TestComment>> Handle(AddAnswerToTestCommentCommand request,
-        CancellationToken cancellationToken) {
+    public async Task<ErrOr<TestComment>> Handle(
+        AddAnswerToTestCommentCommand request,
+        CancellationToken cancellationToken
+    ) {
         BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);

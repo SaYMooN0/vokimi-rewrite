@@ -12,16 +12,19 @@ public interface ITestCommentsRepository
     public Task Update(TestComment comment);
 
     public Task<ImmutableArray<TestCommentWithViewerVote>> GetCommentsPackageForViewer(
-        TestId testId,
-        uint packageNumber,
-        AppUserId? viewer
+        TestId testId, uint packageNumber, AppUserId? viewer
     );
 
     public Task<ImmutableArray<TestCommentWithViewerVote>> GetFilteredCommentsPackageForViewer(
-        TestId testId,
-        uint packageNumber,
-        AppUserId? viewer,
-        ListTestCommentsFilter filter
+        TestId testId, uint packageNumber, AppUserId? viewer, ListTestCommentsFilter filter
+    );
+
+    public Task<ImmutableArray<TestCommentWithViewerVote>> GetFilteredAnswersPackageForViewer(
+        TestCommentId parentCommentId, uint packageNumber, AppUserId? viewer, ListTestCommentsFilter filter
+    );
+
+    public Task<ImmutableArray<TestCommentWithViewerVote>> GetAnswersPackageForViewer(
+        TestCommentId parentCommentId, uint packageNumber, AppUserId? viewer
     );
 }
 

@@ -20,12 +20,12 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
             .Property(x => x.TestId)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-        
+
         builder
             .Property(x => x.AuthorId)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-        
+
         builder
             .Property(x => x.Attachment)
             .HasConversion(new TestCommentAttachmentConverter());
@@ -33,7 +33,7 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
         builder.Ignore(x => x.Answers);
         builder
             .HasMany<TestComment>("_answers")
-            .WithOne(x => x.ParentComment)
-            .HasForeignKey("ParentCommentId");
+            .WithOne()
+            .HasForeignKey(x => x.ParentCommentId);
     }
 }

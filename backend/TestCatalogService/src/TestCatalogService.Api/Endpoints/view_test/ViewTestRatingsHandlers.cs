@@ -3,8 +3,7 @@ using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestCatalogService.Api.Extensions;
-using TestCatalogService.Application.TestComments.commands;
-using TestCatalogService.Domain.Common;
+using TestCatalogService.Application.Tests.formats_shared.commands.ratings;
 
 namespace TestCatalogService.Api.Endpoints.view_test;
 
@@ -14,7 +13,7 @@ internal static class ViewTestRatingsHandlers
         group
             .GroupUserAccessToViewTestRequired();
         //list
-        group.MapPost("/rate/{value}", RateTest)
+        group.MapPost("/add/{value}", RateTest)
             .AuthenticationRequired()
             .WithAccessCheckToRateTest();
         group.MapPost("/updateRating/{value}", UpdateTestRating)
@@ -28,11 +27,29 @@ internal static class ViewTestRatingsHandlers
         HttpContext httpContext,
         ISender mediator,
         int value
-    ) { }
+    ) {
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        RateTestCommand command = new(userId, testId, value);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOr(result,
+            (ratingValue) => Results.Json(new { RatingValue = ratingValue })
+        );
+    }
 
     private static async Task<IResult> UpdateTestRating(
         HttpContext httpContext,
         ISender mediator,
         int value
-    ) { }
+    ) {
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        UpdateTestRatingCommand command = new(userId, testId, value);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOr(result,
+            (ratingValue) => Results.Json(new { RatingValue = ratingValue })
+        );
+    }
 }

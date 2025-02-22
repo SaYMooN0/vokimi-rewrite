@@ -4,6 +4,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.Rules;
 
 namespace TestCatalogService.Domain.TestCommentAggregate;
@@ -13,7 +14,7 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     private TestComment() { }
     public AppUserId AuthorId { get; init; }
     public TestId TestId { get; init; }
-    public TestComment? ParentComment { get; init; }
+    public TestCommentId? ParentCommentId { get; init; }
     private ICollection<TestComment> _answers { get; init; }
     public uint CurrentAnswersCount { get; private set; }
     private ICollection<CommentVote> _votes { get; init; }
@@ -130,5 +131,26 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
         DeletedAt = timeProvider.Now;
 
         return ErrOrNothing.Nothing;
+    }
+
+    public async Task<ErrOrNothing> MarkAsSpoiler(AppUserId userId, IBaseTestsRepository baseTestsRepository) {
+        if (AuthorId == userId) {
+            MarkedAsSpoiler = true;
+            return ErrOrNothing.Nothing;
+        }
+
+        var testCreatorIdRes = await baseTestsRepository.GetTestCreatorId(TestId);
+        if (testCreatorIdRes.IsErr(out var err)) {
+            return err;
+        }
+
+        if (testCreatorIdRes.GetSuccess() == userId) {
+            MarkedAsSpoiler = true;
+            return ErrOrNothing.Nothing;
+        }
+
+        return Err.ErrFactory.NoAccess(
+            "You don't have permission to mark this comment as spoiler. You must be either the author of the comment or creator of the test"
+        );
     }
 }

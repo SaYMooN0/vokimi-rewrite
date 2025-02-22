@@ -12,7 +12,7 @@ public class TestRating : Entity<TestRatingId>
     public AppUserId UserId { get; init; }
     public TestId TestId { get; init; }
     public DateTime CreatedAt { get; init; }
-    public DateTime LastUpdated { get; protected set; }
+    public DateTime? LastUpdated { get; protected set; }
     public const ushort MaxValue = 5;
 
     public static ErrOr<TestRating> CreateNew(
@@ -29,7 +29,7 @@ public class TestRating : Entity<TestRatingId>
             UserId = userId,
             TestId = testId,
             CreatedAt = dateTimeProvider.Now,
-            LastUpdated = dateTimeProvider.Now
+            LastUpdated = null
         };
         return rating;
     }

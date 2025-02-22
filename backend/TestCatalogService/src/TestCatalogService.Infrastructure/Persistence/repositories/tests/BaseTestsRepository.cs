@@ -1,4 +1,7 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client.Events;
+using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 
@@ -14,6 +17,15 @@ internal class BaseTestsRepository : IBaseTestsRepository
 
     public async Task<BaseTest?> GetById(TestId testId) =>
         await _db.BaseTests.FindAsync(testId);
+
+    public async Task<ErrOr<AppUserId>> GetTestCreatorId(TestId testId) {
+        var test = await _db.BaseTests.FindAsync(testId);
+        if (test is not null) {
+            return test.CreatorId;
+        }
+
+        return Err.ErrPresets.TestNotFound(testId);
+    }
 
     public async Task Update(BaseTest test) {
         _db.BaseTests.Update(test);
