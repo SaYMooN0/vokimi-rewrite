@@ -8,21 +8,21 @@ using TestCatalogService.Domain.TestAggregate.formats_shared;
 
 namespace TestCatalogService.Application.Tests.formats_shared.commands.ratings;
 
-public record class RateTestCommand(AppUserId UserId, TestId TestId, int Rating)
+public record class AddTestRatingCommand(AppUserId UserId, TestId TestId, int Rating)
     : IRequest<ErrOr<ushort>>;
 
-public class RateTestCommandHandler : IRequestHandler<RateTestCommand, ErrOr<ushort>>
+public class AddTestRatingCommandHandler : IRequestHandler<AddTestRatingCommand, ErrOr<ushort>>
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public RateTestCommandHandler(IBaseTestsRepository baseTestsRepository, IDateTimeProvider dateTimeProvider) {
+    public AddTestRatingCommandHandler(IBaseTestsRepository baseTestsRepository, IDateTimeProvider dateTimeProvider) {
         _baseTestsRepository = baseTestsRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<ushort>> Handle(RateTestCommand request, CancellationToken cancellationToken) {
-        BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
+    public async Task<ErrOr<ushort>> Handle(AddTestRatingCommand request, CancellationToken cancellationToken) {
+        BaseTest? test = await _baseTestsRepository.GetWithRatings(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);
         }

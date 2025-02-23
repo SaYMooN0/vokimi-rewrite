@@ -9,4 +9,6 @@ public interface IBaseTestsRepository
     public Task<BaseTest?> GetById(TestId testId);
     public Task<ErrOr<AppUserId>> GetTestCreatorId(TestId testId);
     public Task Update(BaseTest test);
+    public Task<BaseTest?> GetWithRatingsAsNoTracking(TestId testId);
+    public Task<BaseTest?> GetWithRatings(TestId testId);
 }

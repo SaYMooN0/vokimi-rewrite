@@ -5,7 +5,7 @@ using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common.filters;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 
-namespace TestCatalogService.Application.TestComments.commands.list;
+namespace TestCatalogService.Application.TestComments.commands.list_comments;
 
 public record class ListFilteredTestCommentsCommand(
     TestId TestId,

@@ -2,6 +2,10 @@
 using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.interfaces;
+using SharedKernel.Configs;
+using TestCatalogService.Api.Contracts.view_test.comments.view_response;
+using TestCatalogService.Api.Contracts.view_test.ratings;
 using TestCatalogService.Api.Extensions;
 using TestCatalogService.Application.Tests.formats_shared.commands.ratings;
 
@@ -13,6 +17,9 @@ internal static class ViewTestRatingsHandlers
         group
             .GroupUserAccessToViewTestRequired();
         //list
+        group.MapGet("/list/{package}", ListTestRatings);
+        group.MapPost("/listFiltered/{package}", ListTestFilteredRatings)
+            .WithRequestValidation<ListFilteredTestRatingsRequest>();
         group.MapPost("/add/{value}", RateTest)
             .AuthenticationRequired()
             .WithAccessCheckToRateTest();
@@ -20,28 +27,68 @@ internal static class ViewTestRatingsHandlers
             .AuthenticationRequired()
             .WithAccessCheckToRateTest();
 
+
         return group;
     }
 
-    private static async Task<IResult> RateTest(
+    private static async Task<IResult> ListTestRatings(
         HttpContext httpContext,
         ISender mediator,
-        int value
+        int package
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        ListTestRatingsCommand command = new(testId, package);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(result,
+            (ratings) => Results.Json(
+                ViewTestRatingsListResponse.FromTestRatings(ratings)
+            )
+        );
+    }
+
+    private static async Task<IResult> ListTestFilteredRatings(
+        HttpContext httpContext,
+        ISender mediator,
+        JwtTokenConfig jwtTokenConfig,
+        IDateTimeProvider dateTimeProvider,
+        int package
+    ) {
+        var req = httpContext.GetValidatedRequest<ListFilteredTestRatingsRequest>();
+        TestId testId = httpContext.GetTestIdFromRoute();
+        AppUserId? viewerId = null;
+        httpContext.ParseUserIdFromJwtToken(jwtTokenConfig).IsSuccess(out viewerId);
+        var filter = req.ParseToFilter(dateTimeProvider, viewerId);
+        if (filter.IsErr(out var filterErr)) {
+            return CustomResults.ErrorResponse(filterErr);
+        }
+
+        ListFilteredTestRatingsCommand command = new(testId, viewerId, filter.GetSuccess(), package);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(result,
+            (ratings) => Results.Json(
+                ViewTestRatingsListResponse.FromTestRatings(ratings)
+            )
+        );
+    }
+
+    private static async Task<IResult> RateTest(
+        HttpContext httpContext, ISender mediator, int value
     ) {
         AppUserId userId = httpContext.GetAuthenticatedUserId();
         TestId testId = httpContext.GetTestIdFromRoute();
 
-        RateTestCommand command = new(userId, testId, value);
-        var result = await mediator.Send(command);
+        AddTestRatingCommand ratingCommand = new(userId, testId, value);
+        var result = await mediator.Send(ratingCommand);
         return CustomResults.FromErrOr(result,
             (ratingValue) => Results.Json(new { RatingValue = ratingValue })
         );
     }
 
     private static async Task<IResult> UpdateTestRating(
-        HttpContext httpContext,
-        ISender mediator,
-        int value
+        HttpContext httpContext, ISender mediator, int value
     ) {
         AppUserId userId = httpContext.GetAuthenticatedUserId();
         TestId testId = httpContext.GetTestIdFromRoute();

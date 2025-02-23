@@ -184,10 +184,10 @@ public static class GeneralTestTestsConsts
     public static DateTime TestTakingEnd => DateTime.Now;
 
     public static IDateTimeProvider DateTimeProviderInstance = new DateTimeProvider();
+}
 
-    private class DateTimeProvider : IDateTimeProvider
-    {
-        public DateTime Now => DateTime.Now;
-        public DateOnly NowDateOnly => DateOnly.FromDateTime(DateTime.Now);
-    }
+file class DateTimeProvider : IDateTimeProvider
+{
+    public DateTime Now => DateTime.Now;
+    public DateOnly NowDateOnly => DateOnly.FromDateTime(DateTime.Now);
 }

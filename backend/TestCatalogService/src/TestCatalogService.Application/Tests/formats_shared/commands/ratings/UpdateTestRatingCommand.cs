@@ -24,7 +24,7 @@ public class UpdateTestRatingCommandHandler : IRequestHandler<UpdateTestRatingCo
     }
 
     public async Task<ErrOr<ushort>> Handle(UpdateTestRatingCommand request, CancellationToken cancellationToken) {
-        BaseTest? test = await _baseTestsRepository.GetById(request.TestId);
+        BaseTest? test = await _baseTestsRepository.GetWithRatings(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);
         }

@@ -4,7 +4,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 
-namespace TestCatalogService.Application.TestComments.commands.list;
+namespace TestCatalogService.Application.TestComments.commands.list_comments;
 
 public record class ListTestCommentsCommand(
     TestId TestId,

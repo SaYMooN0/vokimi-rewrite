@@ -6,8 +6,11 @@ using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
+using SharedUserRelationsContext.repository;
+using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.filters;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
@@ -53,8 +56,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
     }
 
     public ImmutableHashSet<TestCommentId> CommentIds => _commentIds.ToImmutableHashSet();
-
-    public ImmutableArray<TestRating> Ratings => _ratings.ToImmutableArray();
 
     private bool IsUserCreatorOrEditor(AppUserId userId) =>
         userId == CreatorId || EditorIds.Contains(userId);
@@ -193,5 +194,66 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         return ErrOrNothing.Nothing;
+    }
+
+    private const ushort RatingsPackageSize = 100;
+
+    public ErrOr<ImmutableArray<TestRating>> GetRatingsPackage(int package) {
+        if (package < 0) {
+            return Err.ErrFactory.InvalidData("Package number cannot be negative");
+        }
+
+        return _ratings
+            .Skip(package * RatingsPackageSize)
+            .Take(RatingsPackageSize)
+            .ToImmutableArray();
+    }
+
+    public async Task<ErrOr<ImmutableArray<TestRating>>> GetFilteredRatingsPackage(
+        AppUserId? viewerId,
+        IUserFollowingsRepository userFollowingsRepository,
+        ListTestRatingsFilter filter,
+        int package
+    ) {
+        if (package < 0) {
+            return Err.ErrFactory.InvalidData("Package number cannot be negative");
+        }
+
+        if (filter.ByUserFollowings != FilterTriState.Unset && viewerId is null) {
+            return Err.ErrFactory.Unauthorized(
+                "Couldn't filter ratings by user followings because user is not logged in",
+                details: "Login in or set 'by user followings' filter field to unset"
+            );
+        }
+
+        if (filter.ByUserFollowers != FilterTriState.Unset && viewerId is null) {
+            return Err.ErrFactory.Unauthorized(
+                "Couldn't filter ratings by user followers because user is not logged in",
+                details: "Login in or set 'by user followers' filter field to unset"
+            );
+        }
+
+        Func<Task<ImmutableHashSet<AppUserId>>> viewerFollowings = async () =>
+            (await userFollowingsRepository.GetUserFollowings(viewerId)).ToImmutableHashSet();
+
+        Func<Task<ImmutableHashSet<AppUserId>>> viewerFollowers = async () =>
+            (await userFollowingsRepository.GetUserFollowers(viewerId)).ToImmutableHashSet();
+
+        var filteredRatings = _ratings
+            .WithRatingValueFilter(filter.MinRatingValue, filter.MaxRatingValue)
+            .WithCreationDateFilter(filter.CreationDateFrom, filter.CreationDateTo)
+            .WithUpdatingDateFilter(filter.LastUpdateDateFrom, filter.LastUpdateDateTo)
+            .WithWereUpdatedFilter(filter.WereUpdated);
+
+        filteredRatings = await TestRatingsQueryExtensions
+            .WithByFollowingsFilter(filteredRatings, filter.ByUserFollowings, viewerFollowings);
+        filteredRatings = await TestRatingsQueryExtensions
+            .WithByFollowersFilter(filteredRatings, filter.ByUserFollowers, viewerFollowers);
+
+        return filteredRatings
+            .ApplySorting(filter.Sorting)
+            .Skip(package * RatingsPackageSize)
+            .Take(RatingsPackageSize)
+            .ToImmutableArray();
     }
 }

@@ -10,18 +10,18 @@ namespace TestCatalogService.Api.Contracts.view_test.comments;
 
 public class ListCommentsFilteredRequest : IRequestWithValidationNeeded
 {
-    public int? MinAnswersCount { get; init; }
-    public int? MaxAnswersCount { get; init; }
-    public int? MinVotesRating { get; init; }
-    public int? MaxVotesRating { get; init; }
-    public int? MinVotesCount { get; init; }
-    public int? MaxVotesCount { get; init; }
-    public DateTime? DateFrom { get; init; }
-    public DateTime? DateTo { get; init; }
-    public bool ShowHidden { get; init; }
-    public bool ShowDeleted { get; init; }
-    public FilterTriState WithAttachments { get; init; }
-    public TestCommentsSortOption Sorting { get; init; }
+    public int? MinAnswersCount { get; init; } = null;
+    public int? MaxAnswersCount { get; init; } = null;
+    public int? MinVotesRating { get; init; } = null;
+    public int? MaxVotesRating { get; init; } = null;
+    public int? MinVotesCount { get; init; } = null;
+    public int? MaxVotesCount { get; init; } = null;
+    public DateTime? DateFrom { get; init; } = null;
+    public DateTime? DateTo { get; init; } = null;
+    public bool ShowHidden { get; init; } = true;
+    public bool ShowDeleted { get; init; } = true;
+    public FilterTriState WithAttachments { get; init; } = FilterTriState.Unset;
+    public TestCommentsSortOption Sorting { get; init; } = TestCommentsSortOption.Newest;
 
     public RequestValidationResult Validate() {
         ErrList errs = new();
@@ -64,12 +64,14 @@ public class ListCommentsFilteredRequest : IRequestWithValidationNeeded
         return errs;
     }
 
-    public ErrOr<ListTestCommentsFilter> ParseToFilter(IDateTimeProvider dateTimeProvider, AppUserId viewer) {
-        if (DateFrom.HasValue && DateFrom > dateTimeProvider.Now.AddDays(1)) {
+    public ErrOr<ListTestCommentsFilter> ParseToFilter(IDateTimeProvider dateTimeProvider, AppUserId? viewer) {
+        var current = dateTimeProvider.Now.AddDays(1);
+
+        if (DateFrom.HasValue && DateFrom > current) {
             return Err.ErrFactory.InvalidData("Date From cannot be later than current date");
         }
 
-        if (DateTo.HasValue && DateTo > dateTimeProvider.Now.AddDays(1)) {
+        if (DateTo.HasValue && DateTo > current) {
             return Err.ErrFactory.InvalidData("Date To cannot be later than current date");
         }
 
