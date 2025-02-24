@@ -7,5 +7,4 @@ public interface ISoftDeleteableEntity
 {
     public bool IsDeleted { get; }
     public DateTime? DeletedAt { get; }
-    public ErrOrNothing Delete(IDateTimeProvider timeProvider);
 }

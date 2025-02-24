@@ -6,7 +6,7 @@ namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
 public class GeneralTestTakingTimeTests
 {
     [Fact]
-    public void TestTaken_StartTimeLaterThanEndTime_ReturnsError() {
+    public void TestTaken_StartTimeLaterThanEndTime_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest();
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
@@ -31,7 +31,7 @@ public class GeneralTestTakingTimeTests
     }
 
     [Fact]
-    public void TestTaken_StartTimeInTheFuture_ReturnsError() {
+    public void TestTaken_StartTimeInTheFuture_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest();
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
@@ -56,7 +56,7 @@ public class GeneralTestTakingTimeTests
     }
 
     [Fact]
-    public void TestTaken_TotalTimeSpentOnQuestionsExceedsTestDuration_ReturnsError() {
+    public void TestTaken_TotalTimeSpentOnQuestionsExceedsTestDuration_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest();
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new() {

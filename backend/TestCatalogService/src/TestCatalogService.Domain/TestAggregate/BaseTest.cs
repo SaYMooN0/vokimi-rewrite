@@ -13,6 +13,7 @@ using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Common.filters;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestCommentAggregate;
 
@@ -32,6 +33,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public ImmutableHashSet<TestTagId> Tags { get; protected set; }
     public TestInteractionsAccessSettings InteractionsAccessSettings { get; protected init; }
     private HashSet<TestCommentId> _commentIds { get; init; }
+    private ICollection<TestCommentReport> _commentReports { get; init; }
     private ICollection<TestRating> _ratings { get; init; }
 
     protected BaseTest(
@@ -52,6 +54,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Tags = tags;
         InteractionsAccessSettings = interactionsAccessSettings;
         _commentIds = [];
+        _commentReports = [];
         _ratings = [];
     }
 
@@ -255,5 +258,32 @@ public abstract class BaseTest : AggregateRoot<TestId>
             .Skip(package * RatingsPackageSize)
             .Take(RatingsPackageSize)
             .ToImmutableArray();
+    }
+
+    public ErrOrNothing CheckUserAccessToManageTest(AppUserId userId) {
+        if (userId != CreatorId) {
+            return Err.ErrFactory.NoAccess("Only test creator has access to manage test");
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing AddCommentReport(
+        AppUserId userId,
+        TestCommentId commentId,
+        string reportText,
+        CommentReportReason reportReason
+    ) {
+        bool commentExists = _commentIds.Any(cId => cId == commentId);
+        if (!commentExists) {
+            return Err.ErrFactory.NotFound(
+                "Cannot report comment because this test does have this comment",
+                details: $"Comment with id {commentId} has not been found in the test with id {Id}"
+            );
+        }
+
+        TestCommentReport report = TestCommentReport.CreateNew();
+
+        _domainEvents.Add(new TestCommentReportedEvent(commentId));
     }
 }

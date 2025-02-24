@@ -4,6 +4,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
+using TestCatalogService.Domain.TestAggregate.formats_shared;
 
 namespace TestCatalogService.Infrastructure.Persistence.repositories.tests;
 
@@ -19,7 +20,7 @@ internal class BaseTestsRepository : IBaseTestsRepository
         await _db.BaseTests.FindAsync(testId);
 
     public async Task<ErrOr<AppUserId>> GetTestCreatorId(TestId testId) {
-        var test = await _db.BaseTests.FindAsync(testId);
+        BaseTest? test = await _db.BaseTests.FindAsync(testId);
         if (test is not null) {
             return test.CreatorId;
         }
@@ -31,4 +32,16 @@ internal class BaseTestsRepository : IBaseTestsRepository
         _db.BaseTests.Update(test);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<BaseTest?> GetWithRatingsAsNoTracking(TestId testId) =>
+        await _db.BaseTests
+            .Include(t => EF.Property<ICollection<TestRating>>(t, "_ratings"))
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == testId);
+
+
+    public async Task<BaseTest?> GetWithRatings(TestId testId) =>
+        await _db.BaseTests
+            .Include(t => EF.Property<ICollection<TestRating>>(t, "_ratings"))
+            .FirstOrDefaultAsync(t => t.Id == testId);
 }

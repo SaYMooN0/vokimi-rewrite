@@ -36,6 +36,13 @@ internal static class ViewTestCommentsHandlers
         group.MapPost("/{commentId}/markAsSpoiler", MarkCommentAsSpoiler)
             .AuthenticationRequired()
             .WithCommentBelongsToTestCheck();
+        group.MapPost("/{commentId}/report", ReportComment)
+            .AuthenticationRequired()
+            .WithCommentBelongsToTestCheck()
+            .WithRequestValidation<RepostTestCommentRequest>();
+        group.MapDelete("/{commentId}/delete", DeleteComment)
+            .AuthenticationRequired()
+            .WithCommentBelongsToTestCheck();
 
         group.MapGet("/{commentId}/answers/list/{package}", ListCommentsAnswers)
             .WithCommentBelongsToTestCheck();
@@ -140,6 +147,32 @@ internal static class ViewTestCommentsHandlers
 
 
         MarkCommentAsSpoilerCommand command = new(commentId, userId);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOrNothing(result,
+            () => Results.Ok()
+        );
+    }
+    private static async Task<IResult> ReportComment(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+
+
+        ReportCommentCommand command = new(commentId, userId);
+        var result = await mediator.Send(command);
+        return CustomResults.FromErrOrNothing(result,
+            () => Results.Ok()
+        );
+    }
+    private static async Task<IResult> DeleteComment(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestCommentId commentId = httpContext.GetCommentTestIdFromRoute().GetSuccess();
+        AppUserId userId = httpContext.GetAuthenticatedUserId();
+
+
+        DeleteCommentCommand command = new(commentId, userId);
         var result = await mediator.Send(command);
         return CustomResults.FromErrOrNothing(result,
             () => Results.Ok()

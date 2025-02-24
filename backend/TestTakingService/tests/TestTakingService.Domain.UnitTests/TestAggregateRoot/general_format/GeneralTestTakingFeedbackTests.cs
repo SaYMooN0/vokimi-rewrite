@@ -13,7 +13,7 @@ public class GeneralTestTakingFeedbackTests
     ).GetSuccess();
 
     [Fact]
-    public void TestTaken_FeedbackDisabled_ReturnsError() {
+    public void TestTakenWithFeedbackLeft_WhenFeedbackDisabled_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest(feedbackOption: GeneralTestFeedbackOption.Disabled.Instance);
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
@@ -28,14 +28,14 @@ public class GeneralTestTakingFeedbackTests
             feedback,
             GeneralTestTestsConsts.DateTimeProviderInstance
         );
-    
+
         // Assert
         Assert.True(result.IsErr(out var err));
         Assert.Equal("Feedback for this test is disabled", err.Message);
     }
 
     [Fact]
-    public void TestTaken_MissingTestTakerIdNonAnonymousFeedback_ReturnsError() {
+    public void TestTakenWithNonAnonymousFeedbackLeft_WhenMissingTestTakerId_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
@@ -57,7 +57,7 @@ public class GeneralTestTakingFeedbackTests
     }
 
     [Fact]
-    public void TestTaken_AnonymityMismatch_AnonymousFeedback_ReturnsError() {
+    public void TestTakenWithAnonymousFeedbackLeft_WhenTestAcceptNonAnonymousOnly_ShouldReturnErr() {
         // Arrange
         var feedbackOption = GeneralTestFeedbackOption.Enabled.CreateNew(
             AnonymityValues.NonAnonymousOnly, "text text text text text", 56
@@ -84,7 +84,7 @@ public class GeneralTestTakingFeedbackTests
     }
 
     [Fact]
-    public void TestTaken_AnonymityMismatch_NonAnonymousFeedback_ReturnsError() {
+    public void TestTakenWithNonAnonymousFeedbackLeft_WhenTestAcceptAnonymousOnly_ShouldReturnErr() {
         // Arrange
         var feedbackOption = GeneralTestFeedbackOption.Enabled.CreateNew(
             AnonymityValues.AnonymousOnly, "text text text text text", 56
@@ -111,7 +111,7 @@ public class GeneralTestTakingFeedbackTests
     }
 
     [Fact]
-    public void TestTaken_FeedbackLengthTooShort_ReturnsError() {
+    public void TestTakenWithFeedbackLeft_WithEmptyFeedback_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
@@ -133,7 +133,7 @@ public class GeneralTestTakingFeedbackTests
     }
 
     [Fact]
-    public void TestTaken_FeedbackLengthTooLong_ReturnsError() {
+    public void TestTakenWithFeedbackLeft_WithTooLongFeedback_ShouldReturnErr() {
         // Arrange
         var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
 

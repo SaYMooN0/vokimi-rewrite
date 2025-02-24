@@ -48,3 +48,9 @@ public class CommentVoteId : EntityId
 
     public static CommentVoteId CreateNew() => new(Guid.CreateVersion7());
 }
+public class TestCommentReportId : EntityId
+{
+    public TestCommentReportId(Guid value) : base(value) { }
+
+    public static TestCommentReportId CreateNew() => new(Guid.CreateVersion7());
+}

@@ -1,14 +1,25 @@
-﻿namespace TestCatalogService.Domain.UnitTests.TestCommentAggregateRoots;
+﻿using SharedKernel.Common.errors;
+using TestCatalogService.Domain.Rules;
+using TestCatalogService.Domain.TestCommentAggregate;
+
+namespace TestCatalogService.Domain.UnitTests.TestCommentAggregateRoots;
 
 public class TestCommentCreationTests
 {
     [Fact]
-    public void Should_CreateNewComment_Successfully_WithoutAttachment() {
+    public void CreateNewComment_WithCorrectDataWithoutAttachment_ShouldSucceed() {
         //Act
-        var comment = TestCommentsTestsConsts.CreateNewComment(attachment: null);
+        var creationRes = TestComment.CreateNew(
+            TestCommentsTestsConsts.TestId,
+            TestCommentsTestsConsts.AuthorId,
+            TestCommentsTestsConsts.DefaultCommentText,
+            attachment: null,
+            markAsSpoiler: false,
+            TestCommentsTestsConsts.DateTimeProviderInstance
+        );
 
         // Assert
-
+        Assert.True(creationRes.IsSuccess(out var comment));
         Assert.Equal(TestCommentsTestsConsts.TestId, comment.TestId);
         Assert.Equal(TestCommentsTestsConsts.AuthorId, comment.AuthorId);
         Assert.Equal(TestCommentsTestsConsts.DefaultCommentText, comment.Text.GetSuccess());
@@ -20,5 +31,42 @@ public class TestCommentCreationTests
         Assert.False(comment.IsHidden);
         Assert.False(comment.IsDeleted);
         Assert.Null(comment.DeletedAt);
+    }
+
+    [Fact]
+    public void CreateNewComment_MarkedAsSpoiler_ShouldCreateMarkedAsSpoilerComment() {
+        //Act
+        var creationRes = TestComment.CreateNew(
+            TestCommentsTestsConsts.TestId,
+            TestCommentsTestsConsts.AuthorId,
+            TestCommentsTestsConsts.DefaultCommentText,
+            attachment: null,
+            markAsSpoiler: true,
+            TestCommentsTestsConsts.DateTimeProviderInstance
+        );
+
+        // Assert
+        Assert.True(creationRes.IsSuccess(out var comment));
+        Assert.True(comment.MarkedAsSpoiler);
+        Assert.False(comment.IsHidden);
+        Assert.False(comment.IsDeleted);
+        Assert.Null(comment.DeletedAt);
+    }
+
+    [Fact]
+    public void CreateNewComment_WithTooLongTest_ShouldReturnErr() {
+        //Act
+        var creationRes = TestComment.CreateNew(
+            TestCommentsTestsConsts.TestId,
+            TestCommentsTestsConsts.AuthorId,
+            new string('a', TestCommentRules.MaxCommentLength + 1),
+            attachment: null,
+            markAsSpoiler: true,
+            TestCommentsTestsConsts.DateTimeProviderInstance
+        );
+
+        // Assert
+        Assert.True(creationRes.IsErr(out var err));
+        Assert.Equal(err.Code, Err.ErrCodes.InvalidData);
     }
 }

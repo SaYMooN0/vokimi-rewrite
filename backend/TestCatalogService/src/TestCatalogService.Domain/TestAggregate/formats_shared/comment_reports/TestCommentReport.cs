@@ -1,0 +1,42 @@
+using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
+using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Rules;
+
+namespace TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
+
+public class TestCommentReport : Entity<TestCommentReportId>
+{
+    private TestCommentReport() { }
+
+    private TestId TestId { get; init; }
+    private AppUserId AuthorId { get; init; }
+    private TestCommentId CommentId { get; init; }
+    public CommentReportReason Reason { get; init; }
+    public string Text { get; init; }
+    public DateTime CreatedAt { get; init; }
+
+    public static ErrOr<TestCommentReport> CreateNew(
+        TestId testId,
+        AppUserId authorId,
+        TestCommentId commentId,
+        string text,
+        CommentReportReason reason,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        if (TestCommentReportRules.CheckReportTextForErr(text).IsErr(out var textErr)) {
+            return textErr;
+        }
+
+        return new TestCommentReport() {
+            Id = TestCommentReportId.CreateNew(),
+            TestId = testId,
+            AuthorId = authorId,
+            CommentId = commentId,
+            Reason = reason,
+            Text = text,
+            CreatedAt = dateTimeProvider.Now
+        };
+    }
+}

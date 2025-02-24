@@ -122,9 +122,20 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
         CurrentAnswersCount += 1;
     }
 
-    public ErrOrNothing Delete(IDateTimeProvider timeProvider) {
+    public ErrOrNothing Delete(AppUserId? deletingUser, IDateTimeProvider timeProvider) {
         if (IsDeleted) {
             return new Err("This comment is already deleted");
+        }
+
+        if (deletingUser is null) {
+            return Err.ErrFactory.NoAccess(
+                "To delete comment you need to be authenticated and be the author of the comment",
+                "Log in to delete comment"
+            );
+        }
+
+        if (deletingUser != AuthorId) {
+            return Err.ErrFactory.NoAccess("To delete comment you must be the author of the comment");
         }
 
         IsDeleted = true;
@@ -151,6 +162,22 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
 
         return Err.ErrFactory.NoAccess(
             "You don't have permission to mark this comment as spoiler. You must be either the author of the comment or creator of the test"
+        );
+    }
+
+    public async Task<ErrOrNothing> Hide(AppUserId userId, IBaseTestsRepository baseTestsRepository) {
+        var testCreatorIdRes = await baseTestsRepository.GetTestCreatorId(TestId);
+        if (testCreatorIdRes.IsErr(out var err)) {
+            return err;
+        }
+
+        if (testCreatorIdRes.GetSuccess() == userId) {
+            IsHidden = true;
+            return ErrOrNothing.Nothing;
+        }
+
+        return Err.ErrFactory.NoAccess(
+            "You don't have permission to hide this comment as spoiler. To hide comments you must bet the test creator"
         );
     }
 }
