@@ -7,7 +7,7 @@ using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestCommentAggregate;
 
-namespace TestCatalogService.Application.Tests.formats_shared.commands;
+namespace TestCatalogService.Application.Tests.formats_shared.commands.comments;
 
 public record class AddTestCommentCommand(
     TestId TestId,

@@ -3,7 +3,7 @@ using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Common.sort_options;
 
-namespace TestCatalogService.Domain.TestAggregate.formats_shared;
+namespace TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 internal static class TestRatingsQueryExtensions
 {

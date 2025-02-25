@@ -3,7 +3,7 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.Common;
 
-namespace TestCatalogService.Domain.TestAggregate.formats_shared;
+namespace TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 public class TestRating : Entity<TestRatingId>
 {

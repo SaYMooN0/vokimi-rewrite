@@ -15,6 +15,7 @@ using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
+using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 using TestCatalogService.Domain.TestCommentAggregate;
 
 namespace TestCatalogService.Domain.TestAggregate;
@@ -130,7 +131,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         var comment = creationRes.GetSuccess();
         await testCommentsRepository.Add(comment);
         _commentIds.Add(comment.Id);
-        _domainEvents.Add(new TestCommentToTestAddedEvent(comment.Id, comment.AuthorId));
+        _domainEvents.Add(new UserCreatedNewTestCommentEvent(comment.Id, comment.AuthorId));
         return comment;
     }
 
@@ -268,11 +269,12 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing AddCommentReport(
+    public ErrOrNothing ReportComment(
         AppUserId userId,
         TestCommentId commentId,
         string reportText,
-        CommentReportReason reportReason
+        CommentReportReason reportReason,
+        IDateTimeProvider dateTimeProvider
     ) {
         bool commentExists = _commentIds.Any(cId => cId == commentId);
         if (!commentExists) {
@@ -282,8 +284,15 @@ public abstract class BaseTest : AggregateRoot<TestId>
             );
         }
 
-        TestCommentReport report = TestCommentReport.CreateNew();
+        var creationRes =
+            TestCommentReport.CreateNew(Id, userId, commentId, reportText, reportReason, dateTimeProvider);
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
 
-        _domainEvents.Add(new TestCommentReportedEvent(commentId));
+        var report = creationRes.GetSuccess();
+        _commentReports.Add(report);
+        _domainEvents.Add(new TestCommentReportedEvent(report.Id, userId, commentId));
+        return ErrOrNothing.Nothing;
     }
 }

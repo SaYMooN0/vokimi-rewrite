@@ -13,7 +13,8 @@ internal record class TestCommentViewDataResponse(
     uint DownVotesCount,
     bool MarkedAsSpoiler,
     string Text,
-    string? AttachmentJson
+    string? AttachmentJson,
+    bool WasEdited
 ) : ITestCommentDataViewResponse
 {
     public static TestCommentViewDataResponse FromComment(TestComment comment, UserCommentVoteState userVote) => new(
@@ -26,7 +27,8 @@ internal record class TestCommentViewDataResponse(
         comment.DownVotesCount,
         comment.MarkedAsSpoiler,
         comment.Text.GetSuccess(),
-        comment.Attachment.GetSuccess()?.ToStorageString() ?? null
+        comment.Attachment.GetSuccess()?.ToStorageString() ?? null,
+        comment.LastEditTime is not null
     );
 
     private static string? GetAttachmentJson(TestCommentAttachment? attachment) =>

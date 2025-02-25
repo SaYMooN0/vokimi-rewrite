@@ -18,12 +18,16 @@ public class CheckCommentBelongsToTestEndpointFilter : IEndpointFilter
     }
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next) {
-        var commentIdRes = context.HttpContext.GetCommentTestIdFromRoute();
-        if (commentIdRes.IsErr(out var err)) {
-            return CustomResults.ErrorResponse(err);
+        var idStr = context.HttpContext.Request.RouteValues["commentId"]?.ToString() ?? "";
+        if (!Guid.TryParse(idStr, out var guid)) {
+            return CustomResults.ErrorResponse(Err.ErrFactory.InvalidData(
+                "Incorrect comment id provided",
+                "Couldn't parse comment id from route"
+            ));
         }
 
-        TestCommentId id = commentIdRes.GetSuccess();
+        TestCommentId id = new(guid);
+
         TestComment? comment = await _testCommentsRepository.GetById(id);
         if (comment is null) {
             return TestCatalogErrPresets.CommentNotFound(id);

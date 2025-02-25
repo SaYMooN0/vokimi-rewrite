@@ -5,6 +5,7 @@ using SharedKernel.Common.errors;
 using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 namespace TestCatalogService.Application.Tests.formats_shared.commands.ratings;
 

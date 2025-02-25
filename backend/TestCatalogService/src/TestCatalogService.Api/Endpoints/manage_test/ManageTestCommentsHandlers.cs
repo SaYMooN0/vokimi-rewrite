@@ -10,9 +10,9 @@ internal static class ManageTestCommentsHandlers
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
         
-        group.MapGet("/list/{package}", ListComments);
-        group.MapPost("/listFiltered/{package}", ListCommentsFiltered)
-            .WithRequestValidation<ListCommentsFilteredRequest>();
+
+        //search?
+
         //hide unhide
         //reported comments
         //mark as spoiler

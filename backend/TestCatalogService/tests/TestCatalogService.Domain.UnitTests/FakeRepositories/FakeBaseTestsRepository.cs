@@ -7,22 +7,22 @@ namespace TestCatalogService.Domain.UnitTests.FakeRepositories;
 
 public class FakeBaseTestsRepository : IBaseTestsRepository
 {
-    public Func<TestId, Task<ErrOr<AppUserId>>> GetTestCreatorIdFunc { get; set; } =
+    public Func<TestId, Task<ErrOr<AppUserId>>> GetTestCreatorIdFunc { get; init; } =
         (testId) => throw new Exception("Implementation not provided");
 
-    public Func<TestId, Task<BaseTest?>> GetByIdFunc { get; set; } =
-        (testId) => throw new Exception("Implementation not provided");
-
-
-    public Func<TestId, Task<BaseTest?>> GetWithRatingsAsNoTrackingFunc { get; set; } =
+    public Func<TestId, Task<BaseTest?>> GetByIdFunc { get; init; } =
         (testId) => throw new Exception("Implementation not provided");
 
 
-    public Func<TestId, Task<BaseTest?>> GetWithRatingsFunc { get; set; } =
+    public Func<TestId, Task<BaseTest?>> GetWithRatingsAsNoTrackingFunc { get; init; } =
         (testId) => throw new Exception("Implementation not provided");
 
 
-    public Func<BaseTest, Task> UpdateFunc { get; set; } =
+    public Func<TestId, Task<BaseTest?>> GetWithRatingsFunc { get; init; } =
+        (testId) => throw new Exception("Implementation not provided");
+
+
+    public Func<BaseTest, Task> UpdateFunc { get; init; } =
         (testId) => throw new Exception("Implementation not provided");
 
     public Task<BaseTest?> GetById(TestId testId) => GetByIdFunc(testId);

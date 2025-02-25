@@ -37,7 +37,10 @@ public static class HttpContextExtensions
     public static TestId GetTestIdFromRoute(this HttpContext context) {
         var testIdString = context.Request.RouteValues["testId"]?.ToString() ?? "";
         if (!Guid.TryParse(testIdString, out var testGuid)) {
-            throw new ErrCausedException(Err.ErrFactory.InvalidData("Invalid test id"));
+            throw new ErrCausedException(Err.ErrFactory.InvalidData(
+                "Invalid test id",
+                "Couldn't parse test id from route"
+            ));
         }
 
         return new TestId(testGuid);

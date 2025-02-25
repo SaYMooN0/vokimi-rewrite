@@ -7,22 +7,22 @@ using TestCatalogService.Domain.TestCommentAggregate;
 
 namespace TestCatalogService.Application.TestComments.commands;
 
-public record class VoteForCommentCommand(
+public record class VoteForTestCommentCommand(
     TestCommentId CommentId,
     AppUserId UserId,
     bool IsUp
 ) : IRequest<ErrOr<UserCommentVoteState>>;
 
-public class VoteForCommentCommandHandler : IRequestHandler<VoteForCommentCommand, ErrOr<UserCommentVoteState>>
+public class VoteForTestCommentCommandHandler : IRequestHandler<VoteForTestCommentCommand, ErrOr<UserCommentVoteState>>
 {
     private readonly ITestCommentsRepository _testCommentsRepository;
 
-    public VoteForCommentCommandHandler(ITestCommentsRepository testCommentsRepository) {
+    public VoteForTestCommentCommandHandler(ITestCommentsRepository testCommentsRepository) {
         _testCommentsRepository = testCommentsRepository;
     }
 
     public async Task<ErrOr<UserCommentVoteState>> Handle(
-        VoteForCommentCommand request,
+        VoteForTestCommentCommand request,
         CancellationToken cancellationToken
     ) {
         TestComment? comment = await _testCommentsRepository.GetById(request.CommentId);

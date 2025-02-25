@@ -20,13 +20,14 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     private ICollection<CommentVote> _votes { get; init; }
     public uint UpVotesCount { get; private set; }
     public uint DownVotesCount { get; private set; }
-    private string _text { get; init; }
+    private string _text { get; set; }
     private TestCommentAttachment? _attachment { get; init; }
     public DateTime CreatedAt { get; init; }
     public bool IsHidden { get; private set; }
     public bool MarkedAsSpoiler { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
+    public DateTime? LastEditTime { get; private set; }
 
     public ErrOr<string> Text =>
         IsDeleted ? Err.ErrFactory.NoAccess("Cannot access deleted comment text") : _text;
@@ -67,11 +68,16 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
             _attachment = attachment,
             CreatedAt = dateTimeProvider.Now,
             IsHidden = false,
-            MarkedAsSpoiler = markAsSpoiler
+            MarkedAsSpoiler = markAsSpoiler,
+            LastEditTime = null
         };
     }
 
     public ErrOr<UserCommentVoteState> Vote(AppUserId user, bool isUp) {
+        if (IsDeleted || IsHidden) {
+            return Err.ErrFactory.NoAccess("Cannot cannot vote for hidden or deleted comments");
+        }
+
         CommentVote? existingVote = _votes.FirstOrDefault(v => v.UserId == user);
         if (existingVote is null) {
             CommentVote vote = new(user, isUp);
@@ -145,6 +151,14 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     }
 
     public async Task<ErrOrNothing> MarkAsSpoiler(AppUserId userId, IBaseTestsRepository baseTestsRepository) {
+        if (MarkedAsSpoiler) {
+            return new Err("This comment is already marked as spoiler");
+        }
+
+        if (IsDeleted) {
+            return new Err("This comment is deleted. You cannot mark deleted comments as spoilers");
+        }
+
         if (AuthorId == userId) {
             MarkedAsSpoiler = true;
             return ErrOrNothing.Nothing;
@@ -166,6 +180,10 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     }
 
     public async Task<ErrOrNothing> Hide(AppUserId userId, IBaseTestsRepository baseTestsRepository) {
+        if (IsHidden) {
+            return new Err("This comment is already hidden");
+        }
+
         var testCreatorIdRes = await baseTestsRepository.GetTestCreatorId(TestId);
         if (testCreatorIdRes.IsErr(out var err)) {
             return err;
@@ -179,5 +197,26 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
         return Err.ErrFactory.NoAccess(
             "You don't have permission to hide this comment as spoiler. To hide comments you must bet the test creator"
         );
+    }
+
+    public ErrOrNothing Edit(AppUserId userId, string newText, IDateTimeProvider dateTimeProvider) {
+        if (IsDeleted) {
+            return new Err("You cannot edit this comment because it is deleted");
+        }
+
+        if (TestCommentRules.CheckCommentTextForErrs(newText).IsErr(out var err)) {
+            return err;
+        }
+
+        if (userId != AuthorId) {
+            return Err.ErrFactory.NoAccess(
+                "You don't have permission to edit this comment. To edit comment you must be its author"
+            );
+        }
+
+        _text = newText;
+        LastEditTime = dateTimeProvider.Now;
+        
+        return ErrOrNothing.Nothing;
     }
 }

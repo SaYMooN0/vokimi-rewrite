@@ -2,6 +2,7 @@ using ApiShared;
 using System.Text.Json.Serialization;
 using SharedUserRelationsContext;
 using TestCatalogService.Api.Endpoints.view_test;
+using TestCatalogService.Api.Endpoints.view_test.comments;
 using TestCatalogService.Application;
 using TestCatalogService.Infrastructure;
 
@@ -37,6 +38,8 @@ public class Program
     private static void MapHandlers(WebApplication app) {
         app.MapGroup("/viewTest/{testId}/").MapViewTestRootHandlers();
         app.MapGroup("/viewTest/{testId}/ratings").MapViewTestRatingsHandlers();
-        app.MapGroup("/viewTest/{testId}/comments").MapViewTestCommentsHandlers();
+        app.MapGroup("/viewTest/{testId}/comments").MapViewTestRootCommentsHandlers();
+        app.MapGroup("/viewTest/{testId}/{commentId}").MapViewTestCommentActionsHandlers();
+        app.MapGroup("/viewTest/{testId}/{commentId}/answers").MapViewTestCommentAnswersHandlers();
     }
 }

@@ -11,8 +11,9 @@ public class AppUser : AggregateRoot<AppUserId>
     private AppUser() { }
     private readonly HashSet<TestId> _createdTestIds;
     private readonly HashSet<TestId> _editorAssignedTests;
-    private HashSet<TestCommentId> _commentIds { get; init; }
-    private HashSet<TestRatingId> _ratingIds { get; init; }
+    private readonly HashSet<TestCommentId> _commentIds;
+    private readonly HashSet<TestRatingId> _ratingIds;
+    private readonly HashSet<TestCommentReportId> _commentReportIds;
     public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
     public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
     public ImmutableHashSet<TestCommentId> CommentIds => _commentIds.ToImmutableHashSet();
@@ -25,6 +26,7 @@ public class AppUser : AggregateRoot<AppUserId>
         _editorAssignedTests = [];
         _commentIds = [];
         _ratingIds = [];
+        _commentReportIds = [];
     }
 
     public void AddCreatedTest(TestId testId) =>
@@ -35,4 +37,5 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public void AddComment(TestCommentId commentId) => _commentIds.Add(commentId);
     public void AddRating(TestRatingId ratingId) => _ratingIds.Add(ratingId);
+    public void AddCommentReport(TestCommentReportId reportId) => _commentReportIds.Add(reportId);
 }

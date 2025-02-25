@@ -6,6 +6,7 @@ using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Common.filters;
 using TestCatalogService.Domain.Common.sort_options;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 namespace TestCatalogService.Api.Contracts.view_test.ratings;
 

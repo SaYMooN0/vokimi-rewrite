@@ -4,17 +4,17 @@ using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 
-namespace TestCatalogService.Application.Tests.formats_shared.events;
+namespace TestCatalogService.Application.AppUsers.events;
 
-internal class TestCommentToTestAddedEventHandler : INotificationHandler<TestCommentToTestAddedEvent>
+internal class UserCreatedNewTestCommentEventHandler : INotificationHandler<UserCreatedNewTestCommentEvent>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    public TestCommentToTestAddedEventHandler(IAppUsersRepository appUsersRepository) {
+    public UserCreatedNewTestCommentEventHandler(IAppUsersRepository appUsersRepository) {
         _appUsersRepository = appUsersRepository;
     }
 
 
-    public async Task Handle(TestCommentToTestAddedEvent notification, CancellationToken cancellationToken) {
+    public async Task Handle(UserCreatedNewTestCommentEvent notification, CancellationToken cancellationToken) {
         AppUser? appUser = await _appUsersRepository.GetById(notification.AuthorId);
         if (appUser is null) {
             throw new ErrCausedException(Err.ErrFactory.NotFound(

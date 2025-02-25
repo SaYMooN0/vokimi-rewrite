@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
+using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 namespace TestCatalogService.Api.Contracts.view_test.ratings;
 

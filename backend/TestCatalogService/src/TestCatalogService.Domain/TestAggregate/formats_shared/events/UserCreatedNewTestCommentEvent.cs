@@ -4,4 +4,4 @@ using TestCatalogService.Domain.Common;
 
 namespace TestCatalogService.Domain.TestAggregate.formats_shared.events;
 
-public record TestCommentToTestAddedEvent(TestCommentId CommentId, AppUserId AuthorId): IDomainEvent;
+public record UserCreatedNewTestCommentEvent(TestCommentId CommentId, AppUserId AuthorId): IDomainEvent;
