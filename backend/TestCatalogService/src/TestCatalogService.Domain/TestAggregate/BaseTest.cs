@@ -59,7 +59,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _ratings = [];
     }
 
-    public ImmutableHashSet<TestCommentId> CommentIds => _commentIds.ToImmutableHashSet();
+    public ImmutableHashSet<TestCommentReport> CommentReports => _commentReports.ToImmutableHashSet();
 
     private bool IsUserCreatorOrEditor(AppUserId userId) =>
         userId == CreatorId || EditorIds.Contains(userId);
@@ -284,8 +284,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
             );
         }
 
-        var creationRes =
-            TestCommentReport.CreateNew(Id, userId, commentId, reportText, reportReason, dateTimeProvider);
+        var creationRes = TestCommentReport.CreateNew(
+            Id, userId, commentId, reportText, reportReason, dateTimeProvider
+        );
         if (creationRes.IsErr(out var err)) {
             return err;
         }

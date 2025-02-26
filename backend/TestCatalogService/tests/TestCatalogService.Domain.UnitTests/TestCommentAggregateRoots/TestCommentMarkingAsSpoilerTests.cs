@@ -17,7 +17,7 @@ public class TestCommentMarkingAsSpoilerTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         FakeBaseTestsRepository baseTestsRepositoryMock = new();
@@ -26,7 +26,7 @@ public class TestCommentMarkingAsSpoilerTests
         var markAsSpoilerRes = await comment.MarkAsSpoiler(authorId, baseTestsRepositoryMock);
 
         // Assert
-        Assert.True(!markAsSpoilerRes.IsErr());
+        Assert.False(markAsSpoilerRes.IsErr());
         Assert.True(comment.MarkedAsSpoiler);
     }
 
@@ -37,11 +37,11 @@ public class TestCommentMarkingAsSpoilerTests
         var commentAuthorId = AppUserId.CreateNew();
         var comment = TestComment.CreateNew(
             TestCommentsTestsConsts.TestId,
-            commentAuthorId, // Автор комментария
+            commentAuthorId, 
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
@@ -52,7 +52,7 @@ public class TestCommentMarkingAsSpoilerTests
         var markAsSpoilerRes = await comment.MarkAsSpoiler(testCreatorId, baseTestsRepositoryMock);
 
         // Assert
-        Assert.True(!markAsSpoilerRes.IsErr());
+        Assert.False(markAsSpoilerRes.IsErr());
         Assert.True(comment.MarkedAsSpoiler);
     }
 
@@ -67,7 +67,7 @@ public class TestCommentMarkingAsSpoilerTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
@@ -93,16 +93,16 @@ public class TestCommentMarkingAsSpoilerTests
         var commentAuthorId = AppUserId.CreateNew();
         var comment = TestComment.CreateNew(
             TestCommentsTestsConsts.TestId,
-            commentAuthorId, 
+            commentAuthorId,
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
-        var baseTestsRepositoryMock = new FakeBaseTestsRepository();
-        baseTestsRepositoryMock.GetTestCreatorIdFunc = (testId) =>
-            Task.FromResult<ErrOr<AppUserId>>(Err.ErrFactory.NotFound("Not found"));
+        var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
+            GetTestCreatorIdFunc = (testId) => Task.FromResult<ErrOr<AppUserId>>(Err.ErrFactory.NotFound("Not found"))
+        };
 
         // Act
         var markAsSpoilerRes = await comment.MarkAsSpoiler(userId, baseTestsRepositoryMock);

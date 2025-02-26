@@ -11,9 +11,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration
     ) {
-        var dbConnetionString = configuration.GetConnectionString("UserRelationsDb")
+        var dbConnectionString = configuration.GetConnectionString("UserRelationsDb")
                                 ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<UserRelationsDbContext>(options => options.UseNpgsql(dbConnetionString));
+        services.AddDbContext<UserRelationsDbContext>(options => options.UseNpgsql(dbConnectionString));
         services.AddScoped<IUserFollowingsRepository, UserFollowingsRepository>();
 
         return services;

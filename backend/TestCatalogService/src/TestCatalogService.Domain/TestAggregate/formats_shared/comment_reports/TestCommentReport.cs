@@ -10,10 +10,10 @@ public class TestCommentReport : Entity<TestCommentReportId>
 {
     private TestCommentReport() { }
 
-    private TestId TestId { get; init; }
-    private AppUserId AuthorId { get; init; }
-    private TestCommentId CommentId { get; init; }
-    public CommentReportReason Reason { get; init; }
+    public TestId TestId { get; private init; }
+    public AppUserId AuthorId { get; private init; }
+    public TestCommentId CommentId { get; private init; }
+    public CommentReportReason Reason { get; private init; }
     public string Text { get; init; }
     public DateTime CreatedAt { get; init; }
 

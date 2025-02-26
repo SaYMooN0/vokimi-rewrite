@@ -15,14 +15,14 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
         var voteRes = comment.Vote(userId, true); 
 
         // Assert
-        Assert.True(!voteRes.IsErr());
+        Assert.False(voteRes.IsErr());
         Assert.Equal(UserCommentVoteState.Up, voteRes.GetSuccess());
         Assert.Equal((uint)1, comment.UpVotesCount);
         Assert.Equal((uint)0, comment.DownVotesCount);
@@ -37,7 +37,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, true);
 
@@ -45,7 +45,7 @@ public class TestCommentVotingTests
         var voteRes = comment.Vote(userId, true);
 
         // Assert
-        Assert.True(!voteRes.IsErr());
+        Assert.False(voteRes.IsErr());
         Assert.Equal(UserCommentVoteState.None, voteRes.GetSuccess());
         Assert.Equal((uint)0, comment.UpVotesCount);
         Assert.Equal((uint)0, comment.DownVotesCount);
@@ -60,7 +60,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, true); 
 
@@ -68,7 +68,7 @@ public class TestCommentVotingTests
         var voteRes = comment.Vote(userId, false);
 
         // Assert
-        Assert.True(!voteRes.IsErr());
+        Assert.False(voteRes.IsErr());
         Assert.Equal(UserCommentVoteState.Down, voteRes.GetSuccess());
         Assert.Equal((uint)0, comment.UpVotesCount);
         Assert.Equal((uint)1, comment.DownVotesCount);
@@ -83,7 +83,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, false);
 
@@ -91,7 +91,7 @@ public class TestCommentVotingTests
         var voteRes = comment.Vote(userId, true);
 
         // Assert
-        Assert.True(!voteRes.IsErr());
+        Assert.False(voteRes.IsErr());
         Assert.Equal(UserCommentVoteState.Up, voteRes.GetSuccess());
         Assert.Equal((uint)1, comment.UpVotesCount);
         Assert.Equal((uint)0, comment.DownVotesCount);

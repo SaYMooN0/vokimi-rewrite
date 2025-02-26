@@ -14,17 +14,17 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
         var deleteRes = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         );
 
         // Assert
-        Assert.True(!deleteRes.IsErr());
+        Assert.False(deleteRes.IsErr());
         Assert.True(comment.IsDeleted);
         Assert.NotNull(comment.DeletedAt);
         Assert.True(comment.Text.IsErr(out var textAccessErr));
@@ -42,21 +42,21 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
         var deleteRes1 = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         );
         var deleteRes2 = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         );
 
         // Assert
-        Assert.True(!deleteRes1.IsErr()); // First delete should succeed
+        Assert.False(deleteRes1.IsErr()); // First delete should succeed
         Assert.True(deleteRes2.IsErr(out var err)); // Second delete should fail
         Assert.Equal("This comment is already deleted", err.Message);
         Assert.True(comment.IsDeleted);
@@ -72,7 +72,7 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
     
         TestComment answer = TestComment.CreateNew(
@@ -81,15 +81,15 @@ public class TestCommentDeletingTests
             "This is an answer",
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.AddAnswer(answer);
 
         // Act
-        var deleteRes = comment.Delete(TestCommentsTestsConsts.AuthorId, TestCommentsTestsConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(TestCommentsTestsConsts.AuthorId, TestsSharedConsts.DateTimeProviderInstance);
 
         // Assert
-        Assert.True(!deleteRes.IsErr()); 
+        Assert.False(deleteRes.IsErr()); 
         Assert.True(comment.IsDeleted);
         Assert.Contains(answer, comment.Answers); // The answer should still be there
     }
@@ -102,11 +102,11 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
-        var deleteRes = comment.Delete(null, TestCommentsTestsConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(null, TestsSharedConsts.DateTimeProviderInstance);
 
         // Assert
         Assert.True(deleteRes.IsErr(out var err));
@@ -122,11 +122,11 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
-        var deleteRes = comment.Delete(otherUserId, TestCommentsTestsConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(otherUserId, TestsSharedConsts.DateTimeProviderInstance);
 
         // Assert
         Assert.True(deleteRes.IsErr(out var err));

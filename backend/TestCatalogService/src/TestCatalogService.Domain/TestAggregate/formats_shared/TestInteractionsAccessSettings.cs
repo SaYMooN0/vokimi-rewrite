@@ -18,8 +18,10 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
     public ResourceAvailabilitySetting AllowTagsSuggestions { get; private set; }
 
     public TestInteractionsAccessSettings(
-        AccessLevel testAccess, ResourceAvailabilitySetting allowRatings,
-        ResourceAvailabilitySetting allowComments, bool allowTestTakenPosts,
+        AccessLevel testAccess,
+        ResourceAvailabilitySetting allowRatings,
+        ResourceAvailabilitySetting allowComments,
+        bool allowTestTakenPosts,
         ResourceAvailabilitySetting allowTagsSuggestions
     ) {
         TestAccess = testAccess;

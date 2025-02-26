@@ -20,7 +20,7 @@ public class TestRating : Entity<TestRatingId>
         IDateTimeProvider dateTimeProvider
     ) {
         if (value > MaxValue) {
-            return new Err($"Test rating cannot be greater than {MaxValue}");
+            return Err.ErrFactory.InvalidData($"Test rating cannot be greater than {MaxValue}");
         }
 
         TestRating rating = new() {

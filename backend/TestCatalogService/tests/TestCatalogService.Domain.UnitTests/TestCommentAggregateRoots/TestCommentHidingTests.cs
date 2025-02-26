@@ -20,7 +20,7 @@ public class TestCommentHidingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {
@@ -31,7 +31,7 @@ public class TestCommentHidingTests
         var hideRes = await comment.Hide(creatorId, baseTestsRepositoryMock);
 
         // Assert
-        Assert.True(!hideRes.IsErr());
+        Assert.False(hideRes.IsErr());
         Assert.True(comment.IsHidden); 
     }
     [Fact]
@@ -46,7 +46,7 @@ public class TestCommentHidingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {
@@ -72,7 +72,7 @@ public class TestCommentHidingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestCommentsTestsConsts.DateTimeProviderInstance
+            TestsSharedConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {

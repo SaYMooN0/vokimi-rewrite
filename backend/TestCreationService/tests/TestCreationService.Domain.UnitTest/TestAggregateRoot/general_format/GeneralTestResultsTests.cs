@@ -72,7 +72,7 @@ public class GeneralTestResultsTests
         var deleteResult = test.DeleteResult(result.Id);
 
         // Assert
-        Assert.True(!deleteResult.IsErr(), "Expected result deletion to succeed.");
+        Assert.False(deleteResult.IsErr(), "Expected result deletion to succeed.");
         Assert.Empty(test.GetTestResultIdsWithNames());
         Assert.Contains(test.GetDomainEventsCopy(), e =>
             e is GeneralTestResultDeletedEvent ev && ev.ResultId == result.Id
@@ -108,7 +108,7 @@ public class GeneralTestResultsTests
         var updateResult = test.UpdateResult(result.Id, newName, newText, newImage);
 
         // Assert
-        Assert.True(!updateResult.IsErr(), "Expected result update to succeed.");
+        Assert.False(updateResult.IsErr(), "Expected result update to succeed.");
         var updatedResult = test.GetTestResultIdsWithNames()[result.Id];
         Assert.Equal(newName, updatedResult);
     }
