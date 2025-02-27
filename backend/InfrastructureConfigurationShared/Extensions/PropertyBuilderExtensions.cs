@@ -1,11 +1,9 @@
 ﻿using InfrastructureConfigurationShared.ValueConverters;
 using InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 using InfrastructureConfigurationShared.ValueConverters.general_format_test;
-using InfrastructureConfigurationShared.ValueСonverters.entity_id_related;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
-using TestCreationService.Infrastructure.Persistence.configurations.value_converters.general_format_test;
 
 namespace InfrastructureConfigurationShared.Extensions;
 
@@ -66,5 +64,12 @@ public static class PropertyBuilderExtensions
         return builder
             .HasConversion(new HexColorConverter())
             .HasMaxLength(7);
+    }
+    public static PropertyBuilder<TProperty> HasResourceAvailabilitySettingConversion<TProperty>(
+        this PropertyBuilder<TProperty> builder
+    ) where TProperty : class {
+        return builder
+            .HasConversion(new ResourceAvailabilitySettingConverter())
+            .HasMaxLength(20);
     }
 }

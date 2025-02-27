@@ -175,7 +175,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
             );
         }
 
-        var ratingCreationRes = TestRating.CreateNew(ratingValue, userId, Id, dateTimeProvider);
+        var ratingCreationRes = TestRating.CreateNew(ratingValue, userId,  dateTimeProvider);
         if (ratingCreationRes.IsErr(out var err)) {
             return err;
         }
@@ -285,7 +285,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         var creationRes = TestCommentReport.CreateNew(
-            Id, userId, commentId, reportText, reportReason, dateTimeProvider
+            userId, commentId, reportText, reportReason, dateTimeProvider
         );
         if (creationRes.IsErr(out var err)) {
             return err;

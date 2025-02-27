@@ -13,6 +13,7 @@ namespace TestCatalogService.Domain.TestAggregate.general_format;
 
 public class GeneralFormatTest : BaseTest
 {
+    private GeneralFormatTest(){}
     public override TestFormat Format => TestFormat.General;
     public ushort QuestionsCount { get; init; }
     public ushort ResultsCount { get; init; }

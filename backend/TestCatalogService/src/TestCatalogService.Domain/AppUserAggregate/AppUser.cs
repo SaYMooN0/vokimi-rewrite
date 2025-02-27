@@ -11,21 +11,15 @@ public class AppUser : AggregateRoot<AppUserId>
     private AppUser() { }
     private readonly HashSet<TestId> _createdTestIds;
     private readonly HashSet<TestId> _editorAssignedTests;
-    private readonly HashSet<TestCommentId> _commentIds;
     private readonly HashSet<TestRatingId> _ratingIds;
+    private readonly HashSet<TestCommentId> _commentIds;
     private readonly HashSet<TestCommentReportId> _commentReportIds;
-    public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
-    public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
-    public ImmutableHashSet<TestCommentId> CommentIds => _commentIds.ToImmutableHashSet();
-
-    public ImmutableHashSet<TestRatingId> RatingIds => _ratingIds.ToImmutableHashSet();
-
     public AppUser(AppUserId id) {
         Id = id;
         _createdTestIds = [];
         _editorAssignedTests = [];
-        _commentIds = [];
         _ratingIds = [];
+        _commentIds = [];
         _commentReportIds = [];
     }
 

@@ -22,7 +22,7 @@ public class TestCatalogDbContext : DbContext
     public DbSet<TestTag> TestTags { get; set; } = null!;
     public DbSet<TestComment> TestComments { get; set; } = null!;
 
-    public TestCatalogDbContext(DbContextOptions options, IPublisher publisher) : base(options) {
+    public TestCatalogDbContext(DbContextOptions<TestCatalogDbContext> options, IPublisher publisher) : base(options) {
         _publisher = publisher;
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TestCatalogService.Domain.TestCommentAggregate;
 using TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
 
-namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
+namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations.test_comments;
 
 public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
 {
@@ -27,7 +27,12 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
             .HasEntityIdConversion();
 
         builder
-            .Property(x => x.Attachment)
+            .Property(x => x.ParentCommentId)
+            .ValueGeneratedNever()
+            .HasNullableEntityIdConversion();
+        
+        builder
+            .Property<TestCommentAttachment?>("_attachment")
             .HasConversion(new TestCommentAttachmentConverter());
 
         builder.Ignore(x => x.Answers);
@@ -35,5 +40,10 @@ public class TestCommentsConfigurations : IEntityTypeConfiguration<TestComment>
             .HasMany<TestComment>("_answers")
             .WithOne()
             .HasForeignKey(x => x.ParentCommentId);
+        
+        builder
+            .HasMany<CommentVote>("_votes")
+            .WithOne()
+            .HasForeignKey("TestCommentId");
     }
 }

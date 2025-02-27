@@ -4,6 +4,9 @@ using InfrastructureConfigurationShared.Extensions;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.AppUserAggregate;
+using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
+using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
 
@@ -16,18 +19,30 @@ internal class AppUserConfigurations : IEntityTypeConfiguration<AppUser>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-        
-        builder.Ignore(x => x.CreatedTestIds);
+
         builder
             .Property<HashSet<TestId>>("_createdTestIds")
             .HasColumnName("CreatedTestIds")
             .HasEntityIdsHashSetConversion();
-        
 
-        builder.Ignore(x => x.EditorAssignedTests);
         builder
             .Property<HashSet<TestId>>("_editorAssignedTests")
             .HasColumnName("EditorAssignedTests")
+            .HasEntityIdsHashSetConversion();
+
+        builder
+            .Property<HashSet<TestRatingId>>("_ratingIds")
+            .HasColumnName("RatingIds")
+            .HasEntityIdsHashSetConversion();
+
+        builder
+            .Property<HashSet<TestCommentId>>("_commentIds")
+            .HasColumnName("CommentIds")
+            .HasEntityIdsHashSetConversion();
+
+        builder
+            .Property<HashSet<TestCommentReportId>>("_commentReportIds")
+            .HasColumnName("CommentReportIds")
             .HasEntityIdsHashSetConversion();
     }
 }

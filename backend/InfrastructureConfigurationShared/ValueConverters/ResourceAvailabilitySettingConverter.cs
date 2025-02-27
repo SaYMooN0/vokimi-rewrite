@@ -2,7 +2,7 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.tests.value_objects;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.value_converters;
+namespace InfrastructureConfigurationShared.ValueConverters;
 
 internal class ResourceAvailabilitySettingConverter : ValueConverter<ResourceAvailabilitySetting, string>
 {

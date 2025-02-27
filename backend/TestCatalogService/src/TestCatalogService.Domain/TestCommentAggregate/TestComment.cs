@@ -15,13 +15,13 @@ public class TestComment : AggregateRoot<TestCommentId>, ISoftDeleteableEntity
     public AppUserId AuthorId { get; init; }
     public TestId TestId { get; init; }
     public TestCommentId? ParentCommentId { get; init; }
+    private string _text { get; set; }
+    private TestCommentAttachment? _attachment { get; init; }
     private ICollection<TestComment> _answers { get; init; }
     public uint CurrentAnswersCount { get; private set; }
     private ICollection<CommentVote> _votes { get; init; }
     public uint UpVotesCount { get; private set; }
     public uint DownVotesCount { get; private set; }
-    private string _text { get; set; }
-    private TestCommentAttachment? _attachment { get; init; }
     public DateTime CreatedAt { get; init; }
     public bool IsHidden { get; private set; }
     public bool MarkedAsSpoiler { get; private set; }

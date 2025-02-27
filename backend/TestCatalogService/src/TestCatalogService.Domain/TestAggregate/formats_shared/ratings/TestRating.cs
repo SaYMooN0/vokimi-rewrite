@@ -10,13 +10,13 @@ public class TestRating : Entity<TestRatingId>
     private TestRating() { }
     public ushort Value { get; private set; }
     public AppUserId UserId { get; init; }
-    public TestId TestId { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime? LastUpdated { get; protected set; }
     public const ushort MaxValue = 5;
 
     public static ErrOr<TestRating> CreateNew(
-        ushort value, AppUserId userId, TestId testId,
+        ushort value,
+        AppUserId userId,
         IDateTimeProvider dateTimeProvider
     ) {
         if (value > MaxValue) {
@@ -27,7 +27,6 @@ public class TestRating : Entity<TestRatingId>
             Id = TestRatingId.CreateNew(),
             Value = value,
             UserId = userId,
-            TestId = testId,
             CreatedAt = dateTimeProvider.Now,
             LastUpdated = null
         };

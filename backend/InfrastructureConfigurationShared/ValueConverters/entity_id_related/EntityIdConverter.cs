@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 
-namespace InfrastructureConfigurationShared.ValueСonverters.entity_id_related;
+namespace InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 
 public class EntityIdConverter<TId> : ValueConverter<TId, Guid> where TId : EntityId
 {

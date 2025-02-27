@@ -8,7 +8,7 @@ public class CommentAttachmentImages : TestCommentAttachment
 {
     public ImmutableArray<string> Images { get; private init; }
 
-    private CommentAttachmentImages(ImmutableArray<string> images) {
+    public CommentAttachmentImages(ImmutableArray<string> images) {
         Images = images;
     }
 

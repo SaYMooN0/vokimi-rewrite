@@ -10,7 +10,7 @@ public class TestRatingsTests
 {
     private readonly AppUserId _testUserId = new(Guid.NewGuid());
 
-    private async Task<BaseTest> CreateTestWithRatings(Dictionary<AppUserId, ushort>? initialRatings = null) {
+    private BaseTest CreateTestWithRatings(Dictionary<AppUserId, ushort>? initialRatings = null) {
         var test = TestsSharedTestsConsts.CreateBaseTest();
 
         if (initialRatings != null) {
@@ -24,10 +24,10 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public async Task AddRating_ShouldReturnError_WhenUserHasAlreadyRated() {
+    public void AddRating_ShouldReturnError_WhenUserHasAlreadyRated() {
         // Arrange
         var initialRatings = new Dictionary<AppUserId, ushort> { { _testUserId, 4 } };
-        var test = await CreateTestWithRatings(initialRatings);
+        var test = CreateTestWithRatings(initialRatings);
 
         // Act
         var result = test.AddRating(_testUserId, 5, TestsSharedConsts.DateTimeProviderInstance);
@@ -38,9 +38,9 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public async Task AddRating_ShouldReturnError_WhenRatingIsOutOfRange() {
+    public void AddRating_ShouldReturnError_WhenRatingIsOutOfRange() {
         // Arrange
-        var test = await CreateTestWithRatings();
+        var test = CreateTestWithRatings();
 
         // Act
         var invalidHighRating = test.AddRating(_testUserId, 6, TestsSharedConsts.DateTimeProviderInstance);
@@ -51,9 +51,9 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public async Task AddRating_ShouldAddRatingAndRaiseEvent_WhenSuccessful() {
+    public void AddRating_ShouldAddRatingAndRaiseEvent_WhenSuccessful() {
         // Arrange
-        var test = await CreateTestWithRatings();
+        var test =  CreateTestWithRatings();
         ushort ratingValue = 5;
 
         // Act

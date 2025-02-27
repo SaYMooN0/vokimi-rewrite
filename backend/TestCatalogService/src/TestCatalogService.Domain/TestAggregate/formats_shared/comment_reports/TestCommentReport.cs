@@ -10,7 +10,6 @@ public class TestCommentReport : Entity<TestCommentReportId>
 {
     private TestCommentReport() { }
 
-    public TestId TestId { get; private init; }
     public AppUserId AuthorId { get; private init; }
     public TestCommentId CommentId { get; private init; }
     public CommentReportReason Reason { get; private init; }
@@ -18,7 +17,6 @@ public class TestCommentReport : Entity<TestCommentReportId>
     public DateTime CreatedAt { get; init; }
 
     public static ErrOr<TestCommentReport> CreateNew(
-        TestId testId,
         AppUserId authorId,
         TestCommentId commentId,
         string text,
@@ -31,7 +29,6 @@ public class TestCommentReport : Entity<TestCommentReportId>
 
         return new TestCommentReport() {
             Id = TestCommentReportId.CreateNew(),
-            TestId = testId,
             AuthorId = authorId,
             CommentId = commentId,
             Reason = reason,
