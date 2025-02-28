@@ -1,7 +1,7 @@
 using ApiShared.extensions;
-using TestCatalogService.Api.Extensions;
+using TestManagingService.Api.Extensions;
 
-namespace TestCatalogService.Api.Endpoints.manage_test;
+namespace TestManagingService.Api.Endpoints;
 
 internal static class ManageTestTagsHandlers
 {
@@ -10,8 +10,10 @@ internal static class ManageTestTagsHandlers
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
         
-        
-        return group;
+        //accept 
+        //decline
+        //ban
+        //unban
         return group;
     }
 

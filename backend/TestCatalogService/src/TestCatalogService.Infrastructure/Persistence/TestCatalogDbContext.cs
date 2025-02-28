@@ -30,7 +30,7 @@ public class TestCatalogDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
-    public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
         var domainEvents = ChangeTracker.Entries<IAggregateRoot>()
            .Select(entry => entry.Entity.PopDomainEvents())
            .SelectMany(x => x)

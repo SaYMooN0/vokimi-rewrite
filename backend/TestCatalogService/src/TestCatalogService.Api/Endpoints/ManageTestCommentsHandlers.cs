@@ -1,7 +1,7 @@
 using ApiShared.extensions;
 using TestCatalogService.Api.Extensions;
 
-namespace TestCatalogService.Api.Endpoints.manage_test;
+namespace TestCatalogService.Api.Endpoints;
 
 internal static class ManageTestCommentsHandlers
 {

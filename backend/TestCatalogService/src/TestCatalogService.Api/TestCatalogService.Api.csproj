@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TestCatalogService.Infrastructure\TestCatalogService.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\manage_test\" />
+  </ItemGroup>
+
 </Project>

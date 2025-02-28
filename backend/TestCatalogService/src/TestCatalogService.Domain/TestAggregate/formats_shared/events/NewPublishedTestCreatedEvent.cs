@@ -10,3 +10,4 @@ public record class NewPublishedTestCreatedEvent(
     ImmutableHashSet<AppUserId> EditorIds
 ) : IDomainEvent;
 
+        

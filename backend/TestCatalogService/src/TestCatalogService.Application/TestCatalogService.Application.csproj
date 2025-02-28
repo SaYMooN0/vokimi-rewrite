@@ -8,6 +8,6 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\TestCatalogService.Domain\TestCatalogService.Domain.csproj" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
 	</ItemGroup>
 </Project>
