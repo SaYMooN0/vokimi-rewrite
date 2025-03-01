@@ -364,16 +364,4 @@ FodyWeavers.xsd
 /backend/.idea/.idea.backend/.idea
 
 
-/backend/AuthenticationService/src/AuthenticationService.Api/appsettings.json
-/backend/AuthenticationService/src/AuthenticationService.Api/appsettings.Development.json
-/backend/TestCreationService/src/TestCreationService.Api/appsettings.json
-/backend/TestCreationService/src/TestCreationService.Api/appsettings.Development.json
-/backend/TestCatalogService/src/TestCatalogService.Api/appsettings.json
-/backend/TestCatalogService/src/TestCatalogService.Api/appsettings.Development.json
-/backend/TestTakingService/src/TestTakingService.Api/appsettings.json
-/backend/TestTakingService/src/TestTakingService.Api/appsettings.Development.json
-/backend/TestManagingService/src/TestManagingService.Api/appsettings.json
-/backend/TestManagingService/src/TestManagingService.Api/appsettings.Development.json
-
-/backend/DBSeeder/appsettings.json
-
+**/appsettings*.json
