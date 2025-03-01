@@ -24,7 +24,7 @@ internal static class GeneralTestTakingValidatorHelper
 
         if (testTakerId is null && feedbackData.LeftAnonymously == false) {
             return new Err(
-                "The feedback was left non-anonymously, but the user ID is not provided",
+                "The feedback was left non-anonymously, but the user Id is not provided",
                 details: "Ensure that you are logged in"
             );
         }

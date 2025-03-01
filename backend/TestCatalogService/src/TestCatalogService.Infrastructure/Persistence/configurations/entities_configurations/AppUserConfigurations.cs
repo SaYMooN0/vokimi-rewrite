@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using InfrastructureConfigurationShared.Extensions;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.Common;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
-using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
 
@@ -38,11 +35,6 @@ internal class AppUserConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .Property<HashSet<TestCommentId>>("_commentIds")
             .HasColumnName("CommentIds")
-            .HasEntityIdsHashSetConversion();
-
-        builder
-            .Property<HashSet<TestCommentReportId>>("_commentReportIds")
-            .HasColumnName("CommentReportIds")
             .HasEntityIdsHashSetConversion();
     }
 }

@@ -1,11 +1,11 @@
 using MediatR;
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using TestCatalogService.Domain.Common;
+using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.Common.interfaces.repositories.tests;
 using TestCatalogService.Domain.TestAggregate;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
 
 namespace TestCatalogService.Application.Tests.formats_shared.commands.comments;
 
@@ -20,14 +20,17 @@ public record ReportTestCommentCommand(
 public class ReportTestCommentCommandHandler : IRequestHandler<ReportTestCommentCommand, ErrOrNothing>
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ITestCommentsRepository _testCommentsRepository;
+    private readonly IAppUsersRepository _appUsersRepository;
 
     public ReportTestCommentCommandHandler(
         IBaseTestsRepository baseTestsRepository,
-        IDateTimeProvider dateTimeProvider
+        ITestCommentsRepository testCommentsRepository,
+        IAppUsersRepository appUsersRepository
     ) {
         _baseTestsRepository = baseTestsRepository;
-        _dateTimeProvider = dateTimeProvider;
+        _testCommentsRepository = testCommentsRepository;
+        _appUsersRepository = appUsersRepository;
     }
 
     public async Task<ErrOrNothing> Handle(ReportTestCommentCommand request, CancellationToken cancellationToken) {
@@ -36,12 +39,15 @@ public class ReportTestCommentCommandHandler : IRequestHandler<ReportTestComment
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
 
-        var reportRes = test.ReportComment(
+        ErrOrNothing reportRes = await test.ReportComment(
             request.UserId,
             request.CommentId,
             request.ReportText,
-            request.ReportReason, _dateTimeProvider
+            request.ReportReason,
+            _testCommentsRepository,
+            _appUsersRepository
         );
+        
         if (reportRes.IsErr(out var err)) {
             return err;
         }

@@ -13,14 +13,12 @@ public class AppUser : AggregateRoot<AppUserId>
     private readonly HashSet<TestId> _editorAssignedTests;
     private readonly HashSet<TestRatingId> _ratingIds;
     private readonly HashSet<TestCommentId> _commentIds;
-    private readonly HashSet<TestCommentReportId> _commentReportIds;
     public AppUser(AppUserId id) {
         Id = id;
         _createdTestIds = [];
         _editorAssignedTests = [];
         _ratingIds = [];
         _commentIds = [];
-        _commentReportIds = [];
     }
 
     public void AddCreatedTest(TestId testId) =>
@@ -31,5 +29,4 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public void AddComment(TestCommentId commentId) => _commentIds.Add(commentId);
     public void AddRating(TestRatingId ratingId) => _ratingIds.Add(ratingId);
-    public void AddCommentReport(TestCommentReportId reportId) => _commentReportIds.Add(reportId);
 }

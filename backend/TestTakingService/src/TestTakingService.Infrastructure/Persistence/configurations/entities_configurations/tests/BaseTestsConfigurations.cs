@@ -35,11 +35,5 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property<HashSet<TestTakenRecordId>>("_testTakenRecordIds")
             .HasColumnName("TestTakenRecordIds")
             .HasEntityIdsHashSetConversion();
-        
-        builder.Ignore(x => x.FeedbackRecordIds);
-        builder
-            .Property<HashSet<TestFeedbackRecordId>>("_feedbackRecordIds")
-            .HasColumnName("FeedbackRecordIds")
-            .HasEntityIdsHashSetConversion();
     }
 }

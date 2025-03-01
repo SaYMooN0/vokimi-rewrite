@@ -1,4 +1,5 @@
-﻿using TestCatalogService.Domain.TestTagAggregate;
+﻿using SharedKernel.Common.domain.entity;
+using TestCatalogService.Domain.TestTagAggregate;
 
 namespace TestCatalogService.Domain.Common.interfaces.repositories;
 

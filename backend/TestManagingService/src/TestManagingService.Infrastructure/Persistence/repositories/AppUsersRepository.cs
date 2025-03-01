@@ -1,5 +1,6 @@
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories;
+using TestManagingService.Domain.AppUserAggregate;
 
 namespace TestManagingService.Infrastructure.Persistence.repositories;
 

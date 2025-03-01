@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.Common.domain;
-using System.Collections.Immutable;
 using SharedKernel.Common.domain.entity;
 
-namespace TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
+namespace InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 internal class EntityIdsImmutableArrayConverter<T> : ValueConverter<ImmutableArray<T>, string> where T : EntityId
 {
     public EntityIdsImmutableArrayConverter()

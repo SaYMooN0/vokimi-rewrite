@@ -18,9 +18,8 @@ internal class NewPublishedTestCreatedEventHandler : INotificationHandler<NewPub
     public async Task Handle(NewPublishedTestCreatedEvent notification, CancellationToken cancellationToken) {
         AppUser? creator = await _appUsersRepository.GetById(notification.CreatorId);
         if (creator is null) {
-            throw new ErrCausedException(
-                Err.ErrFactory.NotFound("User that is meant to be the creator was not found")
-            );
+            creator = new AppUser(notification.CreatorId);
+            await _appUsersRepository.Add(creator);
         }
 
         creator.AddCreatedTest(notification.TestId);

@@ -14,8 +14,3 @@ public class GeneralTestTakenRecordQuestionDetailsId : EntityId
     public GeneralTestTakenRecordQuestionDetailsId(Guid value) : base(value) { }
     public static GeneralTestTakenRecordQuestionDetailsId CreateNew() => new(Guid.CreateVersion7());
 }
-public class TestFeedbackRecordId : EntityId
-{
-    public TestFeedbackRecordId(Guid value) : base(value) { }
-    public static TestFeedbackRecordId CreateNew() => new(Guid.CreateVersion7());
-}

@@ -1,7 +1,6 @@
 using ApiShared.interfaces;
+using SharedKernel.Common.common_enums;
 using TestCatalogService.Domain.Rules;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
-
 namespace TestCatalogService.Api.Contracts.view_test.comments;
 
 public class ReportTestCommentRequest : IRequestWithValidationNeeded

@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestCatalogService.Domain.Common;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.value_converters;
 

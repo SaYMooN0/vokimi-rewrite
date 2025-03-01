@@ -8,6 +8,7 @@ namespace TestCatalogService.Infrastructure.Persistence.repositories;
 internal class AppUsersRepository : IAppUsersRepository
 {
     private TestCatalogDbContext _db;
+
     public AppUsersRepository(TestCatalogDbContext db) {
         _db = db;
     }
@@ -23,5 +24,10 @@ internal class AppUsersRepository : IAppUsersRepository
     public async Task Update(AppUser appUser) {
         _db.AppUsers.Update(appUser);
         await _db.SaveChangesAsync();
+    }
+
+    public async Task<bool> DoesUserExist(AppUserId appUserId) {
+        var user = await _db.AppUsers.FindAsync(appUserId);
+        return user is not null;
     }
 }

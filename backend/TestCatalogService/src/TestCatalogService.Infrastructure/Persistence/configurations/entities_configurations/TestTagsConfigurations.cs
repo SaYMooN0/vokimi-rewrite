@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestCatalogService.Domain.Common;
+using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.TestTagAggregate;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;

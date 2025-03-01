@@ -9,15 +9,6 @@ namespace TestCatalogService.Infrastructure.Persistence.configurations.extension
 
 internal static class PropertyBuilderExtensions
 {
-    public static PropertyBuilder<ImmutableArray<T>> HasEntityIdsImmutableArrayConversion<T>(
-        this PropertyBuilder<ImmutableArray<T>> builder) where T : EntityId {
-        builder.HasConversion(
-            new EntityIdsImmutableArrayConverter<T>(),
-            new EntityIdsImmutableArrayComparer<T>()
-        );
-        return builder;
-    }
-
     public static PropertyBuilder<ImmutableHashSet<TestTagId>> HasTagIdsImmutableHashSetConversion(
         this PropertyBuilder<ImmutableHashSet<TestTagId>> builder) {
         builder.HasConversion(

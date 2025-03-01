@@ -8,5 +8,6 @@ public interface IAppUsersRepository
     public Task<AppUser?> GetById(AppUserId appUserId);
     public Task Add(AppUser appUser);
     public Task Update(AppUser appUser);
+    public Task<bool> DoesUserExist(AppUserId appUserId);
     
 }

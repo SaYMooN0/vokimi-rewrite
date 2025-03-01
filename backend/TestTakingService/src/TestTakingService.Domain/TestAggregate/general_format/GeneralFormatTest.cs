@@ -149,6 +149,7 @@ public class GeneralFormatTest : BaseTest
             feedback.FeedbackText, feedback.LeftAnonymously
         );
         _domainEvents.Add(feedbackLeftEvent);
+        
     }
 
     private GeneralTestResult GetResultWithMaxPoints(Dictionary<GeneralTestResultId, ushort> resultsWithPoints) {

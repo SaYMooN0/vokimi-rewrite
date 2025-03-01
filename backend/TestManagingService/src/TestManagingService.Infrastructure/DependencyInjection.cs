@@ -40,6 +40,8 @@ public static class DependencyInjection
             ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestManagingDbContext>(options => options.UseNpgsql(dbConnetionString));
 
+        services.AddScoped<IBaseTestFeedbackRecordsRepository, BaseTestFeedbackRecordsRepository>();
+        services.AddScoped<IGeneralTestFeedbackRecordsRepository, GeneralTestFeedbackRecordsRepository>();
         // services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         // services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         // services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();

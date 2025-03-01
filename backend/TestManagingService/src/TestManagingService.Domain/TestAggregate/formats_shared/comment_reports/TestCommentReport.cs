@@ -1,6 +1,7 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
+using TestManagingService.Domain.Common;
 
 namespace TestManagingService.Domain.TestAggregate.formats_shared.comment_reports;
 
@@ -21,10 +22,6 @@ public class TestCommentReport : Entity<TestCommentReportId>
         CommentReportReason reason,
         IDateTimeProvider dateTimeProvider
     ) {
-        if (TestCommentReportRules.CheckReportTextForErr(text).IsErr(out var textErr)) {
-            return textErr;
-        }
-
         return new TestCommentReport() {
             Id = TestCommentReportId.CreateNew(),
             AuthorId = authorId,

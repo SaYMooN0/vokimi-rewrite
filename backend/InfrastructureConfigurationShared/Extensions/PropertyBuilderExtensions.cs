@@ -1,4 +1,5 @@
-﻿using InfrastructureConfigurationShared.ValueConverters;
+﻿using System.Collections.Immutable;
+using InfrastructureConfigurationShared.ValueConverters;
 using InfrastructureConfigurationShared.ValueConverters.entity_id_related;
 using InfrastructureConfigurationShared.ValueConverters.general_format_test;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -71,5 +72,13 @@ public static class PropertyBuilderExtensions
         return builder
             .HasConversion(new ResourceAvailabilitySettingConverter())
             .HasMaxLength(20);
+    }
+    public static PropertyBuilder<ImmutableArray<T>> HasEntityIdsImmutableArrayConversion<T>(
+        this PropertyBuilder<ImmutableArray<T>> builder) where T : EntityId {
+        builder.HasConversion(
+            new EntityIdsImmutableArrayConverter<T>(),
+            new EntityIdsImmutableArrayComparer<T>()
+        );
+        return builder;
     }
 }

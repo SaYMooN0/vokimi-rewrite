@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestCatalogService.Domain.TestAggregate;
 using InfrastructureConfigurationShared.Extensions;
-using TestCatalogService.Domain.Common;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
+using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 using TestCatalogService.Infrastructure.Persistence.configurations.extensions;
 
@@ -58,11 +57,6 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
             .Property<HashSet<TestCommentId>>("_commentIds")
             .HasColumnName("CommentIds")
             .HasEntityIdsHashSetConversion();
-
-        builder
-            .HasMany<TestCommentReport>("_commentReports")
-            .WithOne()
-            .HasForeignKey("TestId");
         
         builder
             .HasMany<TestRating>("_ratings")

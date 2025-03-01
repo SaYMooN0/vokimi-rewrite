@@ -1,5 +1,5 @@
-﻿using SharedKernel.Common.errors;
-using TestCatalogService.Domain.Common;
+﻿using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
 
 namespace TestCatalogService.Api.Extensions;
 

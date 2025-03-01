@@ -1,9 +1,9 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
+using TestManagingService.Domain.TestAggregate.formats_shared.comment_reports;
 
-namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations.tests;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.tests;
 
 internal class TestCommentReportsConfigurations : IEntityTypeConfiguration<TestCommentReport>
 {

@@ -28,7 +28,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Styles = styles;
         _takenByUserIds = [];
         _testTakenRecordIds = [];
-        _feedbackRecordIds = [];
     }
 
     public abstract TestFormat Format { get; }
@@ -38,10 +37,8 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public TestStylesSheet Styles { get; init; }
     protected readonly HashSet<AppUserId> _takenByUserIds;
     protected readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
-    protected readonly HashSet<TestFeedbackRecordId> _feedbackRecordIds;
     public ImmutableHashSet<AppUserId> TakenByUserIds => _takenByUserIds.ToImmutableHashSet();
     public ImmutableHashSet<TestTakenRecordId> TestTakenRecordIds => _testTakenRecordIds.ToImmutableHashSet();
-    public ImmutableHashSet<TestFeedbackRecordId> FeedbackRecordIds => _feedbackRecordIds.ToImmutableHashSet();
 
 
     private const string NoAccessPrivateMessage =

@@ -1,4 +1,4 @@
-﻿using TestCatalogService.Domain.Common;
+﻿using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestTagAggregate;
 

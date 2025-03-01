@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
@@ -13,7 +14,7 @@ namespace TestCatalogService.Domain.TestAggregate.general_format;
 
 public class GeneralFormatTest : BaseTest
 {
-    private GeneralFormatTest(){}
+    private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
     public ushort QuestionsCount { get; init; }
     public ushort ResultsCount { get; init; }
@@ -50,6 +51,10 @@ public class GeneralFormatTest : BaseTest
     ) {
         if (string.IsNullOrWhiteSpace(name)) {
             return Err.ErrFactory.InvalidData("Name is required");
+        }
+
+        if (tags.Count > TestTagsRules.MaxTagsForTestCount) {
+            tags = tags.Take(TestTagsRules.MaxTagsForTestCount).ToImmutableHashSet();
         }
 
         GeneralFormatTest newTest = new(

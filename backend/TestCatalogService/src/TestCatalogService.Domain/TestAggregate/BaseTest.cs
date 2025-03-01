@@ -1,22 +1,22 @@
 ﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.tests;
 using System.Collections.Immutable;
+using SharedKernel.Common;
 using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedUserRelationsContext.repository;
-using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Common.filters;
 using TestCatalogService.Domain.Common.interfaces.repositories;
+using TestCatalogService.Domain.Rules;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestAggregate.formats_shared.ratings;
 using TestCatalogService.Domain.TestCommentAggregate;
+using TestCatalogService.Domain.TestTagAggregate.events;
 
 namespace TestCatalogService.Domain.TestAggregate;
 
@@ -34,7 +34,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public ImmutableHashSet<TestTagId> Tags { get; protected set; }
     public TestInteractionsAccessSettings InteractionsAccessSettings { get; protected init; }
     private HashSet<TestCommentId> _commentIds { get; init; }
-    private ICollection<TestCommentReport> _commentReports { get; init; }
     private ICollection<TestRating> _ratings { get; init; }
 
     protected BaseTest(
@@ -55,11 +54,8 @@ public abstract class BaseTest : AggregateRoot<TestId>
         Tags = tags;
         InteractionsAccessSettings = interactionsAccessSettings;
         _commentIds = [];
-        _commentReports = [];
         _ratings = [];
     }
-
-    public ImmutableHashSet<TestCommentReport> CommentReports => _commentReports.ToImmutableHashSet();
 
     private bool IsUserCreatorOrEditor(AppUserId userId) =>
         userId == CreatorId || EditorIds.Contains(userId);
@@ -175,7 +171,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
             );
         }
 
-        var ratingCreationRes = TestRating.CreateNew(ratingValue, userId,  dateTimeProvider);
+        var ratingCreationRes = TestRating.CreateNew(ratingValue, userId, dateTimeProvider);
         if (ratingCreationRes.IsErr(out var err)) {
             return err;
         }
@@ -269,31 +265,55 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing ReportComment(
+    public async Task<ErrOrNothing> ReportComment(
         AppUserId userId,
         TestCommentId commentId,
         string reportText,
         CommentReportReason reportReason,
-        IDateTimeProvider dateTimeProvider
+        ITestCommentsRepository testCommentsRepository,
+        IAppUsersRepository appUsersRepository
     ) {
-        bool commentExists = _commentIds.Any(cId => cId == commentId);
-        if (!commentExists) {
+        if (TestCommentReportRules.CheckReportTextForErr(reportText).IsErr(out var err)) {
+            return err;
+        }
+
+        if (!_commentIds.Any(cId => cId == commentId)) {
             return Err.ErrFactory.NotFound(
                 "Cannot report comment because this test does have this comment",
                 details: $"Comment with id {commentId} has not been found in the test with id {Id}"
             );
         }
 
-        var creationRes = TestCommentReport.CreateNew(
-            userId, commentId, reportText, reportReason, dateTimeProvider
-        );
-        if (creationRes.IsErr(out var err)) {
-            return err;
+        TestComment? comment = await testCommentsRepository.GetById(commentId);
+        if (comment is null) {
+            return TestCatalogErrPresets.CommentNotFound(commentId);
         }
 
-        var report = creationRes.GetSuccess();
-        _commentReports.Add(report);
-        _domainEvents.Add(new TestCommentReportedEvent(report.Id, userId, commentId));
+        if (comment.IsDeleted) {
+            return new Err(
+                "Deleted comment cannot be reported",
+                details:
+                $"Comment id: {comment.Id}. Deleted at: {comment.DeletedAt?.ToShortDateString() ?? "(Not set)"}"
+            );
+        }
+
+        if (!await appUsersRepository.DoesUserExist(userId)) {
+            return Err.ErrFactory.NotFound(
+                "User that created the comment report was not found",
+                $"User id: {userId}"
+            );
+        }
+
+        _domainEvents.Add(new TestCommentReportedEvent(Id, userId, commentId, reportText, reportReason));
         return ErrOrNothing.Nothing;
+    }
+
+    public void UpdateTags(HashSet<TestTagId> newTags) {
+        if (newTags.Count > TestTagsRules.MaxTagsForTestCount) {
+            newTags = newTags.Take(TestTagsRules.MaxTagsForTestCount).ToHashSet();
+        }
+
+        _domainEvents.Add(new TestTagsChangedEvent(Id, OldTags: Tags, newTags));
+        Tags = newTags.ToImmutableHashSet();
     }
 }

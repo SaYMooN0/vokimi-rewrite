@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories;
 using TestManagingService.Domain.AppUserAggregate;
+using TestManagingService.Domain.TestAggregate.formats_shared.events;
 
 namespace TestManagingService.Application.AppUsers.integration_events;
 
@@ -16,7 +17,8 @@ internal class NewPublishedTestCreatedEventHandler : INotificationHandler<NewPub
     public async Task Handle(NewPublishedTestCreatedEvent notification, CancellationToken cancellationToken) {
         AppUser? creator = await _appUsersRepository.GetById(notification.CreatorId);
         if (creator is null) {
-            ..create new user;
+            creator = new AppUser(notification.CreatorId);
+            await _appUsersRepository.Add(creator);
         }
 
         creator.AddCreatedTest(notification.TestId);

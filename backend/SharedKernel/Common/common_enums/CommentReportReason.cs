@@ -1,4 +1,4 @@
-namespace TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
+namespace SharedKernel.Common.common_enums;
 
 public enum CommentReportReason
 {
