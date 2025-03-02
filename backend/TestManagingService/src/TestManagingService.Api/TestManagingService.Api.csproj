@@ -12,7 +12,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\ApiShared\ApiShared.csproj" />
-      <ProjectReference Include="..\TestManagingService.Application\TestManagingService.Application.csproj" />
       <ProjectReference Include="..\TestManagingService.Infrastructure\TestManagingService.Infrastructure.csproj" />
     </ItemGroup>
 

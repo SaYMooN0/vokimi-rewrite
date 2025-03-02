@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net9.0</TargetFramework>
@@ -8,19 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AuthenticationService\src\AuthenticationService.Infrastructure\AuthenticationService.Infrastructure.csproj" />
-      <ProjectReference Include="..\TestCatalogService\src\TestCatalogService.Infrastructure\TestCatalogService.Infrastructure.csproj" />
-      <ProjectReference Include="..\TestCreationService\src\TestCreationService.Infrastructure\TestCreationService.Infrastructure.csproj" />
-      <ProjectReference Include="..\TestManagingService\src\TestManagingService.Infrastructure\TestManagingService.Infrastructure.csproj" />
-      <ProjectReference Include="..\TestTakingService\src\TestTakingService.Infrastructure\TestTakingService.Infrastructure.csproj" />
+        <ProjectReference Include="..\AuthenticationService\src\AuthenticationService.Infrastructure\AuthenticationService.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TestCatalogService\src\TestCatalogService.Infrastructure\TestCatalogService.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TestCreationService\src\TestCreationService.Infrastructure\TestCreationService.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TestManagingService\src\TestManagingService.Infrastructure\TestManagingService.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TestTakingService\src\TestTakingService.Infrastructure\TestTakingService.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="appsettings.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
+        <None Include="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
-
 </Project>

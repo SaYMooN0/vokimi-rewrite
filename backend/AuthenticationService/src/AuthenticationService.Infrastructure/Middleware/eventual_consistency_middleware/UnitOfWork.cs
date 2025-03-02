@@ -11,8 +11,11 @@ public class UnitOfWork : IDisposable
     private IDbConnection? _connection;
     private bool _isCommitted = false;
 
-    public IDbConnection Connection => _connection ?? throw new InvalidOperationException("Connection not initialized.");
-    public IDbTransaction Transaction => _transaction ?? throw new InvalidOperationException("Transaction not initialized.");
+    public IDbConnection Connection =>
+        _connection ?? throw new InvalidOperationException("Connection not initialized.");
+
+    public IDbTransaction Transaction =>
+        _transaction ?? throw new InvalidOperationException("Transaction not initialized.");
 
     public void BeginTransaction(IDbConnection connection) {
         if (_connection != null)
@@ -36,24 +39,24 @@ public class UnitOfWork : IDisposable
         if (domainEvents.Count == 0) {
             return;
         }
+
         foreach (var domainEvent in domainEvents) {
             await publisher.Publish(domainEvent);
         }
+
         await PublishDomainEventsAsync(publisher);
     }
 
     public void Commit() {
-        if (_transaction == null || _isCommitted)
-            throw new InvalidOperationException("Transaction already committed or not started.");
+        if (_transaction is null || _isCommitted)
+            throw new InvalidOperationException("Transaction already committed or not started");
 
         _transaction.Commit();
         _isCommitted = true;
     }
 
     public void Rollback() {
-        if (_transaction != null) {
-            _transaction.Rollback();
-        }
+        _transaction?.Rollback();
     }
 
     public void Dispose() {

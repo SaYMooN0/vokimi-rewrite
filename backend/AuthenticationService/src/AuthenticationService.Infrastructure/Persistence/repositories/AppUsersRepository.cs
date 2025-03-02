@@ -4,7 +4,7 @@ using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middl
 
 namespace AuthenticationService.Infrastructure.Persistence.repositories;
 
-internal class AppUsersRepository : BaseRepository, IAppUsersRepository
+public class AppUsersRepository : BaseRepository, IAppUsersRepository
 {
     public AppUsersRepository(UnitOfWork unitOfWork) : base(unitOfWork) { }
 

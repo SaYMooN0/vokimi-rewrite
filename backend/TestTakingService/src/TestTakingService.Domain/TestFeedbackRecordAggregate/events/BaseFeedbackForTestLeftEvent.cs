@@ -6,7 +6,6 @@ namespace TestTakingService.Domain.TestFeedbackRecordAggregate.events;
 
 public abstract record class BaseFeedbackForTestLeftEvent(
     TestId TestId,
-    AppUserId? AppUserId,
-    TestTakenRecordId TestTakenRecordId,
+    AppUserId? AuthorId,
     DateTime CreatedOn
 ) : IDomainEvent;

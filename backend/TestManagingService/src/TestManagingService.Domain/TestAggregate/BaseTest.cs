@@ -3,6 +3,7 @@ using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
+using TestManagingService.Domain.TestAggregate.formats_shared.comment_reports;
 
 namespace TestManagingService.Domain.TestAggregate;
 
@@ -10,9 +11,11 @@ public abstract class BaseTest : AggregateRoot<TestId>
 {
     protected BaseTest() { }
     public abstract TestFormat Format { get; }
-    public AppUserId CreatorId { get; init; }
-    public ImmutableArray<AppUserId> EditorIds { get; init; }
-    public DateTime PublicationDate { get; init; }
+    public AppUserId CreatorId { get; }
+    public ImmutableArray<AppUserId> EditorIds { get; }
+    public DateTime PublicationDate { get; }
+
+    protected ICollection<TestCommentReport> _commentReports { get; }
 
     protected BaseTest(
         TestId testId,
@@ -24,6 +27,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         CreatorId = creatorId;
         EditorIds = editorIds;
         PublicationDate = publicationDate;
+        _commentReports = [];
     }
 
     public ErrOrNothing CheckUserAccessToManageTest(AppUserId userId) {
@@ -33,5 +37,4 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
         return ErrOrNothing.Nothing;
     }
-
 }

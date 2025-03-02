@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestTakingService.Domain.TestFeedbackRecordAggregate;
-using TestTakingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.TestFeedbackRecordAggregate;
+using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.test_feedback_records;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.feedback_records;
 
 public class GeneralTestFeedbackRecordsConfigurations: IEntityTypeConfiguration<GeneralTestFeedbackRecord>
 {

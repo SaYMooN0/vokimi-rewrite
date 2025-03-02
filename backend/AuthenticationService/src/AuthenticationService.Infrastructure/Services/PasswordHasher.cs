@@ -2,7 +2,7 @@
 
 namespace AuthenticationService.Infrastructure.Services;
 
-internal class PasswordHasher : IPasswordHasher
+public class PasswordHasher : IPasswordHasher
 {
     public string HashPassword(string password) {
         return BCrypt.Net.BCrypt.HashPassword(password);

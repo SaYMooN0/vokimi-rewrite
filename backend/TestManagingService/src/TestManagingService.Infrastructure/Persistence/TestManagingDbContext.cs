@@ -16,15 +16,14 @@ public class TestManagingDbContext : DbContext
     private readonly IPublisher _publisher;
 
     public DbSet<AppUser> AppUsers { get; set; } = null!;
-    public DbSet<BaseTest> BaseTests { get; set; } = null!;
-
     //tests
-
+    public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
 
     //feedback records
     public DbSet<BaseTestFeedbackRecord> BaseTestFeedbackRecords { get; set; } = null!;
     public DbSet<GeneralTestFeedbackRecord> GeneralTestFeedbackRecords { get; set; } = null!;
+    
 
     public TestManagingDbContext(DbContextOptions<TestManagingDbContext> options, IPublisher publisher) :
         base(options) {

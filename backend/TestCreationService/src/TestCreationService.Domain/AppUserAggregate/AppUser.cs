@@ -9,9 +9,8 @@ public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
     private readonly HashSet<TestId> _createdTestIds;
-    public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
-
     private readonly HashSet<TestId> _editorAssignedTests;
+    public ImmutableHashSet<TestId> CreatedTestIds => _createdTestIds.ToImmutableHashSet();
     public ImmutableHashSet<TestId> EditorAssignedTests => _editorAssignedTests.ToImmutableHashSet();
 
     public void AddCreatedTest(TestId testId) {

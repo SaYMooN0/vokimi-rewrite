@@ -4,7 +4,7 @@ using SharedKernel.Common.domain.aggregate_root;
 
 namespace AuthenticationService.Infrastructure.Persistence;
 
-internal abstract class BaseRepository
+public abstract class BaseRepository
 {
     protected readonly UnitOfWork _unitOfWork;
 

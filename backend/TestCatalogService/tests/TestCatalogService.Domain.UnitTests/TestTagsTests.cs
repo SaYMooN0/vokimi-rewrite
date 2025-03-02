@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestCatalogService.Domain.Common;
 
 namespace TestCatalogService.Domain.UnitTests;
 

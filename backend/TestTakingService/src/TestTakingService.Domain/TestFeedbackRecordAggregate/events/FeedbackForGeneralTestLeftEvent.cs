@@ -1,14 +1,11 @@
-﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity;
-using TestTakingService.Domain.Common;
+﻿using SharedKernel.Common.domain.entity;
 
 namespace TestTakingService.Domain.TestFeedbackRecordAggregate.events;
 
 public record FeedbackForGeneralTestLeftEvent(
     TestId TestId,
-    AppUserId? AppUserId,
-    TestTakenRecordId TestTakenRecordId,
+    AppUserId? AuthorId,
     DateTime CreatedOn,
     string Text,
     bool WasLeftAnonymously
-) : BaseFeedbackForTestLeftEvent(TestId, AppUserId, TestTakenRecordId, CreatedOn);
+) : BaseFeedbackForTestLeftEvent(TestId, AuthorId, CreatedOn);

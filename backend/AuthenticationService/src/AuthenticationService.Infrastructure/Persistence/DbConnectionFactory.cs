@@ -3,7 +3,7 @@ using System.Data;
 
 namespace AuthenticationService.Infrastructure.Persistence;
 
-internal class NpgsqlConnectionFactory : IDbConnectionFactory
+public class NpgsqlConnectionFactory : IDbConnectionFactory
 {
     private readonly string _connectionString;
     public NpgsqlConnectionFactory(string connectionString) {

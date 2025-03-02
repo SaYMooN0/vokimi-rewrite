@@ -1,9 +1,9 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestTakingService.Domain.TestFeedbackRecordAggregate;
+using TestManagingService.Domain.TestFeedbackRecordAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.test_feedback_records;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.feedback_records;
 
 public class BaseTestFeedbackRecordsConfigurations: IEntityTypeConfiguration<BaseTestFeedbackRecord>
 {
@@ -22,11 +22,6 @@ public class BaseTestFeedbackRecordsConfigurations: IEntityTypeConfiguration<Bas
         
         builder
             .Property(x => x.TestId)
-            .ValueGeneratedNever()
-            .HasEntityIdConversion();
-        
-        builder
-            .Property(x => x.TestTakenRecordId)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
     }

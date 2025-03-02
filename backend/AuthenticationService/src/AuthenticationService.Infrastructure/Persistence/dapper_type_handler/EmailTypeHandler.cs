@@ -4,7 +4,7 @@ using System.Data;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 
-internal class EmailTypeHandler : SqlMapper.TypeHandler<Email>
+public class EmailTypeHandler : SqlMapper.TypeHandler<Email>
 {
     public override void SetValue(IDbDataParameter parameter, Email value) {
         parameter.Value = value.ToString();  

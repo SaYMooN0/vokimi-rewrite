@@ -106,7 +106,9 @@ public class GeneralFormatTest : BaseTest
             testTakenRecordId, receivedRes.Id, testTakenQuestionDetails
         );
         if (feedback is not null) {
-            CreateFeedbackLeftEvent(testTakerId, testTakingEnd, feedback, testTakenRecordId);
+            _domainEvents.Add(new FeedbackForGeneralTestLeftEvent(
+                Id, testTakerId, testTakingEnd, feedback.FeedbackText, feedback.LeftAnonymously
+            ));
         }
 
         return receivedRes;
@@ -132,24 +134,6 @@ public class GeneralFormatTest : BaseTest
             receivedResId, testTakenQuestionDetails
         );
         _domainEvents.Add(testTakenEvent);
-    }
-
-    private void CreateFeedbackLeftEvent(
-        AppUserId? testTakerId,
-        DateTime testTakingEnd,
-        GeneralTestTakenFeedbackData feedback,
-        TestTakenRecordId testTakenRecordId
-    ) {
-        var feedbackRecordId = TestFeedbackRecordId.CreateNew();
-        _feedbackRecordIds.Add(feedbackRecordId);
-
-        var feedbackLeftEvent = new FeedbackForGeneralTestLeftEvent(
-            feedbackRecordId,
-            Id, testTakerId, testTakenRecordId, testTakingEnd,
-            feedback.FeedbackText, feedback.LeftAnonymously
-        );
-        _domainEvents.Add(feedbackLeftEvent);
-        
     }
 
     private GeneralTestResult GetResultWithMaxPoints(Dictionary<GeneralTestResultId, ushort> resultsWithPoints) {
