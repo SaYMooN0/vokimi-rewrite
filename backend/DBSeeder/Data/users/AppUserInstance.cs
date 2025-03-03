@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.interfaces;
 
-namespace DBSeeder.Data.users.shared;
+namespace DBSeeder.Data.users;
 
 public class AppUserInstance
 {
@@ -10,20 +10,24 @@ public class AppUserInstance
     public TestCatalogService.Domain.AppUserAggregate.AppUser TestCatalogAppUser { get; }
     public TestCreationService.Domain.AppUserAggregate.AppUser TestCreationAppUser { get; }
     public TestManagingService.Domain.AppUserAggregate.AppUser TestManagingAppUser { get; }
+    public AppUserId Id => AuthAppUser.Id;
+    public TestId[] PublishedCreatedTestIds { get; }
 
     private AppUserInstance(
         AuthenticationService.Domain.AppUserAggregate.AppUser authAppUser,
         TestCatalogService.Domain.AppUserAggregate.AppUser testCatalogAppUser,
         TestCreationService.Domain.AppUserAggregate.AppUser testCreationAppUser,
-        TestManagingService.Domain.AppUserAggregate.AppUser testManagingAppUser
+        TestManagingService.Domain.AppUserAggregate.AppUser testManagingAppUser,
+        TestId[] publishedCreatedTestIds
     ) {
         AuthAppUser = authAppUser;
         TestCatalogAppUser = testCatalogAppUser;
         TestCreationAppUser = testCreationAppUser;
         TestManagingAppUser = testManagingAppUser;
+        PublishedCreatedTestIds = publishedCreatedTestIds;
     }
 
-    public static AppUserInstance CreateNew(IDateTimeProvider dateTimeProvider) {
+    public static AppUserInstance CreateRandom() {
         var email = Email.Create($"user{Guid.NewGuid()}@example.com").GetSuccess();
         var password = $"random-password-{Guid.NewGuid()}";
         return CreateSpecified(email, password, DateTime.Now);
@@ -36,7 +40,7 @@ public class AppUserInstance
         HashSet<TestId>? publishedCreatedTests = null,
         HashSet<TestId>? publishedEditorAssignedTests = null,
         HashSet<TestId>? draftCreatedTests = null,
-        HashSet<TestId>? draftEditorAssignedTests =  null
+        HashSet<TestId>? draftEditorAssignedTests = null
     ) {
         string passwordHash = DataShared.PasswordHasher.HashPassword(password);
         var authAppUser = AuthenticationService.Domain.AppUserAggregate.AppUser.CreateNew(
@@ -73,6 +77,12 @@ public class AppUserInstance
             }
         }
 
-        return new AppUserInstance(authAppUser, testCatalogAppUser, testCreationAppUser, testManagingAppUser);
+        return new AppUserInstance(
+            authAppUser,
+            testCatalogAppUser,
+            testCreationAppUser,
+            testManagingAppUser,
+            publishedCreatedTests?.ToArray() ?? []
+        );
     }
 }

@@ -14,7 +14,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public AppUserId CreatorId { get; }
     public ImmutableArray<AppUserId> EditorIds { get; }
     public DateTime PublicationDate { get; }
-
     protected ICollection<TestCommentReport> _commentReports { get; }
 
     protected BaseTest(

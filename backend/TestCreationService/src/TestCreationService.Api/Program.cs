@@ -17,8 +17,13 @@ namespace TestCreationService.Api
                 .AddAuthTokenConfig(builder.Configuration)
                 .AddApplication(builder.Configuration)
                 .AddInfrastructure(builder.Configuration)
-                .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+                .ConfigureHttpJsonOptions(options => {
+                    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
+
             var app = builder.Build();
+            app.AddInfrastructureMiddleware();
 
             if (app.Environment.IsDevelopment()) {
                 app.MapOpenApi();
@@ -28,9 +33,9 @@ namespace TestCreationService.Api
             app.UseHttpsRedirection();
 
             MapHandlers(app);
-
             app.Run();
         }
+
         private static void MapHandlers(WebApplication app) {
             app.MapGroup("/newTestInitialization").MapNewTestInitializationHandlers();
 
@@ -40,11 +45,15 @@ namespace TestCreationService.Api
 
             app.MapGroup("/testCreation/{testId}/general").MapGeneralFormatTestCreationHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions").MapGeneralTestCreationQuestionsHandlers();
-            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}").MapGeneralTestCreationQuestionOperationsHandlers();
-            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers").MapGeneralTestCreationAnswersHandlers();
-            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers/{answerId}").MapGeneralTestCreationAnswerOperationsHandlers();
+            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}")
+                .MapGeneralTestCreationQuestionOperationsHandlers();
+            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers")
+                .MapGeneralTestCreationAnswersHandlers();
+            app.MapGroup("/testCreation/{testId}/general/questions/{questionId}/answers/{answerId}")
+                .MapGeneralTestCreationAnswerOperationsHandlers();
             app.MapGroup("/testCreation/{testId}/general/results").MapGeneralTestCreationResultsHandlers();
-            app.MapGroup("/testCreation/{testId}/general/results/{resultId}/").MapGeneralTestCreationResultOperationHandlers();
+            app.MapGroup("/testCreation/{testId}/general/results/{resultId}/")
+                .MapGeneralTestCreationResultOperationHandlers();
 
             app.MapGroup("/testCreation/{testId}/publishing").MapTestPublishingHandlers();
             //app.MapGroup("/testCreation/{testId}/scoring").MapScoringFormatTestCreationHandlers();

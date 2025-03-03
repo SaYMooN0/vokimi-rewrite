@@ -24,8 +24,12 @@ public class Program
             .ConfigureHttpJsonOptions(options => {
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+        
+        
         var app = builder.Build();
+        app.AddInfrastructureMiddleware();
 
+        
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
         }
@@ -34,21 +38,6 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
-        
-        using (var scope = app.Services.CreateScope()) {
-            var services = scope.ServiceProvider;
-            try {
-                var appDbContext = services.GetRequiredService<TestCatalogDbContext>();
-                appDbContext.Database.EnsureDeleted();
-                appDbContext.Database.EnsureCreated();
-                appDbContext.AppUsers.Add(new AppUser(new AppUserId(new("01947086-ae53-7834-8d6c-56cdb1bbb587"))));
-                appDbContext.SaveChanges();
-            } catch (Exception ex) {
-                app.Logger.LogError(ex, "An error occurred while initializing the database.");
-                throw;
-            }
-        }
-        
         app.Run();
     }
 

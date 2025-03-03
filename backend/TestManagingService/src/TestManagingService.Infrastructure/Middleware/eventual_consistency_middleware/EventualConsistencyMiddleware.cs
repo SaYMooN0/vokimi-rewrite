@@ -21,7 +21,6 @@ internal class EventualConsistencyMiddleware
             } catch (Exception) {
                 await transaction.RollbackAsync();
             } finally {
-
                 await transaction.DisposeAsync();
             }
         });

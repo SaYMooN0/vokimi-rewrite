@@ -13,6 +13,13 @@ namespace TestTakingService.Domain.TestAggregate;
 public abstract class BaseTest : AggregateRoot<TestId>
 {
     protected BaseTest() { }
+    public abstract TestFormat Format { get; }
+    protected AppUserId _creatorId { get; }
+    protected ImmutableHashSet<AppUserId> _editors { get; }
+    protected AccessLevel _accessLevel { get; init; }
+    public TestStylesSheet Styles { get; init; }
+    protected readonly HashSet<AppUserId> _takenByUserIds;
+    protected readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
 
     protected BaseTest(
         TestId id,
@@ -30,13 +37,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _testTakenRecordIds = [];
     }
 
-    public abstract TestFormat Format { get; }
-    protected AppUserId _creatorId { get; init; }
-    protected ImmutableHashSet<AppUserId> _editors { get; init; }
-    protected AccessLevel _accessLevel { get; init; }
-    public TestStylesSheet Styles { get; init; }
-    protected readonly HashSet<AppUserId> _takenByUserIds;
-    protected readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
     public ImmutableHashSet<AppUserId> TakenByUserIds => _takenByUserIds.ToImmutableHashSet();
     public ImmutableHashSet<TestTakenRecordId> TestTakenRecordIds => _testTakenRecordIds.ToImmutableHashSet();
 
@@ -54,7 +54,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
             AccessLevel.FollowersOnly => Err.ErrFactory.NoAccess(NoAccessFollowersMessage),
             _ => Err.ErrFactory.NoAccess("This test has unknown access level")
         };
+
     public delegate Task<ImmutableArray<AppUserId>> GetUserFollowingsAsyncDelegate(AppUserId userId);
+
     public async Task<ErrOrNothing> CheckUserAccessToTakeTest(
         AppUserId userId,
         GetUserFollowingsAsyncDelegate getUserFollowingsAsync

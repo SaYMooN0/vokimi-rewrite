@@ -6,7 +6,7 @@ using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 using AuthenticationService.Infrastructure.Persistence.repositories;
 using Dapper;
-using DBSeeder.Data.users.shared;
+using DBSeeder.Data.users;
 using SharedKernel.Common.domain.entity;
 
 namespace DBSeeder.DbSeeders;
@@ -20,11 +20,11 @@ public class AuthenticationServiceDbSeeder : IDbContextSeeder
     public async Task Initialize(string dbConnectionString) {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        SqlMapper.AddTypeHandler(typeof(Email), new EmailTypeHandler());
-        SqlMapper.AddTypeHandler(typeof(DateOnly), new DateOnlyTypeHandler());
+        SqlMapper.AddTypeHandler(new EmailTypeHandler());
+        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
-        SqlMapper.AddTypeHandler(typeof(AppUserId), new GuidEntityIdTypeHandler<AppUserId>());
-        SqlMapper.AddTypeHandler(typeof(UnconfirmedAppUserId), new GuidEntityIdTypeHandler<UnconfirmedAppUserId>());
+        SqlMapper.AddTypeHandler(new GuidEntityIdTypeHandler<AppUserId>());
+        SqlMapper.AddTypeHandler(new GuidEntityIdTypeHandler<UnconfirmedAppUserId>());
 
         _dbConnectionFactory = new(dbConnectionString);
         _connection = await _dbConnectionFactory.CreateConnectionAsync();

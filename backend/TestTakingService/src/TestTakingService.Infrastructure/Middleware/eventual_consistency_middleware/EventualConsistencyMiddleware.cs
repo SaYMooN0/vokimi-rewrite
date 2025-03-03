@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using TestCreationService.Infrastructure.Persistence;
+using TestTakingService.Infrastructure.Persistence;
 
-namespace TestCreationService.Infrastructure.Middleware.eventual_consistency_middleware;
+namespace TestTakingService.Infrastructure.Middleware.eventual_consistency_middleware;
 
 internal class EventualConsistencyMiddleware
 {
@@ -13,7 +13,7 @@ internal class EventualConsistencyMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IPublisher publisher, TestCreationDbContext dbContext) {
+    public async Task InvokeAsync(HttpContext context, IPublisher publisher, TestTakingDbContext dbContext) {
         var transaction = await dbContext.Database.BeginTransactionAsync();
         context.Response.OnCompleted(async () => {
             try {

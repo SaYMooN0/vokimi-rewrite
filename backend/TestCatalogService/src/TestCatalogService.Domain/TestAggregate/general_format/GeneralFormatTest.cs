@@ -1,11 +1,9 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
-using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestTagAggregate.events;

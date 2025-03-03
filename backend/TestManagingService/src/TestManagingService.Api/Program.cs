@@ -20,7 +20,11 @@ public class Program
             .ConfigureHttpJsonOptions(options => {
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+
         var app = builder.Build();
+        app.AddInfrastructureMiddleware();
+
 
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
@@ -30,7 +34,6 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
-        
         app.Run();
     }
 

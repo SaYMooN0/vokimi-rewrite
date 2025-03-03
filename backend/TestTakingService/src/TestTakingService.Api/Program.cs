@@ -18,8 +18,13 @@ public class Program
             .AddApplication(builder.Configuration)
             .AddInfrastructure(builder.Configuration)
             .AddSharedUserRelationsContext(builder.Configuration)
-            .ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+            .ConfigureHttpJsonOptions(options => {
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+
         var app = builder.Build();
+        app.AddInfrastructureMiddleware();
 
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
@@ -29,24 +34,6 @@ public class Program
         app.UseHttpsRedirection();
 
         MapHandlers(app);
-        
-        using (var scope = app.Services.CreateScope()) {
-            var services = scope.ServiceProvider;
-            try {
-                var appDbContext = services.GetRequiredService<TestTakingDbContext>();
-                appDbContext.Database.EnsureDeleted();
-                appDbContext.Database.EnsureCreated();
-                appDbContext.SaveChanges();
-                
-                var appDbContext2 = services.GetRequiredService<UserRelationsDbContext>();
-                appDbContext2.Database.EnsureDeleted();
-                appDbContext2.Database.EnsureCreated();
-                appDbContext2.SaveChanges();
-            } catch (Exception ex) {
-                app.Logger.LogError(ex, "An error occurred while initializing the database.");
-                throw;
-            }
-        }
         app.Run();
     }
 

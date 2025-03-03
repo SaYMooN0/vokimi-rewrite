@@ -15,6 +15,7 @@ namespace AuthenticationService.Api
                 .AddApplication(builder.Configuration)
                 .AddInfrastructure(builder.Configuration);
             var app = builder.Build();
+            app.AddInfrastructureMiddleware();
 
             if (app.Environment.IsDevelopment()) {
                 app.MapOpenApi();
@@ -22,13 +23,13 @@ namespace AuthenticationService.Api
 
             app.AddExceptionHandlingMiddleware();
             app.UseHttpsRedirection();
-            app.AddInfrastructureMiddleware();
 
 
             MapHandlers(app);
 
             app.Run();
         }
+
         private static void MapHandlers(WebApplication app) {
             app.MapRootHandlers();
             app.MapGroup("/resetPassword").MapResetPasswordHandlers();
