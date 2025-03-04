@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DBSeeder.Data.published_tests.published_tests_data;
+using Microsoft.EntityFrameworkCore;
 using TestCatalogService.Infrastructure.Persistence;
 
 namespace DBSeeder.DbSeeders;
@@ -14,16 +15,13 @@ public class TestCatalogServiceDbSeeder : IDbContextSeeder
                 .Options;
 
         _db = new TestCatalogDbContext(options, new FakePublisher());
-        await _db.Database.BeginTransactionAsync();
     }
 
     public async Task Commit() {
-        await _db.Database.CommitTransactionAsync();
+        await _db.SaveChangesAsync();
     }
 
-    public async Task Rollback() {
-        await _db.Database.RollbackTransactionAsync();
-    }
+    public async Task Rollback() => _db.ChangeTracker.Clear();
 
     public async Task EnsureExists() {
         await _db.Database.EnsureCreatedAsync();
@@ -34,18 +32,20 @@ public class TestCatalogServiceDbSeeder : IDbContextSeeder
         await _db.Database.EnsureCreatedAsync();
     }
 
-    private async Task Seed() {
-        try {
-            await _db.SaveChangesAsync();
-        }
-        catch (Exception e) {
-            throw new DbContextSeederException(e, typeof(AuthenticationServiceDbSeeder));
-        }
-    }
-
     public async Task ClearAndSeed() {
         await _db.Database.EnsureDeletedAsync();
         await _db.Database.EnsureCreatedAsync();
         await Seed();
+    }
+
+    private async Task Seed() {
+        try {
+            foreach (var test in GeneralFormatPublishedTestsData.AllTests) {
+                await _db.BaseTests.AddAsync(test.TestCatalogTest);
+            }
+        }
+        catch (Exception e) {
+            throw new DbContextSeederException(e, typeof(TestCatalogServiceDbSeeder));
+        }
     }
 }

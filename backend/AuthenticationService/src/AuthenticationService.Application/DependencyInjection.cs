@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AuthenticationService.Application.Configs;
 using MediatR;
-using AuthenticationService.Application.Configs;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthenticationService.Application;
 

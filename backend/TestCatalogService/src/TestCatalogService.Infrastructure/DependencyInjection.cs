@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Common.interfaces;
 using SharedKernel.Common;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.Common.interfaces.repositories.tests;
@@ -43,9 +43,9 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
-        string dbConnetionString = configuration.GetConnectionString("TestCatalogServiceDb")
+        string dbConnectionString = configuration.GetConnectionString("TestCatalogServiceDb")
                                    ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnetionString));
+        services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
 

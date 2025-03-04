@@ -1,6 +1,6 @@
-﻿using AuthenticationService.Domain.Common.value_objects;
+﻿using System.Data;
+using AuthenticationService.Domain.Common.value_objects;
 using Dapper;
-using System.Data;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 

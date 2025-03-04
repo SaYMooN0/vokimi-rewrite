@@ -1,7 +1,6 @@
 ﻿using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Application.Common.interfaces.repositories;
 using AuthenticationService.Domain.Common;
-using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Infrastructure.Configs;
 using AuthenticationService.Infrastructure.IntegrationEvents.background_service;
 using AuthenticationService.Infrastructure.IntegrationEvents.integration_events_publisher;
@@ -14,7 +13,6 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Common;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Configs;
@@ -58,10 +56,10 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
-        string dbConnetionString = configuration.GetConnectionString("AuthServiceDb")
+        string dbConnectionString = configuration.GetConnectionString("AuthServiceDb")
             ?? throw new Exception("Database connection string is not provided.");
 
-        services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(dbConnetionString));
+        services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(dbConnectionString));
         services.AddScoped<UnitOfWork>();
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();

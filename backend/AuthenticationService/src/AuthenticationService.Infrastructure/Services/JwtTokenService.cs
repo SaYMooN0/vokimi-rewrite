@@ -1,11 +1,11 @@
-﻿using AuthenticationService.Application.Common.interfaces;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using AuthenticationService.Application.Common.interfaces;
 using AuthenticationService.Domain.AppUserAggregate;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Configs;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace AuthenticationService.Infrastructure.Services;
 

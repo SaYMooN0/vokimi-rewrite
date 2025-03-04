@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using AuthenticationService.Domain.Common.value_objects;
+using SharedKernel.Common.domain.entity;
 
 namespace DBSeeder.Data.users;
 
@@ -8,7 +9,8 @@ internal static class AppUsersData
     public static readonly AppUserInstance User1 = AppUserInstance.CreateSpecified(
         Email.Create("admin@admin.com").GetSuccess(),
         "admin@admin.com",
-        DateTime.Now.AddDays(-10).AddMonths(-13)
+        DateTime.Now.AddDays(-10).AddMonths(-13),
+        publishedCreatedTests: [TestId.CreateNew()]
     );
 
     public static readonly AppUserInstance User2 = AppUserInstance.CreateSpecified(

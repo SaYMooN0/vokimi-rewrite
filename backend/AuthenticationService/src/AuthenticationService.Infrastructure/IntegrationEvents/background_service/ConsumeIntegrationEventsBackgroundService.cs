@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text;
+using System.Text.Json;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
-using MediatR;
-using SharedKernel.IntegrationEvents;
+using RabbitMQ.Client.Events;
 using SharedKernel.Configs;
+using SharedKernel.IntegrationEvents;
 
 namespace AuthenticationService.Infrastructure.IntegrationEvents.background_service;
 internal class ConsumeIntegrationEventsBackgroundService : IHostedService

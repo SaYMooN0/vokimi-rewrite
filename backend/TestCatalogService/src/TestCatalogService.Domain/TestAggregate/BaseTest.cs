@@ -1,11 +1,11 @@
-﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.tests;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using SharedKernel.Common;
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.aggregate_root;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
+using SharedKernel.Common.tests;
 using SharedUserRelationsContext.repository;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.Common;

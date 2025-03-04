@@ -1,7 +1,7 @@
-﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.errors;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.value_object;
+using SharedKernel.Common.errors;
 
 namespace AuthenticationService.Domain.Common.value_objects;
 

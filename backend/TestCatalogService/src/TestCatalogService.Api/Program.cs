@@ -1,5 +1,5 @@
-using ApiShared;
 using System.Text.Json.Serialization;
+using ApiShared;
 using SharedKernel.Common.domain.entity;
 using SharedUserRelationsContext;
 using TestCatalogService.Api.Endpoints.view_test;

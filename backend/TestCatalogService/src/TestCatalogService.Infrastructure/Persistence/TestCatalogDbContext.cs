@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SharedKernel.Common.domain;
-using System.Reflection;
 using SharedKernel.Common.domain.aggregate_root;
 using TestCatalogService.Domain.AppUserAggregate;
 using TestCatalogService.Domain.TestAggregate;

@@ -1,8 +1,8 @@
+using System.Transactions;
 using AuthenticationService.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System.Transactions;
 
 namespace AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 

@@ -2,12 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain.entity;
-using TestCatalogService.Domain.AppUserAggregate;
-using TestCatalogService.Domain.Common;
+using TestManagingService.Domain.AppUserAggregate;
 
-namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations;
 
-internal class AppUserConfigurations : IEntityTypeConfiguration<AppUser>
+public class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {
     public void Configure(EntityTypeBuilder<AppUser> builder) {
         builder
@@ -25,16 +24,6 @@ internal class AppUserConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .Property<HashSet<TestId>>("_editorAssignedTests")
             .HasColumnName("EditorAssignedTests")
-            .HasEntityIdsHashSetConversion();
-
-        builder
-            .Property<HashSet<TestRatingId>>("_ratingIds")
-            .HasColumnName("RatingIds")
-            .HasEntityIdsHashSetConversion();
-
-        builder
-            .Property<HashSet<TestCommentId>>("_commentIds")
-            .HasColumnName("CommentIds")
             .HasEntityIdsHashSetConversion();
     }
 }

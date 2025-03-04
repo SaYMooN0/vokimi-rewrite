@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TestManagingService.Domain.TestAggregate.formats_shared.comment_reports;
 
-namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.tests;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;
 
 internal class TestCommentReportsConfigurations : IEntityTypeConfiguration<TestCommentReport>
 {

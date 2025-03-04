@@ -1,7 +1,7 @@
-﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.errors;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.value_object;
+using SharedKernel.Common.errors;
 
 namespace SharedKernel.Common.general_test_questions.answer_type_specific_data;
 public abstract partial class GeneralTestAnswerTypeSpecificData : ValueObject

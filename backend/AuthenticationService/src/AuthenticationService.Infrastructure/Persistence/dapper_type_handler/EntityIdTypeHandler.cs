@@ -1,6 +1,6 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using SharedKernel.Common.domain;
-using System.Data;
 using SharedKernel.Common.domain.entity;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;

@@ -1,5 +1,5 @@
-﻿using MediatR;
-using System.Data;
+﻿using System.Data;
+using MediatR;
 using SharedKernel.Common.domain.aggregate_root;
 
 namespace AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;

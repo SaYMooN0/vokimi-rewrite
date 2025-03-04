@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestCatalogService.Domain.TestAggregate;
-using TestCatalogService.Domain.TestAggregate.general_format;
+using TestManagingService.Domain.TestAggregate;
+using TestManagingService.Domain.TestAggregate.general_format;
 
-namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations.tests;
+namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
 internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<GeneralFormatTest>
 {

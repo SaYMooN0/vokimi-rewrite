@@ -1,5 +1,5 @@
-﻿using SharedKernel.Common.domain;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 
 namespace TestCatalogService.Domain.TestAggregate.formats_shared.events;

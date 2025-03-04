@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
-using SharedKernel.IntegrationEvents;
+﻿using System.Text;
 using System.Text.Json;
-using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
 using SharedKernel.Configs;
+using SharedKernel.IntegrationEvents;
 
 namespace TestCatalogService.Infrastructure.IntegrationEvents.integration_events_publisher;
 

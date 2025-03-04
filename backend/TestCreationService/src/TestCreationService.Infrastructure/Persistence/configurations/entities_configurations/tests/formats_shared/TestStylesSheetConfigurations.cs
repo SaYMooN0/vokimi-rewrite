@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
-using TestCreationService.Domain.TestAggregate;
-using InfrastructureConfigurationShared.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.tests.formats_shared.test_styles;
+using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Infrastructure.Persistence.configurations.extensions;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;

@@ -1,9 +1,9 @@
-﻿using ApiShared.extensions;
-using ApiShared;
+﻿using ApiShared;
+using ApiShared.extensions;
 using MediatR;
 using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
-using TestCreationService.Application.Tests.formats_shared.commands.styles;
 using TestCreationService.Api.Extensions;
+using TestCreationService.Application.Tests.formats_shared.commands.styles;
 
 namespace TestCreationService.Api.Endpoints.test_creation.formats_shared;
 internal static class TestCreationStylesHandlers

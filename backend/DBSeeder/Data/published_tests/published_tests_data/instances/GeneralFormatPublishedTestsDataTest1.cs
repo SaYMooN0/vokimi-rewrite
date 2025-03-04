@@ -3,9 +3,9 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
 using SharedKernel.Common.tests.value_objects;
+using TestAnswer = TestTakingService.Domain.TestAggregate.general_format.GeneralTestAnswer;
 using TestQuestion = TestTakingService.Domain.TestAggregate.general_format.GeneralTestQuestion;
 using TestResult = TestTakingService.Domain.TestAggregate.general_format.GeneralTestResult;
-using TestAnswer = TestTakingService.Domain.TestAggregate.general_format.GeneralTestAnswer;
 
 namespace DBSeeder.Data.published_tests.published_tests_data.instances;
 

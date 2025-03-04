@@ -1,11 +1,11 @@
-﻿using ApiShared.interfaces;
-using Microsoft.AspNetCore.Http;
-using SharedKernel.Common.domain;
-using SharedKernel.Common.errors;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using ApiShared.interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
 using SharedKernel.Configs;
 
 namespace ApiShared.extensions;

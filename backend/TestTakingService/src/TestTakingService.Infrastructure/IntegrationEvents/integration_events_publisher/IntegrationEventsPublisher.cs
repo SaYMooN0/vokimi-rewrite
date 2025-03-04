@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
-using SharedKernel.IntegrationEvents;
+﻿using System.Text;
 using System.Text.Json;
-using System.Text;
+using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
 using SharedKernel.Configs;
+using SharedKernel.IntegrationEvents;
 
 namespace TestTakingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 

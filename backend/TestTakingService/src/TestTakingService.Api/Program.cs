@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
-using TestTakingService.Application;
-using TestTakingService.Infrastructure;
 using ApiShared;
 using SharedUserRelationsContext;
 using TestTakingService.Api.Endpoints;
+using TestTakingService.Application;
+using TestTakingService.Infrastructure;
 using TestTakingService.Infrastructure.Persistence;
 
 namespace TestTakingService.Api;

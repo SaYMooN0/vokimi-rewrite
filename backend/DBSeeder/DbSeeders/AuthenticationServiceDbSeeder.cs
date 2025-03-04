@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using AuthenticationService.Domain.Common;
-using AuthenticationService.Domain.Common.value_objects;
 using AuthenticationService.Infrastructure.Middleware.eventual_consistency_middleware;
 using AuthenticationService.Infrastructure.Persistence;
 using AuthenticationService.Infrastructure.Persistence.dapper_type_handler;

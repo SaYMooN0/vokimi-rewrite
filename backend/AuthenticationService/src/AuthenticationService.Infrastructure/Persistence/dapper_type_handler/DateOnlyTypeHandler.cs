@@ -1,6 +1,6 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using NpgsqlTypes;
-using System.Data;
 
 namespace AuthenticationService.Infrastructure.Persistence.dapper_type_handler;
 

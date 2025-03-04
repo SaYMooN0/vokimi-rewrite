@@ -47,9 +47,9 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
-        string dbConnetionString = configuration.GetConnectionString("TestTakingServiceDb")
+        string dbConnectionString = configuration.GetConnectionString("TestTakingServiceDb")
                                    ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnetionString));
+        services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         

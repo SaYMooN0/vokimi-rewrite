@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain;
-using System.Reflection;
 using SharedKernel.Common.domain.aggregate_root;
 using TestTakingService.Domain.AppUserAggregate;
 using TestTakingService.Domain.TestAggregate;

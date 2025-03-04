@@ -1,5 +1,5 @@
-﻿using SharedKernel.Common.domain;
-using System.Collections;
+﻿using System.Collections;
+using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.AppUserAggregate;
 
