@@ -5,5 +5,5 @@ namespace TestManagingService.Domain.TestAggregate.formats_shared.events;
 
 public record TagsChangedEvent(
     TestId TestId,
-    TestTagId[] NewTags
+    HashSet<TestTagId> NewTags
 ) : IDomainEvent;

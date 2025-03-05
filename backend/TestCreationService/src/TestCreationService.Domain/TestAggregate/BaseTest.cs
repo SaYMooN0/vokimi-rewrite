@@ -103,13 +103,13 @@ public abstract class BaseTest : AggregateRoot<TestId>
         ResourceAvailabilitySetting ratingsSetting,
         ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting tagsSuggestionsSetting
+        bool allowTagSuggestions
     ) => _interactionsAccessSettings.Update(
         testAccessLevel,
         ratingsSetting: ratingsSetting,
         commentsSetting: commentsSetting,
         allowTestTakenPosts,
-        tagsSuggestionsSetting
+        allowTagSuggestions
     );
 
     public void UpdateStyles(HexColor accentColor, HexColor errorsColor, TestStylesButtons buttonsStyle) =>

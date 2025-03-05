@@ -15,13 +15,12 @@ internal static class ViewTestRootHandlers
             .GroupUserAccessToViewTestRequired();
 
         group.MapGet("/", LoadViewTestData);
-
+        
         return group;
     }
 
-    private async static Task<IResult> LoadViewTestData(
-        HttpContext httpContext,
-        ISender mediator
+    private static async Task<IResult> LoadViewTestData(
+        HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
         LoadViewTestDataCommand command = new(testId);

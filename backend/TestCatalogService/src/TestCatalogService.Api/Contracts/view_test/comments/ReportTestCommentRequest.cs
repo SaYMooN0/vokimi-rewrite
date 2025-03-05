@@ -12,7 +12,6 @@ public class ReportTestCommentRequest : IRequestWithValidationNeeded
         if (TestCommentReportRules.CheckReportTextForErr(Text).IsErr(out var err)) {
             return err;
         }
-
         return RequestValidationResult.Success;
     }
 }

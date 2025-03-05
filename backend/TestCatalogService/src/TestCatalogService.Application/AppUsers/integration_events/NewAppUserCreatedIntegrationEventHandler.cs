@@ -5,11 +5,11 @@ using TestCatalogService.Domain.Common.interfaces.repositories;
 
 namespace TestCatalogService.Application.AppUsers.integration_events;
 
-internal class NewAppUserCreatedEventHandler : INotificationHandler<NewAppUserCreatedIntegrationEvent>
+internal class NewAppUserCreatedIntegrationEventHandler : INotificationHandler<NewAppUserCreatedIntegrationEvent>
 {
     private readonly IAppUsersRepository _appUsersRepository;
 
-    public NewAppUserCreatedEventHandler(IAppUsersRepository appUsersRepository) {
+    public NewAppUserCreatedIntegrationEventHandler(IAppUsersRepository appUsersRepository) {
         _appUsersRepository = appUsersRepository;
     }
 

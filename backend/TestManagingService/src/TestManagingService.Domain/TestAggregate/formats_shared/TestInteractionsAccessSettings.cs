@@ -14,14 +14,14 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
     public ResourceAvailabilitySetting AllowComments { get; private set; }
     public bool AllowTestTakenPosts { get; private set; }
-    public ResourceAvailabilitySetting AllowTagsSuggestions { get; private set; }
+    public bool AllowTagsSuggestions { get; private set; }
 
     public TestInteractionsAccessSettings(
         AccessLevel testAccess,
         ResourceAvailabilitySetting allowRatings,
         ResourceAvailabilitySetting allowComments,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting allowTagsSuggestions
+        bool allowTagsSuggestions
     ) {
         TestAccess = testAccess;
         AllowRatings = allowRatings;
@@ -106,7 +106,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         ResourceAvailabilitySetting ratingsSetting,
         ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting tagsSuggestionsSetting
+        bool tagsSuggestionsSetting
     ) {
         ErrList errs = new();
         errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfRatingsAvailabilityIsCorrect(

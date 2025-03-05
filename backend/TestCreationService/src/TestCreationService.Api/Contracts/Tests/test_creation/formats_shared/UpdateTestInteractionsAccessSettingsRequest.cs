@@ -14,7 +14,7 @@ internal class UpdateTestInteractionsAccessSettingsRequest : IRequestWithValidat
     public bool CommentsEnabled { get; init; }
     public AccessLevel CommentsAccess { get; init; }
     public bool AllowTestTakenPosts { get; init; }
-    public bool TagSuggestionsEnabled { get; init; }
+    public bool AllowTagSuggestions { get; init; }
     public AccessLevel TagSuggestionsAccess { get; init; }
 
     public RequestValidationResult Validate() {
@@ -29,12 +29,11 @@ internal class UpdateTestInteractionsAccessSettingsRequest : IRequestWithValidat
             TestAccess, AllowTestTakenPosts
         ));
         errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(
-            TestAccess, TagSuggestionsSetting
+            TestAccess, AllowTagSuggestions
         ));
         return errs;
     }
 
     public ResourceAvailabilitySetting RatingsSetting => new(RatingsEnabled, RatingsAccess);
     public ResourceAvailabilitySetting CommentsSetting => new(CommentsEnabled, CommentsAccess);
-    public ResourceAvailabilitySetting TagSuggestionsSetting => new(TagSuggestionsEnabled, TagSuggestionsAccess);
 }

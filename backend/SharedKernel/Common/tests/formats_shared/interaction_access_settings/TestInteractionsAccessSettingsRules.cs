@@ -33,14 +33,20 @@ public static class TestInteractionsAccessSettingsRules
     ) => CheckFeatureAvailabilityIsCorrect("Ratings", testAccess, ratingsSetting);
 
     public static ErrOrNothing CheckIfTagsSuggestionsAvailabilityIsCorrect(
-        AccessLevel testAccess,
-        ResourceAvailabilitySetting tagsSuggestionSetting
-    ) => CheckFeatureAvailabilityIsCorrect("Tags suggestions", testAccess, tagsSuggestionSetting);
+        AccessLevel testAccess, bool allowTagsSuggestions
+    ) {
+        if (allowTagsSuggestions && testAccess == AccessLevel.Private) {
+            return Err.ErrFactory.InvalidData(message: "Tags Suggestions cannot be enabled when the test is private");
+        }
 
-    public static ErrOrNothing CheckIfTestTakenPostsAvailabilityIsCorrect(AccessLevel testAccess,
-        bool allowTestTakenPosts) {
+        return ErrOrNothing.Nothing;
+    }
+
+    public static ErrOrNothing CheckIfTestTakenPostsAvailabilityIsCorrect(
+        AccessLevel testAccess, bool allowTestTakenPosts
+    ) {
         if (allowTestTakenPosts && testAccess == AccessLevel.Private) {
-            return Err.ErrFactory.InvalidData(message: "TestTakenPosts cannot be enabled when the test is private");
+            return Err.ErrFactory.InvalidData(message: "Test Taken Posts cannot be enabled when the test is private");
         }
 
         return ErrOrNothing.Nothing;

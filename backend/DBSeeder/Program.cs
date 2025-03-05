@@ -18,9 +18,9 @@ TestManagingServiceDbSeeder testManagingServiceDbSeeder = await InitTestManaging
 //perform db actions
 try {
     // await authenticationServiceDbSeeder.ClearAndSeed();
-    await testCatalogServiceDbSeeder.ClearAndSeed();
-    await testTakingServiceDbSeeder.ClearAndSeed();
-    await testManagingServiceDbSeeder.ClearAndSeed();
+    // await testCatalogServiceDbSeeder.ClearAndSeed();
+    // await testTakingServiceDbSeeder.ClearAndSeed();
+    // await testManagingServiceDbSeeder.ClearAndSeed();
 }
 catch (DbContextSeederException exception) {
     Console.WriteLine($"No db seeders has been commited. Error during DB seeding: {exception.Message}");

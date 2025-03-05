@@ -10,10 +10,13 @@ internal static class ManageTestTagsHandlers
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
         
-        //accept 
-        //decline
-        //ban
-        //unban
+        group.MapGet("/list", ...);
+        group.MapPost("/update", ..).);
+        
+        group.MapGet("/listTagSuggestions", ...);
+        group.MapPost("/acceptTagSuggestions", ...);
+        group.MapPost("/declineTagSuggestions", ...);
+        group.MapPost("/declineAndBanTagSuggestions", ...);
         return group;
     }
 

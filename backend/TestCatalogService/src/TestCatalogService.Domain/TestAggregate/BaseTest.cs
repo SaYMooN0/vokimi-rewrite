@@ -6,6 +6,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.value_objects;
 using SharedUserRelationsContext.repository;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.Common;
@@ -316,4 +317,18 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _domainEvents.Add(new TestTagsChangedEvent(Id, OldTags: Tags, newTags));
         Tags = newTags.ToImmutableHashSet();
     }
+
+    public ErrOrNothing UpdateInteractionsAccessSettings(
+        AccessLevel testAccessLevel,
+        ResourceAvailabilitySetting ratingsSetting,
+        ResourceAvailabilitySetting commentsSetting,
+        bool allowTestTakenPosts,
+        bool allowTagsSuggestions
+    ) => InteractionsAccessSettings.Update(
+        testAccessLevel,
+        ratingsSetting,
+        commentsSetting,
+        allowTestTakenPosts,
+        allowTagsSuggestions
+    );
 }

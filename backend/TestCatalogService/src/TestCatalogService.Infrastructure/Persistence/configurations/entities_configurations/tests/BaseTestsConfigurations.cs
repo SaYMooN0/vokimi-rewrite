@@ -48,7 +48,6 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
                     .HasColumnName("iaSettings_AllowTestTakenPosts");
                 ias
                     .Property(p => p.AllowTagsSuggestions)
-                    .HasResourceAvailabilitySettingConversion()
                     .HasColumnName("iaSettings_AllowTagsSuggestions");
             }
         );

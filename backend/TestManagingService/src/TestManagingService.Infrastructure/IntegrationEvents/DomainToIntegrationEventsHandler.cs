@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using SharedKernel.IntegrationEvents;
-using SharedKernel.IntegrationEvents.test_managing;
+using SharedKernel.IntegrationEvents.test_managing.tags;
 using TestManagingService.Domain.TestAggregate.formats_shared.events;
 using TestManagingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 

@@ -1,5 +1,4 @@
 ﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
@@ -15,14 +14,14 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
     public ResourceAvailabilitySetting AllowComments { get; private set; }
     public bool AllowTestTakenPosts { get; private set; }
-    public ResourceAvailabilitySetting AllowTagsSuggestions { get; private set; }
+    public bool AllowTagsSuggestions { get; private set; }
 
     public TestInteractionsAccessSettings(
         AccessLevel testAccess,
         ResourceAvailabilitySetting allowRatings,
         ResourceAvailabilitySetting allowComments,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting allowTagsSuggestions
+        bool allowTagsSuggestions
     ) {
         TestAccess = testAccess;
         AllowRatings = allowRatings;
@@ -102,36 +101,38 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         IsUserCreatorOrEditorDelegate checkUserCreatorOrEditor
     ) => checkUserCreatorOrEditor(userId) ? ErrOrNothing.Nothing : Err.ErrFactory.NoAccess(errMessage);
 
-    public ErrListOrNothing Update(
+    public ErrOrNothing Update(
         AccessLevel testAccessLevel,
         ResourceAvailabilitySetting ratingsSetting,
         ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting tagsSuggestionsSetting
+        bool allowTagsSuggestions
     ) {
-        ErrList errs = new();
-        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfRatingsAvailabilityIsCorrect(
-            testAccessLevel, ratingsSetting
-        ));
-        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfCommentsAvailabilityIsCorrect(
-            testAccessLevel, commentsSetting
-        ));
-        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTestTakenPostsAvailabilityIsCorrect(
-            testAccessLevel, allowTestTakenPosts
-        ));
-        errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(
-            testAccessLevel, tagsSuggestionsSetting
-        ));
-        if (errs.Any()) {
-            return errs;
+        if (TestInteractionsAccessSettingsRules.CheckIfRatingsAvailabilityIsCorrect(
+                testAccessLevel, ratingsSetting).IsErr(out var err)) {
+            return err;
         }
 
+        if (TestInteractionsAccessSettingsRules.CheckIfCommentsAvailabilityIsCorrect(
+                testAccessLevel, commentsSetting).IsErr(out err)) {
+            return err;
+        }
+
+        if (TestInteractionsAccessSettingsRules.CheckIfTestTakenPostsAvailabilityIsCorrect(
+                testAccessLevel, allowTestTakenPosts).IsErr(out err)) {
+            return err;
+        }
+
+        if (TestInteractionsAccessSettingsRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(
+                testAccessLevel, allowTagsSuggestions).IsErr(out err)) {
+            return err;
+        }
         TestAccess = testAccessLevel;
         AllowRatings = ratingsSetting;
         AllowComments = commentsSetting;
         AllowTestTakenPosts = allowTestTakenPosts;
-        AllowTagsSuggestions = tagsSuggestionsSetting;
+        AllowTagsSuggestions = allowTagsSuggestions;
 
-        return ErrListOrNothing.Nothing;
+        return ErrOrNothing.Nothing;
     }
 }

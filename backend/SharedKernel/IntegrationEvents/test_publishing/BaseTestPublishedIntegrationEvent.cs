@@ -26,7 +26,7 @@ public record TestPublishedInteractionsAccessSettingsDto(
     ResourceAvailabilitySetting AllowRatings,
     ResourceAvailabilitySetting AllowComments,
     bool AllowTestTakenPosts,
-    ResourceAvailabilitySetting AllowTagsSuggestions
+    bool AllowTagSuggestions
 );
 
 public record TestPublishedStylesDto(

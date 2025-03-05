@@ -14,7 +14,9 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
 {
     private IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
-    public GeneralTestPublishedIntegrationEventHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+    public GeneralTestPublishedIntegrationEventHandler(
+        IGeneralFormatTestsRepository generalFormatTestsRepository
+    ) {
         _generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
@@ -66,6 +68,6 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         allowRatings: notification.InteractionsAccessSettings.AllowRatings,
         allowComments: notification.InteractionsAccessSettings.AllowComments,
         allowTestTakenPosts: notification.InteractionsAccessSettings.AllowTestTakenPosts,
-        allowTagsSuggestions: notification.InteractionsAccessSettings.AllowTagsSuggestions
+        allowTagsSuggestions: notification.InteractionsAccessSettings.AllowTagSuggestions
     );
 }

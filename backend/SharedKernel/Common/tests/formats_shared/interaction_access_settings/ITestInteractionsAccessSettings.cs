@@ -9,5 +9,5 @@ public interface ITestInteractionsAccessSettings
     public ResourceAvailabilitySetting AllowRatings { get; }
     public ResourceAvailabilitySetting AllowComments { get; }
     public bool AllowTestTakenPosts { get; }
-    public ResourceAvailabilitySetting AllowTagsSuggestions { get; }
+    public bool AllowTagsSuggestions { get; }
 }

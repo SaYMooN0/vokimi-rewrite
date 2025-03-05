@@ -1,5 +1,4 @@
 ﻿using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
@@ -8,14 +7,16 @@ using TestCreationService.Domain.Common;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 
-public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>, ITestInteractionsAccessSettings
+public class TestInteractionsAccessSettings :
+    Entity<TestInteractionsAccessSettingsId>,
+    ITestInteractionsAccessSettings
 {
     private TestInteractionsAccessSettings() { }
     public AccessLevel TestAccess { get; private set; }
     public ResourceAvailabilitySetting AllowRatings { get; private set; }
     public ResourceAvailabilitySetting AllowComments { get; private set; }
     public bool AllowTestTakenPosts { get; private set; }
-    public ResourceAvailabilitySetting AllowTagsSuggestions { get; private set; }
+    public bool AllowTagsSuggestions { get; private set; }
 
     public static TestInteractionsAccessSettings CreateNew() => new() {
         Id = TestInteractionsAccessSettingsId.CreateNew(),
@@ -23,7 +24,7 @@ public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSetti
         AllowRatings = ResourceAvailabilitySetting.EnabledPublic,
         AllowComments = ResourceAvailabilitySetting.EnabledPublic,
         AllowTestTakenPosts = true,
-        AllowTagsSuggestions = ResourceAvailabilitySetting.EnabledFollowersOnly
+        AllowTagsSuggestions = true
     };
 
     public ErrListOrNothing Update(
@@ -31,7 +32,7 @@ public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSetti
         ResourceAvailabilitySetting ratingsSetting,
         ResourceAvailabilitySetting commentsSetting,
         bool allowTestTakenPosts,
-        ResourceAvailabilitySetting tagsSuggestionsSetting
+        bool allowTagSuggestions
     ) {
         ErrList errs = new();
         errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfRatingsAvailabilityIsCorrect(
@@ -44,7 +45,7 @@ public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSetti
             testAccessLevel, allowTestTakenPosts
         ));
         errs.AddPossibleErr(TestInteractionsAccessSettingsRules.CheckIfTagsSuggestionsAvailabilityIsCorrect(
-            testAccessLevel, tagsSuggestionsSetting
+            testAccessLevel, allowTagSuggestions
         ));
         if (errs.Any()) {
             return errs;
@@ -54,7 +55,7 @@ public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSetti
         AllowRatings = ratingsSetting;
         AllowComments = commentsSetting;
         AllowTestTakenPosts = allowTestTakenPosts;
-        AllowTagsSuggestions = tagsSuggestionsSetting;
+        AllowTagsSuggestions = allowTagSuggestions;
 
         return ErrListOrNothing.Nothing;
     }

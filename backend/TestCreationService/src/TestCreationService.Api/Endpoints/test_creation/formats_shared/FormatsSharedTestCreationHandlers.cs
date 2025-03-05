@@ -37,9 +37,10 @@ internal static class FormatsSharedTestCreationHandlers
             .TestEditPermissionRequired();
         return group;
     }
+
     private async static Task<IResult> UpdateTestEditors(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateTestEditorsRequest>();
         var creator = httpContext.GetAuthenticatedUserId();
@@ -56,9 +57,10 @@ internal static class FormatsSharedTestCreationHandlers
             (ids) => Results.Json(new TestEditorsUpdatedResponse(ids), statusCode: 200)
         );
     }
+
     private async static Task<IResult> ChangeTestCreator(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<ChangeTestCreatorRequest>();
         var creator = httpContext.GetAuthenticatedUserId();
@@ -75,9 +77,10 @@ internal static class FormatsSharedTestCreationHandlers
             () => Results.Ok()
         );
     }
+
     private async static Task<IResult> DeleteTest(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         DeleteTestCommand command = new(httpContext.GetTestIdFromRoute());
         ErrOrNothing result = await mediator.Send(command);
@@ -87,9 +90,10 @@ internal static class FormatsSharedTestCreationHandlers
             () => Results.Ok()
         );
     }
+
     private async static Task<IResult> UpdateTestMainInfo(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateTestMainInfoRequest>();
         var testId = httpContext.GetTestIdFromRoute();
@@ -102,9 +106,10 @@ internal static class FormatsSharedTestCreationHandlers
             () => Results.Ok()
         );
     }
+
     private async static Task<IResult> UpdateTestInteractionsAccessSettings(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateTestInteractionsAccessSettingsRequest>();
         var testId = httpContext.GetTestIdFromRoute();
@@ -115,7 +120,7 @@ internal static class FormatsSharedTestCreationHandlers
             RatingsSetting: request.RatingsSetting,
             CommentsSetting: request.CommentsSetting,
             AllowTestTakenPosts: request.AllowTestTakenPosts,
-            TagSuggestionsSetting: request.TagSuggestionsSetting
+            AllowTagSuggestions: request.AllowTagSuggestions
         );
         ErrListOrNothing result = await mediator.Send(command);
 
@@ -124,9 +129,10 @@ internal static class FormatsSharedTestCreationHandlers
             () => Results.Ok()
         );
     }
+
     private async static Task<IResult> UpdateTestCover(
-       HttpContext httpContext,
-       ISender mediator
+        HttpContext httpContext,
+        ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateTestCoverRequest>();
         var testId = httpContext.GetTestIdFromRoute();

@@ -30,8 +30,5 @@ internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfigu
         builder
             .Property(s => s.AllowComments)
             .HasResourceAvailabilitySettingConversion();
-        builder
-            .Property(s => s.AllowTagsSuggestions)
-            .HasResourceAvailabilitySettingConversion();
     }
 }

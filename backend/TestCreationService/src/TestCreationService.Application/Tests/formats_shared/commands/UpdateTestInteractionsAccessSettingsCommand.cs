@@ -15,7 +15,7 @@ public record class UpdateTestInteractionsAccessSettingsCommand(
     ResourceAvailabilitySetting RatingsSetting,
     ResourceAvailabilitySetting CommentsSetting,
     bool AllowTestTakenPosts,
-    ResourceAvailabilitySetting TagSuggestionsSetting
+    bool AllowTagSuggestions
 ) : IRequest<ErrListOrNothing>;
 public class UpdateTestInteractionsAccessSettingsCommandHandler
     : IRequestHandler<UpdateTestInteractionsAccessSettingsCommand, ErrListOrNothing>
@@ -36,7 +36,7 @@ public class UpdateTestInteractionsAccessSettingsCommandHandler
             ratingsSetting: request.RatingsSetting,
             commentsSetting: request.CommentsSetting,
             request.AllowTestTakenPosts,
-            request.TagSuggestionsSetting
+            request.AllowTagSuggestions
         );
         if (updateRes.IsErr(out var err)) {
             return err;
