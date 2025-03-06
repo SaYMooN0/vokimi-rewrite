@@ -19,4 +19,6 @@ public class TagSuggestionForTest : Entity<TagSuggestionForTestId>
         Count = 1,
         FirstTimeSuggested = dateTimeProvider.Now
     };
+
+    public void IncrementCount() => Count++;
 }

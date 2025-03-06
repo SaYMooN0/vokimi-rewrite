@@ -5,7 +5,7 @@ using SharedKernel.Common.errors;
 
 namespace TestManagingService.Api.Contracts;
 
-public class SuggestTagsForTestRequest : IRequestWithValidationNeeded
+public class TestTagIdListRequest : IRequestWithValidationNeeded
 {
     public string[] SuggestedTags { get; set; } = [];
 
@@ -16,7 +16,7 @@ public class SuggestTagsForTestRequest : IRequestWithValidationNeeded
 
         if (SuggestedTags.Length > 200) {
             return Err.ErrFactory.InvalidData(
-                "Too many tags were specified. Please specify less tags"
+                "Too many tags were specified. Please specify fewer tags."
             );
         }
 

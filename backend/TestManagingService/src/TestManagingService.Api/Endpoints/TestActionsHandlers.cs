@@ -4,7 +4,8 @@ using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Api.Contracts;
 using TestManagingService.Api.Extensions;
-using TestManagingService.Application.Tests.formats_shared.commands;
+using TestManagingService.Application.Tests.formats_shared.commands.tags;
+using TestManagingService.Application.Tests.formats_shared.commands.tags.tag_suggestions;
 
 namespace TestManagingService.Api.Endpoints;
 
@@ -15,7 +16,7 @@ internal static class TestActionsHandlers
             .GroupUserAccessToViewTestRequired();
 
         group.MapPost("/suggestTags", AddTagSuggestionsForTest)
-            .WithRequestValidation<SuggestTagsForTestRequest>();
+            .WithRequestValidation<TestTagIdListRequest>();
 
 
         return group;
@@ -25,9 +26,9 @@ internal static class TestActionsHandlers
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        SuggestTagsForTestRequest request = httpContext.GetValidatedRequest<SuggestTagsForTestRequest>();
+        TestTagIdListRequest tagIdListRequest = httpContext.GetValidatedRequest<TestTagIdListRequest>();
 
-        AddTagSuggestionsForTestCommand command = new(testId, request.GetParsedTags());
+        AddTagSuggestionsForTestCommand command = new(testId, tagIdListRequest.GetParsedTags());
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(

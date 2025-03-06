@@ -91,6 +91,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagingService.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBSeeder", "DBSeeder\DBSeeder.csproj", "{DDDF07A8-AD59-442C-9129-452C5FEE37E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagingService.Domain.UnitTest", "TestManagingService\tests\TestManagingService.Domain.UnitTest\TestManagingService.Domain.UnitTest.csproj", "{F23251A6-3503-4DB9-8241-2E4DE7048F25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,10 @@ Global
 		{DDDF07A8-AD59-442C-9129-452C5FEE37E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDDF07A8-AD59-442C-9129-452C5FEE37E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDDF07A8-AD59-442C-9129-452C5FEE37E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23251A6-3503-4DB9-8241-2E4DE7048F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23251A6-3503-4DB9-8241-2E4DE7048F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23251A6-3503-4DB9-8241-2E4DE7048F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23251A6-3503-4DB9-8241-2E4DE7048F25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -252,5 +258,6 @@ Global
 		{52D8A083-31FE-46F3-BCAA-839E836B7FAE} = {3854BE9F-2BD1-48E4-B2B6-E81A708342E6}
 		{CCC4A191-B233-4873-A929-8E8702C73BFD} = {3854BE9F-2BD1-48E4-B2B6-E81A708342E6}
 		{77F5F3C2-8F81-4E30-9683-7DB6F377C9DA} = {3854BE9F-2BD1-48E4-B2B6-E81A708342E6}
+		{F23251A6-3503-4DB9-8241-2E4DE7048F25} = {C2E6F473-675C-4B89-9793-0CABDC16EA4E}
 	EndGlobalSection
 EndGlobal
