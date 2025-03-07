@@ -44,6 +44,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     }
 
     public ImmutableArray<TagSuggestionForTest> TagSuggestions => _tagSuggestions.ToImmutableArray();
+    public ImmutableArray<TestTagId> Tags => _tags.ToImmutableArray();
 
     public ErrOrNothing CheckUserAccessToManageTest(AppUserId userId) {
         if (userId != CreatorId) {
@@ -226,5 +227,16 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         return ErrOrNothing.Nothing;
+    }
+
+    public void AddCommentReport(
+        AppUserId authorId,
+        TestCommentId commentId,
+        string text,
+        CommentReportReason reason,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        TestCommentReport newReport = TestCommentReport.CreateNew(authorId, commentId, text, reason, dateTimeProvider);
+        _commentReports.Add(newReport);
     }
 }

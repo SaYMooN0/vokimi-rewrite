@@ -9,8 +9,13 @@ internal static class ManageTestStatisticsHandlers
         group
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
+
+        //statistics
         
-        
+        //test takings + filter
+        //ratings + filter
+        //comments + filter
+
         return group;
     }
 }

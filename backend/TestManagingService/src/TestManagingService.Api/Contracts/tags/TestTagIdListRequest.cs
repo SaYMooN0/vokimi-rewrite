@@ -3,7 +3,7 @@ using SharedKernel.Common;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 
-namespace TestManagingService.Api.Contracts;
+namespace TestManagingService.Api.Contracts.tags;
 
 public class TestTagIdListRequest : IRequestWithValidationNeeded
 {

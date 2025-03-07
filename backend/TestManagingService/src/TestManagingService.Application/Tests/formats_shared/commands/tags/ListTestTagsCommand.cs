@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Collections.Immutable;
+using MediatR;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestManagingService.Application.Common.interfaces.repositories.tests;
@@ -6,20 +7,21 @@ using TestManagingService.Domain.TestAggregate;
 
 namespace TestManagingService.Application.Tests.formats_shared.commands.tags;
 
-public record UpdateTagsForTestCommand(
-    TestId TestId,
-    HashSet<TestTagId> Tags
-) : IRequest<ErrOrNothing>;
+public record ListTestTagsCommand(
+    TestId TestId
+) : IRequest<ErrOr<ImmutableArray<TestTagId>>>;
 
-internal class UpdateTagsForTestCommandHandler : IRequestHandler<UpdateTagsForTestCommand, ErrOrNothing>
+internal class ListTestTagsCommandHandler
+    : IRequestHandler<ListTestTagsCommand, ErrOr<ImmutableArray<TestTagId>>>
 {
     private readonly IBaseTestsRepository _baseTestsRepository;
 
-    public UpdateTagsForTestCommandHandler(IBaseTestsRepository baseTestsRepository) {
+    public ListTestTagsCommandHandler(IBaseTestsRepository baseTestsRepository) {
         _baseTestsRepository = baseTestsRepository;
     }
-    public async Task<ErrOrNothing> Handle(
-        UpdateTagsForTestCommand request,
+
+    public async Task<ErrOr<ImmutableArray<TestTagId>>> Handle(
+        ListTestTagsCommand request,
         CancellationToken cancellationToken
     ) {
         BaseTest? test = await _baseTestsRepository.GetWithTagSuggestions(request.TestId);
@@ -27,12 +29,6 @@ internal class UpdateTagsForTestCommandHandler : IRequestHandler<UpdateTagsForTe
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
 
-        var res = test.UpdateTags(request.Tags);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        await _baseTestsRepository.Update(test);
-        return ErrOrNothing.Nothing;
+        return test.Tags;
     }
 }

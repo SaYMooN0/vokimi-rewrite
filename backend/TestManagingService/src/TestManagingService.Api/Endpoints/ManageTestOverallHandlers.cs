@@ -9,6 +9,10 @@ internal static class ManageTestOverallHandlers
         group
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
+
+        //get (TestFormat)
+
+        //update interaction settings
         return group;
     }
 }

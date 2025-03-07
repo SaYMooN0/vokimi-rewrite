@@ -22,9 +22,9 @@ public class GeneralFormatTest : BaseTest
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
     public IReadOnlyCollection<GeneralTestQuestion> Questions { get; init; }
-    private bool _shuffleQuestions { get; init; }
+    private bool _shuffleQuestions { get; }
     public IReadOnlyCollection<GeneralTestResult> Results { get; init; }
-    public GeneralTestFeedbackOption FeedbackOption { get; init; }
+    public GeneralTestFeedbackOption FeedbackOption { get; private set; }
 
     public GeneralFormatTest(
         TestId testId,
@@ -148,5 +148,9 @@ public class GeneralFormatTest : BaseTest
         }
 
         return Results.First(r => r.Id == resToReceiveId);
+    }
+
+    public void UpdateFeedbackOption(GeneralTestFeedbackOption newFeedbackOption) {
+        FeedbackOption = newFeedbackOption;
     }
 }

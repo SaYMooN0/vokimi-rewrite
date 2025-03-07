@@ -1,5 +1,5 @@
+using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestManagingService.Domain.Common;
 
@@ -15,7 +15,7 @@ public class TestCommentReport : Entity<TestCommentReportId>
     public string Text { get; init; }
     public DateTime CreatedAt { get; init; }
 
-    public static ErrOr<TestCommentReport> CreateNew(
+    public static TestCommentReport CreateNew(
         AppUserId authorId,
         TestCommentId commentId,
         string text,

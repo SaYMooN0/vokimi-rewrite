@@ -3,8 +3,8 @@ using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Api.Contracts;
+using TestManagingService.Api.Contracts.tags;
 using TestManagingService.Api.Extensions;
-using TestManagingService.Application.Tests.formats_shared.commands.tags;
 using TestManagingService.Application.Tests.formats_shared.commands.tags.tag_suggestions;
 
 namespace TestManagingService.Api.Endpoints;

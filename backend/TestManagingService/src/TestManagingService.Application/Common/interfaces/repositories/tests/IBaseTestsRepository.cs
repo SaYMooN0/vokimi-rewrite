@@ -7,6 +7,7 @@ public interface IBaseTestsRepository
 {
     public Task<BaseTest?> GetById(TestId testId);
     public Task<BaseTest?> GetWithTagSuggestions(TestId testId);
+    public Task<BaseTest?> GetWithCommentReports(TestId testId);
     public Task Update(BaseTest test);
 
 }

@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using ApiShared;
 using SharedUserRelationsContext;
 using TestManagingService.Api.Endpoints;
+using TestManagingService.Api.Endpoints.feedback;
 using TestManagingService.Application;
 using TestManagingService.Infrastructure;
 
@@ -38,9 +39,12 @@ public class Program
     }
 
     private static void MapHandlers(WebApplication app) {
-        app.MapGroup("/manageTest/{testId}/overall").MapManageTestOverallHandlers();
-        app.MapGroup("/manageTest/{testId}/feedback").MapManageTestFeedbackHandlers();
-        app.MapGroup("/manageTest/{testId}/statistics").MapManageTestStatisticsHandlers();
-        app.MapGroup("/manageTest/{testId}/tags").MapManageTestTagsHandlers();
+        app.MapGroup("/{testId}/actions").MapTestActionsHandlers();
+        
+        app.MapGroup("/{testId}/overall").MapManageTestOverallHandlers();
+        app.MapGroup("/{testId}/statistics").MapManageTestStatisticsHandlers();
+        app.MapGroup("/{testId}/tags").MapManageTestTagsHandlers();
+        
+        app.MapGroup("/{testId}/feedback/general").MapManageGeneralTestFeedbackHandlers();
     }
 }

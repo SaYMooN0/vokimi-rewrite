@@ -23,6 +23,9 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         await _db.SaveChangesAsync();
     }
 
+    public async Task<GeneralFormatTest?> GetById(TestId testId) =>
+        await _db.GeneralFormatTests.FindAsync(testId);
+
     public async Task<GeneralFormatTest?> GetWithQuestionWithAnswers(TestId testId) =>
         await _db.GeneralFormatTests
             .Include(t => t.Questions)

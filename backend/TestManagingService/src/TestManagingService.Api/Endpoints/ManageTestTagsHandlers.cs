@@ -3,6 +3,7 @@ using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Api.Contracts;
+using TestManagingService.Api.Contracts.tags;
 using TestManagingService.Api.Extensions;
 using TestManagingService.Application.Tests.formats_shared.commands.tags;
 using TestManagingService.Application.Tests.formats_shared.commands.tags.tag_suggestions;
@@ -16,7 +17,7 @@ internal static class ManageTestTagsHandlers
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
 
-        group.MapGet("/list", ...);
+        group.MapGet("/list", ListTestTags);
         group.MapPost("/update", UpdateTagsForTest)
             .WithRequestValidation<TestTagIdListRequest>();
 
@@ -30,7 +31,32 @@ internal static class ManageTestTagsHandlers
             .WithRequestValidation<TestTagIdListRequest>();
         return group;
     }
+    private static async Task<IResult> UpdateTagsForTest(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+        TestTagIdListRequest tagIdListRequest = httpContext.GetValidatedRequest<TestTagIdListRequest>();
 
+        UpdateTagsForTestCommand command = new(testId, tagIdListRequest.GetParsedTags());
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
+    }
+    private static async Task<IResult> ListTestTags(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        ListTestTagsCommand command = new(testId);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOr(
+            result,
+            (tags) => Results.Json(new {
+                Tags = tags.Select(t=>t.Value)
+            })
+        );
+    }
     private static async Task<IResult> ListTagSuggestionsForTest(
         HttpContext httpContext, ISender mediator
     ) {
@@ -47,19 +73,6 @@ internal static class ManageTestTagsHandlers
             })
         );
     }
-
-    private static async Task<IResult> UpdateTagsForTest(
-        HttpContext httpContext, ISender mediator
-    ) {
-        TestId testId = httpContext.GetTestIdFromRoute();
-        TestTagIdListRequest tagIdListRequest = httpContext.GetValidatedRequest<TestTagIdListRequest>();
-
-        UpdateTagsForTestCommand command = new(testId, tagIdListRequest.GetParsedTags());
-        var result = await mediator.Send(command);
-
-        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
-    }
-
     private static async Task<IResult> AcceptTagSuggestionsForTest(
         HttpContext httpContext, ISender mediator
     ) {

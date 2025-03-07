@@ -1,6 +1,6 @@
 ﻿using TestManagingService.Domain.TestAggregate.formats_shared;
 
-namespace TestManagingService.Api.Contracts;
+namespace TestManagingService.Api.Contracts.tags;
 
 public record class TestTagSuggestionViewResponse(
     string Tag,
