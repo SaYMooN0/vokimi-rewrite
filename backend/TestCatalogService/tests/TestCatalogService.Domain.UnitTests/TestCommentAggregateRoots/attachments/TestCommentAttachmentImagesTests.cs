@@ -7,7 +7,7 @@ namespace TestCatalogService.Domain.UnitTests.TestCommentAggregateRoots.attachme
 public class TestCommentAttachmentImagesTests
 {
     [Fact]
-    public void CheckForErr_ShouldReturnErr_WhenImagesListIsEmpty() {
+    public void CheckForErr_WhenImagesListIsEmpty_ShouldReturnErr() {
         // Arrange
         CommentAttachmentImages attachment = new([]);
 
@@ -20,7 +20,7 @@ public class TestCommentAttachmentImagesTests
     }
 
     [Fact]
-    public void CheckForErr_ShouldReturnErr_WhenImagePathIsEmpty() {
+    public void CheckForErr_WhenImagePathIsEmpty_ShouldReturnErr() {
         // Arrange
         var images = ImmutableArray.Create("");
         var attachment = new CommentAttachmentImages(images);
@@ -34,7 +34,7 @@ public class TestCommentAttachmentImagesTests
     }
 
     [Fact]
-    public void CheckForErr_ShouldReturnErr_WhenImagePathIsTooLong() {
+    public void CheckForErr_WhenImagePathIsTooLong_ShouldReturnErr() {
         // Arrange
         var longPath = new string('a', TestCommentRules.MaxAttachmentImagePathLen + 1);
         var images = ImmutableArray.Create(longPath);
@@ -50,7 +50,7 @@ public class TestCommentAttachmentImagesTests
     }
 
     [Fact]
-    public void CheckForErr_ShouldReturnNothing_WhenAllImagePathsAreValid() {
+    public void CheckForErr_WhenAllImagePathsAreValid_ShouldSucceed() {
         // Arrange
         var validPaths = ImmutableArray.Create("valid/path1.png", "valid/path2.jpg");
         var attachment = new CommentAttachmentImages(validPaths);

@@ -10,7 +10,6 @@ namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared;
 public static class TestsSharedTestsConsts
 {
     public static readonly AppUserId TestCreator = new(Guid.NewGuid());
-    public static readonly TestId TestId = new(Guid.NewGuid());
 
     public static readonly TestInteractionsAccessSettings DefaultInteractionsAccessSettings =
         new TestInteractionsAccessSettings(
@@ -18,12 +17,12 @@ public static class TestsSharedTestsConsts
             ResourceAvailabilitySetting.EnabledPublic,
             ResourceAvailabilitySetting.EnabledPublic,
             true,
-            ResourceAvailabilitySetting.EnabledPublic
+            true
         );
 
     public static BaseTest CreateBaseTest(TestInteractionsAccessSettings? customInteractionsAccessSettings = null) =>
         GeneralFormatTest.CreateNew(
-            TestsSharedTestsConsts.TestId,
+            TestId.CreateNew(),
             "Just test name",
             "coverImg.png",
             "Basic description",

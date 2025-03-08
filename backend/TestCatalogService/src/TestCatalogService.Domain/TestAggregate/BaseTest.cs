@@ -103,6 +103,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
     );
 
+    
     //CheckUserAccessToComment must be checked before
     public async Task<ErrOr<TestComment>> AddComment(
         AppUserId authorId,

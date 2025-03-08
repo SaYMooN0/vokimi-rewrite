@@ -1,4 +1,5 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using Microsoft.EntityFrameworkCore;
+using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.Common.interfaces.repositories;
 using TestCatalogService.Domain.TestTagAggregate;
 
@@ -15,8 +16,16 @@ internal class TestTagsRepository : ITestTagsRepository
     public async Task AddNew(TestTag testTag) {
         _db.TestTags.Add(testTag);
         await _db.SaveChangesAsync();
-
     }
+
+    public Task<string[]> TagIdValuesWithSubstring(string substring, int count) =>
+        _db.TestTags
+            .AsNoTracking()
+            .Select(t => t.Id.Value)
+            .Where(str => str.Contains(substring))
+            .Take(count)
+            .Order()
+            .ToArrayAsync();
 
     public async Task<TestTag?> GetById(TestTagId id) {
         return await _db.TestTags.FindAsync(id);

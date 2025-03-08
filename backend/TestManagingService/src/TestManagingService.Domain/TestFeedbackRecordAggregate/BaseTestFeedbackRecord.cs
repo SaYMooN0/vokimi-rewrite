@@ -7,7 +7,7 @@ namespace TestManagingService.Domain.TestFeedbackRecordAggregate;
 public abstract class BaseTestFeedbackRecord : AggregateRoot<TestFeedbackRecordId>
 {
     protected BaseTestFeedbackRecord() { }
-    public TestId TestId { get; init; }
-    public AppUserId? UserId { get; init; }
-    public DateTime CreatedOn { get; init; }
+    public TestId TestId { get; protected init; }
+    public AppUserId? UserId { get; protected init; }
+    public DateTime CreatedOn { get; protected init; }
 }

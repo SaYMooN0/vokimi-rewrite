@@ -20,7 +20,7 @@ internal static class TestTagsHandlers
         TestId testId = httpContext.GetTestIdFromRoute();
 
 
-        SearchTagsCommand command = new(tag);
+        SearchTagValuesCommand command = new(tag);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(

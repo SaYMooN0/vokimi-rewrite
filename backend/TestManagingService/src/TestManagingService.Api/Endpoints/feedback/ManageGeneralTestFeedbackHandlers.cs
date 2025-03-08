@@ -2,8 +2,11 @@ using ApiShared;
 using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
-using TestManagingService.Api.Contracts.test_feedback;
+using SharedKernel.Common.interfaces;
+using TestManagingService.Api.Contracts.test_feedback.feedback_option;
+using TestManagingService.Api.Contracts.test_feedback.feedback_records;
 using TestManagingService.Api.Extensions;
+using TestManagingService.Application.TestFeedbackRecords.commands;
 using TestManagingService.Application.Tests.general_format.feedback;
 
 namespace TestManagingService.Api.Endpoints.feedback;
@@ -15,12 +18,44 @@ internal static class ManageGeneralTestFeedbackHandlers
             .GroupAuthenticationRequired()
             .GroupUserAccessToManageTestRequired();
 
-        group.MapPost("/disable",DisableFeedbackForGeneralTest);
+        group.MapGet("/list", ListFeedbackForGeneralTest);
+        group.MapPost("/list/filtered", ListFilteredFeedbackForGeneralTest)
+            .WithRequestValidation<ListFilteredGeneralTestFeedbackRecordsRequest>();
+
+        group.MapPost("/disable", DisableFeedbackForGeneralTest);
         group.MapPost("/enable", EnableFeedbackForGeneralTest)
-            .WithRequestValidation<EnableGeneralTestFeedbackRequest>();
+            .WithRequestValidation<EnableGeneralTestFeedbackOptionRequest>();
 
         //list left feedback + filter
         return group;
+    }
+
+    private static async Task<IResult> ListFeedbackForGeneralTest(
+        HttpContext httpContext, ISender mediator
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+
+        ListFeedbackForGeneralTestCommand command = new(testId);
+        var feedbackRecords = await mediator.Send(command);
+
+        return Results.Json(new { FeedbackRecords = feedbackRecords });
+    }
+
+    private static async Task<IResult> ListFilteredFeedbackForGeneralTest(
+        HttpContext httpContext, ISender mediator, IDateTimeProvider dateTimeProvider
+    ) {
+        TestId testId = httpContext.GetTestIdFromRoute();
+        var request = httpContext.GetValidatedRequest<ListFilteredGeneralTestFeedbackRecordsRequest>();
+        var filterResult = request.GetParsedFilter(dateTimeProvider);
+        if (filterResult.IsErr(out var err)) {
+            return CustomResults.ErrorResponse(err);
+        }
+
+        ListFilteredFeedbackForGeneralTestCommand command = new(testId, filterResult.GetSuccess());
+        var feedbackRecords = await mediator.Send(command);
+
+        return Results.Json(new { FeedbackRecords = feedbackRecords });
+
     }
 
     private static async Task<IResult> DisableFeedbackForGeneralTest(
@@ -31,21 +66,22 @@ internal static class ManageGeneralTestFeedbackHandlers
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(result, (newFeedbackOption) => Results.Json(
-            GeneralTestFeedbackViewResponse.FromFeedbackOption(newFeedbackOption)
+            GeneralTestFeedbackOptionViewResponse.FromFeedbackOption(newFeedbackOption)
         ));
     }
+
     private static async Task<IResult> EnableFeedbackForGeneralTest(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        var request = httpContext.GetValidatedRequest<EnableGeneralTestFeedbackRequest>();
+        var request = httpContext.GetValidatedRequest<EnableGeneralTestFeedbackOptionRequest>();
         EnableFeedbackForGeneralTestCommand command = new(
             testId, request.Anonymity, request.AccompanyingText, request.MaxFeedbackLength
         );
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(result, (newFeedbackOption) => Results.Json(
-            GeneralTestFeedbackViewResponse.FromFeedbackOption(newFeedbackOption)
+            GeneralTestFeedbackOptionViewResponse.FromFeedbackOption(newFeedbackOption)
         ));
     }
 }

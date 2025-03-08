@@ -3,6 +3,7 @@ using ApiShared;
 using SharedUserRelationsContext;
 using TestManagingService.Api.Endpoints;
 using TestManagingService.Api.Endpoints.feedback;
+using TestManagingService.Api.Endpoints.statistics;
 using TestManagingService.Application;
 using TestManagingService.Infrastructure;
 
@@ -42,9 +43,10 @@ public class Program
         app.MapGroup("/{testId}/actions").MapTestActionsHandlers();
         
         app.MapGroup("/{testId}/overall").MapManageTestOverallHandlers();
-        app.MapGroup("/{testId}/statistics").MapManageTestStatisticsHandlers();
+        app.MapGroup("/{testId}/statistics").MapManageTestSharedStatisticsHandlers();
         app.MapGroup("/{testId}/tags").MapManageTestTagsHandlers();
         
-        app.MapGroup("/{testId}/feedback/general").MapManageGeneralTestFeedbackHandlers();
+        app.MapGroup("/{testId}/general/feedback").MapManageGeneralTestFeedbackHandlers();
+        app.MapGroup("/{testId}/general/statistics").MapManageGeneralTestStatisticsHandlers();
     }
 }

@@ -1,11 +1,10 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestCatalogService.Domain.Common;
 using TestCatalogService.Domain.Rules;
 using TestCatalogService.Domain.TestAggregate;
-using TestCatalogService.Domain.TestAggregate.formats_shared.comment_reports;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
+using TestCatalogService.Domain.TestCommentAggregate;
 using TestCatalogService.Domain.UnitTests.FakeRepositories;
 
 namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.comments_related_tests;
@@ -16,14 +15,25 @@ public class TestCommentReportingTests
     private readonly AppUserId _commentsAuthorId = new(Guid.NewGuid());
     private readonly string _defaultReportText = "Just some comment report text";
     private readonly CommentReportReason _reportReason = CommentReportReason.Custom;
+    private static readonly List<TestComment> _repositoryCommentsLits = new();
+
+    private readonly FakeTestCommentsRepository _fakeTestCommentsRepository = new() {
+        AddFunc = (comment) => {
+            _repositoryCommentsLits.Add(comment);
+            return Task.CompletedTask;
+        },
+        GetByIdFunc = (id) => Task.FromResult(_repositoryCommentsLits.FirstOrDefault(c => c.Id == id)),
+    };
+
+    private readonly FakeAppUsersRepository _fakeAppUsersRepository = new() {
+        DoesUserExistFunc = (id) => Task.FromResult(true)
+    };
+
 
     private async Task<(BaseTest, List<TestCommentId>)> CreateTestWithComments(int commentsCount = 5) {
         var test = TestsSharedTestsConsts.CreateBaseTest();
         List<TestCommentId> testCommentIds = [];
 
-        FakeTestCommentsRepository fakeTestCommentsRepository = new() {
-            AddFunc = (comment) => { return Task.CompletedTask; }
-        };
 
         for (int i = 0; i < commentsCount; i++) {
             var comment = (await test.AddComment(
@@ -31,7 +41,7 @@ public class TestCommentReportingTests
                 "commentText daaah"
                 , null,
                 false,
-                fakeTestCommentsRepository,
+                _fakeTestCommentsRepository,
                 TestsSharedConsts.DateTimeProviderInstance
             )).GetSuccess();
             testCommentIds.Add(comment.Id);
@@ -46,13 +56,15 @@ public class TestCommentReportingTests
         var (test, testCommentIds) = await CreateTestWithComments();
         var nonExistentCommentId = new TestCommentId(Guid.NewGuid());
 
+
         // Act
-        var result = test.ReportComment(
+        var result = await test.ReportComment(
             _reportingUser,
             nonExistentCommentId,
             _defaultReportText,
             _reportReason,
-            TestsSharedConsts.DateTimeProviderInstance
+            _fakeTestCommentsRepository,
+            _fakeAppUsersRepository
         );
 
         // Assert
@@ -69,19 +81,17 @@ public class TestCommentReportingTests
         var existingCommentId = testCommentIds[0];
 
         // Act
-        var result = test.ReportComment(
-            _reportingUser, existingCommentId, _defaultReportText, _reportReason,
-            TestsSharedConsts.DateTimeProviderInstance
+        var result = await test.ReportComment(
+            _reportingUser,
+            existingCommentId,
+            _defaultReportText,
+            _reportReason,
+            _fakeTestCommentsRepository,
+            _fakeAppUsersRepository
         );
 
         // Assert
         Assert.False(result.IsErr());
-        var reportExists = test.CommentReports.Any(report =>
-            report.CommentId == existingCommentId && report.AuthorId == _reportingUser &&
-            report.Reason == _reportReason && report.Text == _defaultReportText
-        );
-        Assert.True(reportExists);
-
         var eventExists = test.GetDomainEventsCopy().Any(e =>
             e is TestCommentReportedEvent reportedEvent &&
             reportedEvent.CommentId == existingCommentId && reportedEvent.ReportAuthorId == _reportingUser
@@ -97,9 +107,13 @@ public class TestCommentReportingTests
         var tooShortText = new string('a', TestCommentReportRules.MinReportTextLength - 1);
 
         // Act
-        var result = test.ReportComment(
-            _reportingUser, existingCommentId, tooShortText, _reportReason,
-            TestsSharedConsts.DateTimeProviderInstance
+        var result = await test.ReportComment(
+            _reportingUser,
+            existingCommentId,
+            tooShortText,
+            _reportReason,
+            _fakeTestCommentsRepository,
+            _fakeAppUsersRepository
         );
 
         // Assert
@@ -116,9 +130,13 @@ public class TestCommentReportingTests
         var tooLongText = new string('a', TestCommentReportRules.MaxReportTextLength + 1);
 
         // Act
-        var result = test.ReportComment(
-            _reportingUser, existingCommentId, tooLongText, _reportReason,
-            TestsSharedConsts.DateTimeProviderInstance
+        var result = await test.ReportComment(
+            _reportingUser,
+            existingCommentId,
+            tooLongText,
+            _reportReason,
+            _fakeTestCommentsRepository,
+            _fakeAppUsersRepository
         );
 
         // Assert

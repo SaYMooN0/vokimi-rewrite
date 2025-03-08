@@ -2,9 +2,9 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.tests.general_format;
 
-namespace TestManagingService.Api.Contracts.test_feedback;
+namespace TestManagingService.Api.Contracts.test_feedback.feedback_option;
 
-public class EnableGeneralTestFeedbackRequest : IRequestWithValidationNeeded
+public class EnableGeneralTestFeedbackOptionRequest : IRequestWithValidationNeeded
 {
     public AnonymityValues Anonymity { get; init; }
     public string AccompanyingText { get; init; }
