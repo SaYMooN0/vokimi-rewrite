@@ -15,4 +15,9 @@ internal class BaseTestsRepository : IBaseTestsRepository
 
     public async Task<BaseTest?> GetById(TestId testId) =>
         await _db.BaseTests.FindAsync(testId);
+
+    public async Task Update(BaseTest test) {
+        _db.BaseTests.Update(test);
+        await _db.SaveChangesAsync();
+    }
 }

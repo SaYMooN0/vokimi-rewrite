@@ -3,6 +3,7 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.TestAggregate;
+using TestCatalogService.Domain.UnitTests.TestAggregateRoot.test_consts;
 
 namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared;
 
@@ -10,7 +11,7 @@ public class TestRatingsTests
 {
     private readonly AppUserId _testUserId = new(Guid.NewGuid());
 
-    private BaseTest CreateTestWithRatings(Dictionary<AppUserId, ushort>? initialRatings = null) {
+    private async Task<BaseTest> CreateTestWithRatings(Dictionary<AppUserId, ushort>? initialRatings = null) {
         var test = TestsSharedTestsConsts.CreateBaseTest();
 
         if (initialRatings != null) {
@@ -24,10 +25,10 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public void AddRating_ShouldReturnError_WhenUserHasAlreadyRated() {
+    public async Task AddRating_ShouldReturnError_WhenUserHasAlreadyRated() {
         // Arrange
         var initialRatings = new Dictionary<AppUserId, ushort> { { _testUserId, 4 } };
-        var test = CreateTestWithRatings(initialRatings);
+        var test = await CreateTestWithRatings(initialRatings);
 
         // Act
         var result = test.AddRating(_testUserId, 5, TestsSharedConsts.DateTimeProviderInstance);
@@ -38,9 +39,9 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public void AddRating_ShouldReturnError_WhenRatingIsOutOfRange() {
+    public async Task AddRating_ShouldReturnError_WhenRatingIsOutOfRange() {
         // Arrange
-        var test = CreateTestWithRatings();
+        var test = await CreateTestWithRatings();
 
         // Act
         var invalidHighRating = test.AddRating(_testUserId, 6, TestsSharedConsts.DateTimeProviderInstance);
@@ -51,9 +52,9 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public void AddRating_ShouldAddRatingAndRaiseEvent_WhenSuccessful() {
+    public async Task AddRating_ShouldAddRatingAndRaiseEvent_WhenSuccessful() {
         // Arrange
-        var test =  CreateTestWithRatings();
+        var test = await CreateTestWithRatings();
         ushort ratingValue = 5;
 
         // Act

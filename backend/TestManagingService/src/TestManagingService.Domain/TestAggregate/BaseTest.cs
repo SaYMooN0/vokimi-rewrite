@@ -6,6 +6,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.value_objects;
 using TestManagingService.Domain.Common;
 using TestManagingService.Domain.TestAggregate.formats_shared;
 using TestManagingService.Domain.TestAggregate.formats_shared.comment_reports;
@@ -20,9 +21,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public AppUserId CreatorId { get; }
     public ImmutableArray<AppUserId> EditorIds { get; }
     public DateTime PublicationDate { get; }
-    public TestInteractionsAccessSettings InteractionsAccessSettings { get; private set; }
-    public ImmutableArray<TestFeedbackRecordId> _feedbackRecords { get; }
-    protected ICollection<TestCommentReport> _commentReports { get; }
+    private TestInteractionsAccessSettings _interactionsAccessSettings { get; set; }
+    public ImmutableArray<TestFeedbackRecordId> _feedbackRecords { get; init; }
+    protected ICollection<TestCommentReport> _commentReports { get; init; }
     private ImmutableHashSet<TestTagId> _tags { get; set; }
     private ICollection<TagSuggestionForTest> _tagSuggestions { get; set; }
     private ImmutableHashSet<TestTagId> TagsBannedFromSuggestion { get; set; }
@@ -31,12 +32,14 @@ public abstract class BaseTest : AggregateRoot<TestId>
         TestId testId,
         AppUserId creatorId,
         ImmutableArray<AppUserId> editorIds,
-        DateTime publicationDate
+        DateTime publicationDate,
+        TestInteractionsAccessSettings interactionsAccessSettings
     ) {
         Id = testId;
         CreatorId = creatorId;
         EditorIds = editorIds;
         PublicationDate = publicationDate;
+        _interactionsAccessSettings = interactionsAccessSettings;
         _feedbackRecords = [];
         _commentReports = [];
         _tagSuggestions = [];
@@ -60,12 +63,12 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public async Task<ErrOrNothing> CheckUserAccessToViewTest(
         AppUserId userId,
         Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings
-    ) => await InteractionsAccessSettings.CheckUserAccessToViewTest(
+    ) => await _interactionsAccessSettings.CheckUserAccessToViewTest(
         userId, IsUserCreatorOrEditor,
         async (uId) => (await getUserFollowings(userId)).Contains(userId)
     );
 
-    public ErrOrNothing CheckAccessToViewTestForUnauthorized() => InteractionsAccessSettings.TestAccess switch {
+    public ErrOrNothing CheckAccessToViewTestForUnauthorized() => _interactionsAccessSettings.TestAccess switch {
         AccessLevel.Public => ErrOrNothing.Nothing,
         AccessLevel.Private => Err.ErrFactory.NoAccess(
             "To access this test you must be either test creator or editor. Log in to your account if you are"
@@ -77,6 +80,35 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _ => throw new ArgumentException(
             $"Incorrect access level in the {nameof(CheckAccessToViewTestForUnauthorized)}"),
     };
+
+    public ErrListOr<TestInteractionsAccessSettings> UpdateInteractionsAccessSettings(
+        AccessLevel testAccessLevel,
+        ResourceAvailabilitySetting ratingsSetting,
+        ResourceAvailabilitySetting commentsSetting,
+        bool allowTestTakenPosts,
+        bool allowTagSuggestions
+    ) {
+        var updateResult = _interactionsAccessSettings.Update(
+            testAccessLevel,
+            ratingsSetting: ratingsSetting,
+            commentsSetting: commentsSetting,
+            allowTestTakenPosts,
+            allowTagSuggestions
+        );
+        if (updateResult.IsErr(out var errList)) {
+            return errList;
+        }
+
+        TestInteractionsAccessSettingsUpdatedEvent domainEvent = new(
+            Id, _interactionsAccessSettings.TestAccess,
+            AllowRatings: _interactionsAccessSettings.AllowRatings,
+            AllowComments: _interactionsAccessSettings.AllowComments,
+            AllowTestTakenPosts: _interactionsAccessSettings.AllowTestTakenPosts,
+            AllowTagSuggestions: _interactionsAccessSettings.AllowTagsSuggestions
+        );
+        _domainEvents.Add(domainEvent);
+        return _interactionsAccessSettings;
+    }
 
     public ErrOrNothing UpdateTags(HashSet<TestTagId> newTags) {
         if (newTags.Count() > TestTagsRules.MaxTagsForTestCount) {
@@ -98,7 +130,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     private const int MaxSuggestionsCountToInteract = 200;
 
     public ErrOrNothing AddTagSuggestions(HashSet<TestTagId> suggestedTags, IDateTimeProvider dateTimeProvider) {
-        if (!InteractionsAccessSettings.AllowTagsSuggestions) {
+        if (!_interactionsAccessSettings.AllowTagsSuggestions) {
             return new Err(
                 "Tag suggestions are not allowed for this test",
                 details: "Test creator disabled tag suggestions for this test"

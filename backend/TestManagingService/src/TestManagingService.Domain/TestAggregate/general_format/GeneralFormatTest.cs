@@ -4,6 +4,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.general_format;
+using TestManagingService.Domain.TestAggregate.formats_shared;
 using TestManagingService.Domain.TestAggregate.general_format.events;
 
 namespace TestManagingService.Domain.TestAggregate.general_format;
@@ -18,15 +19,17 @@ public class GeneralFormatTest : BaseTest
         TestId testId,
         AppUserId creatorId,
         ImmutableArray<AppUserId> editorIds,
-        DateTime publicationDate
-    ) : base(testId, creatorId, editorIds, publicationDate) { }
+        DateTime publicationDate,
+        TestInteractionsAccessSettings interactionsAccessSettings
+    ) : base(testId, creatorId, editorIds, publicationDate, interactionsAccessSettings) { }
 
     public static GeneralFormatTest CreateNew(
         TestId testId,
         AppUserId creatorId,
         ImmutableArray<AppUserId> editorIds,
-        DateTime publicationDate
-    ) => new(testId, creatorId, editorIds, publicationDate);
+        DateTime publicationDate,
+        TestInteractionsAccessSettings interactionsAccessSettings
+    ) => new(testId, creatorId, editorIds, publicationDate, interactionsAccessSettings);
 
     public ErrOrNothing SetFeedbackOptionEnabled(
         AnonymityValues anonymity,

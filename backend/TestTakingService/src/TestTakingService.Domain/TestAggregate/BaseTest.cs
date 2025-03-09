@@ -16,7 +16,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     public abstract TestFormat Format { get; }
     protected AppUserId _creatorId { get; }
     protected ImmutableHashSet<AppUserId> _editors { get; }
-    protected AccessLevel _accessLevel { get; init; }
+    protected AccessLevel _accessLevel { get; private set; }
     public TestStylesSheet Styles { get; init; }
     protected readonly HashSet<AppUserId> _takenByUserIds;
     protected readonly HashSet<TestTakenRecordId> _testTakenRecordIds;
@@ -75,7 +75,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
         GetUserFollowingsAsyncDelegate getUserFollowingsAsync
     ) {
         IEnumerable<AppUserId> followings = await getUserFollowingsAsync(userId);
-
         return followings.Contains(_creatorId)
             ? ErrOrNothing.Nothing
             : Err.ErrFactory.NoAccess(
@@ -83,4 +82,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
                 $"Test creator Id: {_creatorId}"
             );
     }
+
+    public void UpdateAccessLevel(AccessLevel accessLevel) => _accessLevel = accessLevel;
 }

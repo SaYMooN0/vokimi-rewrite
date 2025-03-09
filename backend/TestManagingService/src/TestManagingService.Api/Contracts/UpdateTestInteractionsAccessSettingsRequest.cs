@@ -1,10 +1,10 @@
-﻿using ApiShared.interfaces;
+using ApiShared.interfaces;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.value_objects;
 
-namespace TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
+namespace TestManagingService.Api.Contracts;
 
 internal class UpdateTestInteractionsAccessSettingsRequest : IRequestWithValidationNeeded
 {

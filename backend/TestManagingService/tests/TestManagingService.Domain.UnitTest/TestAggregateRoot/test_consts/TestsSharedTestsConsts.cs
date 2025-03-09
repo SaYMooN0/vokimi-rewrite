@@ -1,11 +1,11 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests.value_objects;
-using TestCatalogService.Domain.TestAggregate;
-using TestCatalogService.Domain.TestAggregate.formats_shared;
-using TestCatalogService.Domain.TestAggregate.general_format;
+using TestManagingService.Domain.TestAggregate;
+using TestManagingService.Domain.TestAggregate.formats_shared;
+using TestManagingService.Domain.TestAggregate.general_format;
 
-namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared;
+namespace TestManagingService.Domain.UnitTest.TestAggregateRoot.test_consts;
 
 public static class TestsSharedTestsConsts
 {
@@ -23,17 +23,8 @@ public static class TestsSharedTestsConsts
     public static BaseTest CreateBaseTest(TestInteractionsAccessSettings? customInteractionsAccessSettings = null) =>
         GeneralFormatTest.CreateNew(
             TestId.CreateNew(),
-            "Just test name",
-            "coverImg.png",
-            "Basic description",
-            TestCreator,
-            [],
+            TestCreator, [],
             DateTime.Now.AddYears(-1).AddDays(-1),
-            Language.Eng,
-            8,
-            8,
-            true,
-            customInteractionsAccessSettings ?? DefaultInteractionsAccessSettings,
-            []
-        ).GetSuccess();
+            DefaultInteractionsAccessSettings
+        );
 }

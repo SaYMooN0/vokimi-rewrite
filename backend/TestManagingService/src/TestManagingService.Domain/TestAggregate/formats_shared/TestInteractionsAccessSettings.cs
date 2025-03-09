@@ -51,7 +51,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         : AllowComments.Access switch {
             AccessLevel.Public => ErrOrNothing.Nothing,
             AccessLevel.Private =>
-                await CheckAccessForPrivateFields(userId,
+                CheckAccessForPrivateFields(userId,
                     "Test comments are private. You must be the creator or editor to comment.", isUserCreatorOrEditor),
             AccessLevel.FollowersOnly => await CheckAccessForFollowingRequiredFields(userId,
                 "You must be following the test creator to comment.", checkUserFollowsCreatorAsync),
@@ -67,7 +67,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         : AllowRatings.Access switch {
             AccessLevel.Public => ErrOrNothing.Nothing,
             AccessLevel.Private =>
-                await CheckAccessForPrivateFields(userId,
+                CheckAccessForPrivateFields(userId,
                     "Test ratings are private. You must be the creator or editor to rate.", isUserCreatorOrEditor),
             AccessLevel.FollowersOnly => await CheckAccessForFollowingRequiredFields(userId,
                 "You must be following the test creator to rate this test.", checkUserFollowsCreatorAsync),
@@ -81,7 +81,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
     ) => TestAccess switch {
         AccessLevel.Public => ErrOrNothing.Nothing,
         AccessLevel.Private =>
-            await CheckAccessForPrivateFields(userId,
+            CheckAccessForPrivateFields(userId,
                 "Test is private. You must be the creator or editor to view this test.", isUserCreatorOrEditor),
         AccessLevel.FollowersOnly => await CheckAccessForFollowingRequiredFields(userId,
             "You must be following the test creator to view this test.", checkUserFollowsCreatorAsync),
@@ -95,7 +95,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         CheckUserFollowsCreatorAsyncDelegate checkUserFollowsCreatorAsync
     ) => (await checkUserFollowsCreatorAsync(userId)) ? ErrOrNothing.Nothing : Err.ErrFactory.NoAccess(errMessage);
 
-    private async Task<ErrOrNothing> CheckAccessForPrivateFields(
+    private ErrOrNothing CheckAccessForPrivateFields(
         AppUserId userId,
         string errMessage,
         IsUserCreatorOrEditorDelegate checkUserCreatorOrEditor

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SharedKernel.IntegrationEvents.test_managing;
 using SharedKernel.IntegrationEvents.test_managing.feedback_option_updated;
 using SharedKernel.IntegrationEvents.test_managing.tags;
 using TestManagingService.Domain.TestAggregate.formats_shared.events;
@@ -9,8 +10,8 @@ namespace TestManagingService.Infrastructure.IntegrationEvents;
 
 internal class DomainToIntegrationEventsHandler :
     INotificationHandler<TagsChangedEvent>,
-    INotificationHandler<GeneralTestFeedbackOptionUpdatedEvent>
-//settings changed
+    INotificationHandler<GeneralTestFeedbackOptionUpdatedEvent>,
+    INotificationHandler<TestInteractionsAccessSettingsUpdatedEvent>
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
@@ -31,6 +32,20 @@ internal class DomainToIntegrationEventsHandler :
         var integrationEvent = new GeneralTestFeedbackOptionUpdatedIntegrationEvent(
             notification.TestId,
             notification.NewFeedbackOption
+        );
+        await _integrationEventsPublisher.PublishEvent(integrationEvent);
+    }
+
+    public async Task Handle(
+        TestInteractionsAccessSettingsUpdatedEvent notification, CancellationToken cancellationToken
+    ) {
+        var integrationEvent = new TestInteractionsAccessSettingsUpdatedIntegrationEvent(
+            notification.TestId,
+            notification.TestAccess,
+            AllowRatings: notification.AllowRatings,
+            AllowComments: notification.AllowComments,
+            AllowTestTakenPosts: notification.AllowTestTakenPosts,
+            AllowTagSuggestions: notification.AllowTagSuggestions
         );
         await _integrationEventsPublisher.PublishEvent(integrationEvent);
     }

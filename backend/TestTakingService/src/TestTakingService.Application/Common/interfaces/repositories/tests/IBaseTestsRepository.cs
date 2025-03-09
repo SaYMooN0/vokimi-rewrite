@@ -7,4 +7,6 @@ namespace TestTakingService.Application.Common.interfaces.repositories.tests;
 public interface IBaseTestsRepository
 {
     public Task<BaseTest?> GetById(TestId testId);
+    public Task Update(BaseTest test);
+
 }
