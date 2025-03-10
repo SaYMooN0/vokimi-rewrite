@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.general_test_questions;
@@ -183,11 +184,5 @@ public static class GeneralTestTestsConsts
     public static DateTime TestTakingStart => DateTime.Now.AddHours(-1);
     public static DateTime TestTakingEnd => DateTime.Now;
 
-    public static IDateTimeProvider DateTimeProviderInstance = new DateTimeProvider();
-}
-
-file class DateTimeProvider : IDateTimeProvider
-{
-    public DateTime Now => DateTime.Now;
-    public DateOnly NowDateOnly => DateOnly.FromDateTime(DateTime.Now);
+    public static IDateTimeProvider DateTimeProviderInstance = new UtcDateTimeProvider();
 }

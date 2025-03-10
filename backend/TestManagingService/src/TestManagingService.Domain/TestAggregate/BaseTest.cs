@@ -127,7 +127,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return ErrOrNothing.Nothing;
     }
 
-    private const int MaxSuggestionsCountToInteract = 200;
+    public const int MaxSuggestionsCountToInteract = 200;
 
     public ErrOrNothing AddTagSuggestions(HashSet<TestTagId> suggestedTags, IDateTimeProvider dateTimeProvider) {
         if (!_interactionsAccessSettings.AllowTagsSuggestions) {

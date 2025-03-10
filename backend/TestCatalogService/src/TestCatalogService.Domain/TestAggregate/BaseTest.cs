@@ -87,13 +87,6 @@ public abstract class BaseTest : AggregateRoot<TestId>
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
     );
 
-    public async Task<ErrOrNothing> CheckUserAccessToRate(
-        AppUserId userId,
-        Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings
-    ) => await InteractionsAccessSettings.CheckUserAccessToRate(
-        userId, IsUserCreatorOrEditor,
-        async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
-    );
 
     public async Task<ErrOrNothing> CheckUserAccessToComment(
         AppUserId userId,
@@ -103,7 +96,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
     );
 
-    
+
     //CheckUserAccessToComment must be checked before
     public async Task<ErrOr<TestComment>> AddComment(
         AppUserId authorId,
@@ -164,7 +157,25 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return answerCreationRes.GetSuccess();
     }
 
-    public ErrOr<TestRating> AddRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) {
+    private async Task<ErrOrNothing> CheckUserAccessToRate(
+        AppUserId userId,
+        Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings
+    ) => await InteractionsAccessSettings.CheckUserAccessToRate(
+        userId, IsUserCreatorOrEditor,
+        async (uId) => await CheckUserFollowsCreator(getUserFollowings, uId)
+    );
+
+    public async Task<ErrOr<TestRating>> AddRating(
+        AppUserId userId,
+        ushort ratingValue,
+        IUserFollowingsRepository userFollowingsRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        var userAccessToRate = await CheckUserAccessToRate(userId, userFollowingsRepository.GetUserFollowings);
+        if (userAccessToRate.IsErr(out var err)) {
+            return err;
+        }
+
         TestRating? existing = _ratings.FirstOrDefault(r => r.UserId == userId);
         if (existing is not null) {
             return new Err(
@@ -174,7 +185,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         var ratingCreationRes = TestRating.CreateNew(ratingValue, userId, dateTimeProvider);
-        if (ratingCreationRes.IsErr(out var err)) {
+        if (ratingCreationRes.IsErr(out err)) {
             return err;
         }
 
@@ -184,18 +195,28 @@ public abstract class BaseTest : AggregateRoot<TestId>
         return rating;
     }
 
-    public ErrOrNothing UpdateRating(AppUserId userId, ushort ratingValue, IDateTimeProvider dateTimeProvider) {
+    public async Task<ErrOr<TestRating>> UpdateRating(
+        AppUserId userId,
+        ushort ratingValue,
+        IUserFollowingsRepository userFollowingsRepository,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        var userAccessToRate = await CheckUserAccessToRate(userId, userFollowingsRepository.GetUserFollowings);
+        if (userAccessToRate.IsErr(out var err)) {
+            return err;
+        }
+
         TestRating? existing = _ratings.FirstOrDefault(r => r.UserId == userId);
         if (existing is null) {
             return Err.ErrFactory.NotFound($"Cannot update rating because user has not rated this test");
         }
 
         var updatingRes = existing.Update(ratingValue, dateTimeProvider);
-        if (updatingRes.IsErr(out var err)) {
+        if (updatingRes.IsErr(out err)) {
             return err;
         }
 
-        return ErrOrNothing.Nothing;
+        return updatingRes.GetSuccess();
     }
 
     private const ushort RatingsPackageSize = 100;

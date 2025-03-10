@@ -16,16 +16,14 @@ internal static class ViewTestRatingsHandlers
     internal static RouteGroupBuilder MapViewTestRatingsHandlers(this RouteGroupBuilder group) {
         group
             .GroupUserAccessToViewTestRequired();
-        //list
+
         group.MapGet("/list/{package}", ListTestRatings);
         group.MapPost("/listFiltered/{package}", ListTestFilteredRatings)
             .WithRequestValidation<ListFilteredTestRatingsRequest>();
         group.MapPost("/add/{value}", RateTest)
-            .AuthenticationRequired()
-            .WithAccessCheckToRateTest();
+            .AuthenticationRequired();
         group.MapPost("/updateRating/{value}", UpdateTestRating)
-            .AuthenticationRequired()
-            .WithAccessCheckToRateTest();
+            .AuthenticationRequired();
 
 
         return group;
@@ -82,8 +80,9 @@ internal static class ViewTestRatingsHandlers
 
         AddTestRatingCommand ratingCommand = new(userId, testId, value);
         var result = await mediator.Send(ratingCommand);
+
         return CustomResults.FromErrOr(result,
-            (ratingValue) => Results.Json(new { RatingValue = ratingValue })
+            (rating) => Results.Json(new { Rating = TestRatingDataViewResponse.FromTestRating(rating) })
         );
     }
 
@@ -95,8 +94,9 @@ internal static class ViewTestRatingsHandlers
 
         UpdateTestRatingCommand command = new(userId, testId, value);
         var result = await mediator.Send(command);
+
         return CustomResults.FromErrOr(result,
-            (ratingValue) => Results.Json(new { RatingValue = ratingValue })
+            (rating) => Results.Json(new { Rating = TestRatingDataViewResponse.FromTestRating(rating) })
         );
     }
 }

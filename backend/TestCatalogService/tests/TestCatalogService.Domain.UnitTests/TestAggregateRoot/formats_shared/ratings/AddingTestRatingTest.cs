@@ -1,22 +1,31 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using SharedKernel.Common.common_enums;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using SharedKernel.Common.interfaces;
+using SharedKernel.Common.tests.value_objects;
 using TestCatalogService.Domain.AppUserAggregate.events;
 using TestCatalogService.Domain.TestAggregate;
+using TestCatalogService.Domain.TestAggregate.formats_shared;
 using TestCatalogService.Domain.UnitTests.TestAggregateRoot.test_consts;
 
-namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared;
+namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.ratings;
 
-public class TestRatingsTests
+public class AddingTestRatingTest
 {
     private readonly AppUserId _testUserId = new(Guid.NewGuid());
 
-    private async Task<BaseTest> CreateTestWithRatings(Dictionary<AppUserId, ushort>? initialRatings = null) {
-        var test = TestsSharedTestsConsts.CreateBaseTest();
+    private async Task<BaseTest> CreateTestWithRatings(
+        Dictionary<AppUserId, ushort>? initialRatings = null,
+        TestInteractionsAccessSettings? customInteractionsAccessSettings = null
+    ) {
+        var test = TestsSharedTestsConsts.CreateBaseTest(customInteractionsAccessSettings);
 
         if (initialRatings != null) {
             foreach (var (userId, rating) in initialRatings) {
-                var ratingRes = test.AddRating(userId, rating, TestsSharedConsts.DateTimeProviderInstance);
+                var ratingRes = await test.AddRating(
+                    userId,
+                    rating,
+                    TestsSharedConsts.DateTimeProviderInstance
+                );
                 Assert.False(ratingRes.IsErr(), "Failed to initialize test with ratings.");
             }
         }
@@ -25,7 +34,26 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public async Task AddRating_ShouldReturnError_WhenUserHasAlreadyRated() {
+    public Task AddRating_WhenRatingsAreDisabled_ShouldReturnError() {
+        // Arrange
+        var test = CreateTestWithRatings(customInteractionsAccessSettings: new TestInteractionsAccessSettings(
+                AccessLevel.Public,
+                ResourceAvailabilitySetting.Disabled,
+                ResourceAvailabilitySetting.EnabledPublic,
+                allowTagsSuggestions: false,
+                allowTestTakenPosts: true
+            )
+        );
+        // Act
+        var result = await test.AddRating(_testUserId, 5, TestsSharedConsts.DateTimeProviderInstance);
+
+        // Assert
+        Assert.True(result.IsErr(out var err));
+        Assert.Contains("This user has already rated this test", err.Message);
+    }
+
+    [Fact]
+    public async Task AddRating_WhenUserHasAlreadyRated_ShouldReturnError() {
         // Arrange
         var initialRatings = new Dictionary<AppUserId, ushort> { { _testUserId, 4 } };
         var test = await CreateTestWithRatings(initialRatings);
@@ -52,7 +80,7 @@ public class TestRatingsTests
     }
 
     [Fact]
-    public async Task AddRating_ShouldAddRatingAndRaiseEvent_WhenSuccessful() {
+    public async Task AddRating_ShouldAddRatingAndRaiseEvent_WhenSucceed() {
         // Arrange
         var test = await CreateTestWithRatings();
         ushort ratingValue = 5;

@@ -2,6 +2,7 @@
 using SharedKernel.Common;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using TestManagingService.Domain.TestAggregate;
 
 namespace TestManagingService.Api.Contracts.tags;
 
@@ -14,7 +15,7 @@ public class TestTagIdListRequest : IRequestWithValidationNeeded
             return Err.ErrFactory.InvalidData("No suggested tags were specified");
         }
 
-        if (SuggestedTags.Length > 200) {
+        if (SuggestedTags.Length > BaseTest.MaxSuggestionsCountToInteract) {
             return Err.ErrFactory.InvalidData(
                 "Too many tags were specified. Please specify fewer tags."
             );

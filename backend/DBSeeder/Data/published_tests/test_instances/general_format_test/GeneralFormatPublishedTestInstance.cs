@@ -40,21 +40,30 @@ public class GeneralFormatPublishedTestInstance : BasePublishedTestInstance
 
         bool anyAudioAnswers = questions.Any(q => q.AnswersType.HasAudio());
         TestCatalogService.Domain.TestAggregate.formats_shared.TestInteractionsAccessSettings
-            testInteractionsAccessSettings = new(
+            tISAccessSettings = new(
                 interactionsAccessSettings.TestAccess,
                 interactionsAccessSettings.AllowRatings,
                 interactionsAccessSettings.AllowComments,
                 interactionsAccessSettings.AllowTestTakenPosts,
                 interactionsAccessSettings.AllowTagsSuggestions
             );
+        TestManagingService.Domain.TestAggregate.formats_shared.TestInteractionsAccessSettings
+            tMSAccessSettings = new(
+                interactionsAccessSettings.TestAccess,
+                interactionsAccessSettings.AllowRatings,
+                interactionsAccessSettings.AllowComments,
+                interactionsAccessSettings.AllowTestTakenPosts,
+                interactionsAccessSettings.AllowTagsSuggestions
+            );
+        
         var testCatalogTest =
             TestCatalogService.Domain.TestAggregate.general_format.GeneralFormatTest.CreateNew(
                 testId, name, coverImg, description, creatorId, editorIds, publicationDateValue, language,
-                (ushort)questions.Count, (ushort)results.Count, anyAudioAnswers, testInteractionsAccessSettings, tags
+                (ushort)questions.Count, (ushort)results.Count, anyAudioAnswers, tISAccessSettings, tags
             ).GetSuccess();
 
         var testManagingTest = TestManagingService.Domain.TestAggregate.general_format.GeneralFormatTest.CreateNew(
-            testId, creatorId, editorIds, publicationDateValue
+            testId, creatorId, editorIds, publicationDateValue, tMSAccessSettings
         );
 
         TestStylesSheet styles = TestStylesSheet.CreateNew(testId);

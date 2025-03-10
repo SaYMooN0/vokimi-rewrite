@@ -10,7 +10,7 @@ public class UpdateTagsForTestTests
     [Fact]
     public void UpdateTags_WhenTooManyTagsProvided_ShouldReturnErr() {
         // Arrange
-        var test = TestsSharedTestsConsts.CreateBaseTest();
+        var test = TestsSharedTestsConsts.CreateTest();
         var excessiveTags = Enumerable.Range(0, TestTagsRules.MaxTagsForTestCount + 1)
             .Select(i => new TestTagId($"Tag{i}"))
             .ToHashSet();
@@ -30,7 +30,7 @@ public class UpdateTagsForTestTests
     [Fact]
     public void UpdateTags_WhenTagsAreUnchanged_ShouldReturnErr() {
         // Arrange
-        var test = TestsSharedTestsConsts.CreateBaseTest();
+        var test = TestsSharedTestsConsts.CreateTest();
         var initialTags = new HashSet<TestTagId> { new("Tag1"), new("Tag2") };
         test.UpdateTags(initialTags);
 
@@ -45,7 +45,7 @@ public class UpdateTagsForTestTests
     [Fact]
     public void UpdateTags_WhenTagsAreUpdated_ShouldReturnSuccessAndTriggerEvent() {
         // Arrange
-        var test = TestsSharedTestsConsts.CreateBaseTest();
+        var test = TestsSharedTestsConsts.CreateTest();
         var newTags = new HashSet<TestTagId> { new("Tag1"), new("Tag2") };
 
         // Act

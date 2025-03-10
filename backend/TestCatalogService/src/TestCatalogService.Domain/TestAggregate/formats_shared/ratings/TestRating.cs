@@ -33,13 +33,13 @@ public class TestRating : Entity<TestRatingId>
         return rating;
     }
 
-    public ErrOrNothing Update(ushort newValue, IDateTimeProvider dateTimeProvider) {
+    public ErrOr<TestRating> Update(ushort newValue, IDateTimeProvider dateTimeProvider) {
         if (newValue > MaxValue) {
             return new Err($"Test rating cannot be greater than {MaxValue}");
         }
 
         Value = newValue;
         LastUpdated = dateTimeProvider.Now;
-        return ErrOrNothing.Nothing;
+        return this;
     }
 }
