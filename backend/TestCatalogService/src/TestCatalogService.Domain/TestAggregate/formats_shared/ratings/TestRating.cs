@@ -35,7 +35,7 @@ public class TestRating : Entity<TestRatingId>
 
     public ErrOr<TestRating> Update(ushort newValue, IDateTimeProvider dateTimeProvider) {
         if (newValue > MaxValue) {
-            return new Err($"Test rating cannot be greater than {MaxValue}");
+            return Err.ErrFactory.InvalidData($"Test rating cannot be greater than {MaxValue}");
         }
 
         Value = newValue;

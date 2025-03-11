@@ -15,7 +15,7 @@ public class TestCommentCreationTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -42,7 +42,7 @@ public class TestCommentCreationTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: true,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -62,7 +62,7 @@ public class TestCommentCreationTests
             new string('a', TestCommentRules.MaxCommentLength + 1),
             attachment: null,
             markAsSpoiler: true,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert

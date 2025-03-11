@@ -4,9 +4,8 @@ using SharedKernel.Common.interfaces;
 using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestCommentAggregate;
 using TestCatalogService.Domain.UnitTests.FakeRepositories;
-using TestCatalogService.Domain.UnitTests.TestAggregateRoot.test_consts;
 
-namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.comments_related_tests;
+namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.comments;
 
 public class TestAnsweringToCommentTests
 {
@@ -34,7 +33,7 @@ public class TestAnsweringToCommentTests
         }
     };
 
-    private readonly IDateTimeProvider _dateTimeProvider = TestsSharedConsts.DateTimeProviderInstance;
+    private readonly IDateTimeProvider _dateTimeProvider = TestsSharedTestsConsts.DateTimeProviderInstance;
 
     private async Task<(BaseTest test, TestComment parentComment)> CreateTestWithComment() {
         var test = TestsSharedTestsConsts.CreateBaseTest();

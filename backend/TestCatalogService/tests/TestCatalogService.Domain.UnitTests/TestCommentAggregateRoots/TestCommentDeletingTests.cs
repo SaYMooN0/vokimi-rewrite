@@ -14,13 +14,13 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
         var deleteRes = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -42,17 +42,17 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
         var deleteRes1 = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
         var deleteRes2 = comment.Delete(
             TestCommentsTestsConsts.AuthorId,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -72,7 +72,7 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
     
         TestComment answer = TestComment.CreateNew(
@@ -81,12 +81,12 @@ public class TestCommentDeletingTests
             "This is an answer",
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.AddAnswer(answer);
 
         // Act
-        var deleteRes = comment.Delete(TestCommentsTestsConsts.AuthorId, TestsSharedConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(TestCommentsTestsConsts.AuthorId, TestsSharedTestsConsts.DateTimeProviderInstance);
 
         // Assert
         Assert.False(deleteRes.IsErr()); 
@@ -102,11 +102,11 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
-        var deleteRes = comment.Delete(null, TestsSharedConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(null, TestsSharedTestsConsts.DateTimeProviderInstance);
 
         // Assert
         Assert.True(deleteRes.IsErr(out var err));
@@ -122,11 +122,11 @@ public class TestCommentDeletingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
-        var deleteRes = comment.Delete(otherUserId, TestsSharedConsts.DateTimeProviderInstance);
+        var deleteRes = comment.Delete(otherUserId, TestsSharedTestsConsts.DateTimeProviderInstance);
 
         // Assert
         Assert.True(deleteRes.IsErr(out var err));

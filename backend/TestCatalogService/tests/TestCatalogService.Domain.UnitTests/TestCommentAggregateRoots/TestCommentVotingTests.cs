@@ -15,7 +15,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         // Act
@@ -37,7 +37,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, true);
 
@@ -60,7 +60,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, true); 
 
@@ -83,7 +83,7 @@ public class TestCommentVotingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
         comment.Vote(userId, false);
 

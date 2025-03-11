@@ -63,15 +63,15 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         IsUserCreatorOrEditorDelegate isUserCreatorOrEditor,
         CheckUserFollowsCreatorAsyncDelegate checkUserFollowsCreatorAsync
     ) => !AllowRatings.IsEnabled
-        ? Err.ErrFactory.NoAccess("Rating is disabled for this test.")
+        ? Err.ErrFactory.NoAccess("Ratings are disabled for this test")
         : AllowRatings.Access switch {
             AccessLevel.Public => ErrOrNothing.Nothing,
             AccessLevel.Private =>
                 await CheckAccessForPrivateFields(userId,
-                    "Test ratings are private. You must be the creator or editor to rate.", isUserCreatorOrEditor),
+                    "Test ratings are private. You must be the creator or editor to rate", isUserCreatorOrEditor),
             AccessLevel.FollowersOnly => await CheckAccessForFollowingRequiredFields(userId,
-                "You must be following the test creator to rate this test.", checkUserFollowsCreatorAsync),
-            _ => Err.ErrFactory.NoAccess("This test has unknown rating access level.")
+                "You must be following the test creator to rate this test", checkUserFollowsCreatorAsync),
+            _ => Err.ErrFactory.NoAccess("This test has unknown rating access level")
         };
 
     public async Task<ErrOrNothing> CheckUserAccessToViewTest(

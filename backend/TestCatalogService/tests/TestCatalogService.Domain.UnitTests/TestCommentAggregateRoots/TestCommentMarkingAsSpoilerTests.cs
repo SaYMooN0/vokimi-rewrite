@@ -13,11 +13,11 @@ public class TestCommentMarkingAsSpoilerTests
         var authorId = AppUserId.CreateNew();
         var comment = TestComment.CreateNew(
             TestCommentsTestsConsts.TestId,
-            authorId, // Автор комментария
+            authorId, 
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         FakeBaseTestsRepository baseTestsRepositoryMock = new();
@@ -41,7 +41,7 @@ public class TestCommentMarkingAsSpoilerTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
@@ -67,7 +67,7 @@ public class TestCommentMarkingAsSpoilerTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
@@ -97,11 +97,11 @@ public class TestCommentMarkingAsSpoilerTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository() {
-            GetTestCreatorIdFunc = (testId) => Task.FromResult<ErrOr<AppUserId>>(Err.ErrFactory.NotFound("Not found"))
+            GetTestCreatorIdFunc = (_) => Task.FromResult<ErrOr<AppUserId>>(Err.ErrFactory.NotFound("Not found"))
         };
 
         // Act

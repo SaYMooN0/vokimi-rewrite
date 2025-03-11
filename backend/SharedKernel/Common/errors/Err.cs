@@ -58,9 +58,11 @@ public class Err
             ErrorSource source = ErrorSource.Client) =>
             new Err(message, ErrCodes.InvalidData, details, source);
 
-        public static Err NoAccess(string message = "Access is denied", string details = "",
-            ErrorSource source = ErrorSource.Client) =>
-            new Err(message, ErrCodes.NoAccess, details, source);
+        public static Err NoAccess(
+            string message = "Access is denied",
+            string details = "",
+            ErrorSource source = ErrorSource.Client
+        ) => new Err(message, ErrCodes.NoAccess, details, source);
     }
 
     public static class ErrCodes
@@ -74,7 +76,7 @@ public class Err
         public const ushort NoAccess = 1004;
     }
 
-    public static  class ErrPresets
+    public static class ErrPresets
     {
         public static Err UserNotFound(AppUserId userId) => ErrFactory.NotFound(
             "User not found",

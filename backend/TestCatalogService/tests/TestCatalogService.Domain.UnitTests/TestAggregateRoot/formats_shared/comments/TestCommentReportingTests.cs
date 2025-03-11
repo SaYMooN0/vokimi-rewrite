@@ -6,9 +6,8 @@ using TestCatalogService.Domain.TestAggregate;
 using TestCatalogService.Domain.TestAggregate.formats_shared.events;
 using TestCatalogService.Domain.TestCommentAggregate;
 using TestCatalogService.Domain.UnitTests.FakeRepositories;
-using TestCatalogService.Domain.UnitTests.TestAggregateRoot.test_consts;
 
-namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.comments_related_tests;
+namespace TestCatalogService.Domain.UnitTests.TestAggregateRoot.formats_shared.comments;
 
 public class TestCommentReportingTests
 {
@@ -43,7 +42,7 @@ public class TestCommentReportingTests
                 , null,
                 false,
                 _fakeTestCommentsRepository,
-                TestsSharedConsts.DateTimeProviderInstance
+                TestsSharedTestsConsts.DateTimeProviderInstance
             )).GetSuccess();
             testCommentIds.Add(comment.Id);
         }

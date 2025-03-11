@@ -13,14 +13,14 @@ public class TestCommentHidingTests
     public async Task HideComment_ByTestCreator_ShouldSucceed() {
         // Arrange
         var testId = TestCommentsTestsConsts.TestId;
-        var creatorId = TestCommentsTestsConsts.AuthorId; // Создатель теста
+        var creatorId = TestCommentsTestsConsts.AuthorId;
         var comment = TestComment.CreateNew(
             testId,
             creatorId,
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {
@@ -46,7 +46,7 @@ public class TestCommentHidingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {
@@ -72,7 +72,7 @@ public class TestCommentHidingTests
             TestCommentsTestsConsts.DefaultCommentText,
             attachment: null,
             markAsSpoiler: false,
-            TestsSharedConsts.DateTimeProviderInstance
+            TestsSharedTestsConsts.DateTimeProviderInstance
         ).GetSuccess();
 
         var baseTestsRepositoryMock = new FakeBaseTestsRepository {

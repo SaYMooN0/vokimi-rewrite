@@ -64,7 +64,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     private async Task<bool> CheckUserFollowsCreator(
         Func<AppUserId, Task<ImmutableArray<AppUserId>>> getUserFollowings,
         AppUserId userId
-    ) => (await getUserFollowings(userId)).Contains(userId);
+    ) => (await getUserFollowings(userId)).Contains(CreatorId);
 
     public ErrOrNothing CheckAccessToViewTestForUnauthorized() => InteractionsAccessSettings.TestAccess switch {
         AccessLevel.Public => ErrOrNothing.Nothing,
@@ -171,7 +171,9 @@ public abstract class BaseTest : AggregateRoot<TestId>
         IUserFollowingsRepository userFollowingsRepository,
         IDateTimeProvider dateTimeProvider
     ) {
-        var userAccessToRate = await CheckUserAccessToRate(userId, userFollowingsRepository.GetUserFollowings);
+        var userAccessToRate = await CheckUserAccessToRate(
+            userId, userFollowingsRepository.GetUserFollowings
+        );
         if (userAccessToRate.IsErr(out var err)) {
             return err;
         }
@@ -208,7 +210,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
         TestRating? existing = _ratings.FirstOrDefault(r => r.UserId == userId);
         if (existing is null) {
-            return Err.ErrFactory.NotFound($"Cannot update rating because user has not rated this test");
+            return Err.ErrFactory.NotFound("Cannot update rating because user has not rated this test");
         }
 
         var updatingRes = existing.Update(ratingValue, dateTimeProvider);

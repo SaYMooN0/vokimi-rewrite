@@ -63,7 +63,7 @@ public class TestInteractionsAccessSettings : ValueObject, ITestInteractionsAcce
         IsUserCreatorOrEditorDelegate isUserCreatorOrEditor,
         CheckUserFollowsCreatorAsyncDelegate checkUserFollowsCreatorAsync
     ) => !AllowRatings.IsEnabled
-        ? Err.ErrFactory.NoAccess("Rating is disabled for this test.")
+        ? Err.ErrFactory.NoAccess("Ratings are disabled for this test")
         : AllowRatings.Access switch {
             AccessLevel.Public => ErrOrNothing.Nothing,
             AccessLevel.Private =>
