@@ -50,7 +50,7 @@ public class GeneralFormatTest : BaseTest
             );
         }
 
-        var newTest = new GeneralFormatTest(
+        GeneralFormatTest newTest = new(
             creatorId,
             editorIds.ToHashSet(),
             mainInfoCreation.GetSuccess()

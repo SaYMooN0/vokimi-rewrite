@@ -67,6 +67,18 @@ public class TestCommentId : EntityId
 
     public static TestCommentId CreateNew() => new(Guid.CreateVersion7());
 }
+public class TierListTestTierId : EntityId
+{
+    public TierListTestTierId(Guid value) : base(value) { }
+
+    public static TierListTestTierId CreateNew() => new(Guid.CreateVersion7());
+}
+public class TierListTestItemId : EntityId
+{
+    public TierListTestItemId(Guid value) : base(value) { }
+
+    public static TierListTestItemId CreateNew() => new(Guid.CreateVersion7());
+}
 
 public class TestTagId : IEntityId
 {

@@ -13,4 +13,8 @@
     <ProjectReference Include="..\TestCreationService.Infrastructure\TestCreationService.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\test_creation\tier_list_format\" />
+  </ItemGroup>
+
 </Project>

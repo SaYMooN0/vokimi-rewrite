@@ -3,5 +3,6 @@
 public enum TestFormat
 {
     General,
-    Scoring
+    Scoring,
+    TierList
 }
