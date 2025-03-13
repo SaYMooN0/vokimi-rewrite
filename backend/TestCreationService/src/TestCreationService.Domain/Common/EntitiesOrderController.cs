@@ -62,13 +62,11 @@ public class EntitiesOrderController<T> where T : EntityId
     }
 
     public ImmutableArray<(EntityType Entity, ushort Order)> GetItemsWithOrders<EntityType>(
-        IEnumerable<EntityType> entities) where EntityType : Entity<T> {
-        return entities
-            .Select(e => (e, _entityOrders[e.Id]))
-            .OrderBy(e => e.Item2)
-            .ToList()
-            .ToImmutableArray();
-    }
+        IEnumerable<EntityType> entities
+    ) where EntityType : Entity<T> => entities
+        .Select(e => (e, _entityOrders[e.Id]))
+        .OrderBy(e => e.Item2)
+        .ToImmutableArray();
 
     public bool Contains(T id) => _entityOrders.ContainsKey(id);
 

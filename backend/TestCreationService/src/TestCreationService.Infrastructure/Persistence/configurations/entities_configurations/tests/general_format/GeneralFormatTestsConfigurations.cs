@@ -32,8 +32,8 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
             .Ignore(x => x.Results);
         builder.HasMany<GeneralTestResult>("_results")
             .WithOne()
-            .HasForeignKey(q => q.TestId);
-        
+            .HasForeignKey("TestId");
+
         builder
             .Property(x => x.Feedback)
             .HasGeneralTestFeedbackOptionConverter();

@@ -8,7 +8,6 @@ namespace TestCreationService.Domain.TestAggregate.general_format;
 public class GeneralTestResult : Entity<GeneralTestResultId>
 {
     private GeneralTestResult() { }
-    public TestId TestId { get; init; }
     public string Name { get; private set; }
     public string Text { get; private set; }
     public string Image { get; private set; }
@@ -18,7 +17,6 @@ public class GeneralTestResult : Entity<GeneralTestResultId>
         }
         return new GeneralTestResult() {
             Id = GeneralTestResultId.CreateNew(),
-            TestId = testId,
             Name = name,
             Text = "General test result text",
             Image = string.Empty

@@ -2,15 +2,16 @@
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.value_objects;
 
-namespace SharedKernel.Common.general_test_questions.answer_type_specific_data;
+namespace SharedKernel.Common.tests.tier_list_format;
 
-public abstract partial class GeneralTestAnswerTypeSpecificData
+public abstract partial class TierListTestItemContentData
 {
-    public sealed class ColorOnly : GeneralTestAnswerTypeSpecificData
+    public sealed class ColorOnly : TierListTestItemContentData
     {
         public HexColor Color { get; }
         private ColorOnly(HexColor color) => Color = color;
-        [JsonIgnore] public override GeneralTestAnswersType MatchingEnumType => GeneralTestAnswersType.ColorOnly;
+
+        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.Color;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Color;
@@ -21,7 +22,7 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
 
         public static ErrOr<ColorOnly> CreateFromDictionary(Dictionary<string, string> dictionary) {
             if (!dictionary.TryGetValue("Color", out string color)) {
-                return Err.ErrFactory.InvalidData("Unable to create type specific data. Color not provided");
+                return Err.ErrFactory.InvalidData("Unable to create item content. Color not provided");
             }
 
             var parsedColor = HexColor.FromString(color);

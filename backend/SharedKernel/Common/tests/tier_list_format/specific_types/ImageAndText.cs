@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.general_test_questions.answer_type_specific_data;
+namespace SharedKernel.Common.tests.tier_list_format;
 
-public abstract partial class GeneralTestAnswerTypeSpecificData
+public abstract partial class TierListTestItemContentData
 {
-    public sealed class ImageAndText : GeneralTestAnswerTypeSpecificData
+    public sealed class ImageAndText : TierListTestItemContentData
     {
         public string Image { get; }
         public string Text { get; }
@@ -14,8 +14,8 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
             Image = image;
             Text = text;
         }
-
-        [JsonIgnore] public override GeneralTestAnswersType MatchingEnumType => GeneralTestAnswersType.ImageAndText;
+        [JsonIgnore]
+        public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.ImageAndText;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Image;
@@ -29,23 +29,23 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
 
         public static ErrOr<ImageAndText> CreateFromDictionary(Dictionary<string, string> dictionary) {
             if (!dictionary.TryGetValue("Text", out string text)) {
-                return Err.ErrFactory.InvalidData("Unable to create type specific data. Text not provided");
+                return Err.ErrFactory.InvalidData("Unable to create item content. Text not provided");
             }
 
-            if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectAnswerText(text, out int textLength)) {
+            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectItemText(text, out int textLength)) {
                 return Err.ErrFactory.InvalidData(
-                    $"Answer text must be between {GeneralTestAnswerTypeSpecificDataRules.AnswerMinLength} and {GeneralTestAnswerTypeSpecificDataRules.AnswerMaxLength} characters",
+                    $"Answer text must be between {TierListTestItemContentTypeSpecificDataRules.ItemTextMinLength} and {TierListTestItemContentTypeSpecificDataRules.ItemTextMaxLength} characters",
                     details: $"Current length: {textLength}"
                 );
             }
 
             if (!dictionary.TryGetValue("Image", out string image)) {
-                return Err.ErrFactory.InvalidData("Unable to create type specific data. Image not provided");
+                return Err.ErrFactory.InvalidData("Unable to create item content. Image not provided");
             }
 
-            if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectNonTextItem(image, out int imageLength)) {
+            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectNonTextItem(image, out int imageLength)) {
                 return Err.ErrFactory.InvalidData(
-                    $"Image data must be non-empty and at most {GeneralTestAnswerTypeSpecificDataRules.NonTextDataMaxLength} characters",
+                    $"Image data must be non-empty and at most {TierListTestItemContentTypeSpecificDataRules.NonTextDataMaxLength} characters",
                     details: $"Current length: {imageLength}"
                 );
             }

@@ -3,7 +3,7 @@
 public enum TierListTestItemContentType
 {
     Text,
-    TextAndImage,
+    ImageAndText,
     Color,
     Audio
 }

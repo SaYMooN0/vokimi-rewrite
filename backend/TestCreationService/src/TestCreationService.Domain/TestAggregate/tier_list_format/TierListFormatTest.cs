@@ -1,4 +1,5 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using TestCreationService.Domain.Common;
@@ -16,6 +17,8 @@ public class TierListFormatTest : BaseTest
     private ICollection<TierListTestTier> _tiers { get; set; }
     private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
     //time limit
+    //public TierListTestFeedbackOption Feedback { get; private set; }
+
 
     public static ErrOr<TierListFormatTest> CreateNew(
         AppUserId creatorId,
@@ -51,7 +54,7 @@ public class TierListFormatTest : BaseTest
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
     ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
-        TierListTestTier firstTier = TierListTestTier.CreateNew().GetSuccess();
+        TierListTestTier firstTier = TierListTestTier.CreateNew("Tier #1").GetSuccess();
         _tiers = [firstTier];
         _tiersOrderController = EntitiesOrderController<TierListTestTierId>.CreateNew(
             isShuffled: false, new() { { firstTier.Id, 1 } }
@@ -62,6 +65,15 @@ public class TierListFormatTest : BaseTest
     }
 
     public override void DeleteTest() {
+        throw new NotImplementedException();
         // _domainEvents.Add(new TierListFormatTestDeletedEvent(Id, CreatorId, _editorIds));
     }
+
+    public ImmutableArray<(TierListTestTier, ushort)> TiersWithOrder => _tiersOrderController
+        .GetItemsWithOrders(_tiers)
+        .ToImmutableArray();
+
+    public ImmutableArray<(TierListTestItem, ushort)> ItemsWithOrder => _itemsOrderController
+        .GetItemsWithOrders(_items)
+        .ToImmutableArray();
 }
