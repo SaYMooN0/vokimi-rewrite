@@ -22,14 +22,16 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
             if (!dictionary.TryGetValue("Text", out string text)) {
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Text not provided");
             }
+            return CreateNew(text);
+        }
 
+        public static ErrOr<TextOnly> CreateNew(string text) {
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectAnswerText(text, out int textLength)) {
                 return Err.ErrFactory.InvalidData(
                     $"Answer text must be between {GeneralTestAnswerTypeSpecificDataRules.AnswerMinLength} and {GeneralTestAnswerTypeSpecificDataRules.AnswerMaxLength} characters",
                     details: $"Current length: {textLength}"
                 );
             }
-
             return new TextOnly(text);
         }
     }

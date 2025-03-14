@@ -32,15 +32,19 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Text not provided");
             }
 
+            if (!dictionary.TryGetValue("Image", out string image)) {
+                return Err.ErrFactory.InvalidData("Unable to create type specific data. Image not provided");
+            }
+
+            return CreateNew(image, text);
+        }
+
+        public static ErrOr<ImageAndText> CreateNew(string image, string text) {
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectAnswerText(text, out int textLength)) {
                 return Err.ErrFactory.InvalidData(
                     $"Answer text must be between {GeneralTestAnswerTypeSpecificDataRules.AnswerMinLength} and {GeneralTestAnswerTypeSpecificDataRules.AnswerMaxLength} characters",
                     details: $"Current length: {textLength}"
                 );
-            }
-
-            if (!dictionary.TryGetValue("Image", out string image)) {
-                return Err.ErrFactory.InvalidData("Unable to create type specific data. Image not provided");
             }
 
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectNonTextItem(image, out int imageLength)) {

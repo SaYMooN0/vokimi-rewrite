@@ -23,7 +23,14 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Audio not provided");
             }
 
-            if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectNonTextItem(audio, out int audioLength)) {
+            return CreateNew(audio);
+        }
+
+        public static ErrOr<AudioOnly> CreateNew(string audio) {
+            if (
+                !GeneralTestAnswerTypeSpecificDataRules
+                    .IsStringCorrectNonTextItem(audio, out int audioLength)
+            ) {
                 return Err.ErrFactory.InvalidData(
                     $"Audio data must be non-empty and at most {GeneralTestAnswerTypeSpecificDataRules.NonTextDataMaxLength} characters",
                     details: $"Current length: {audioLength}"

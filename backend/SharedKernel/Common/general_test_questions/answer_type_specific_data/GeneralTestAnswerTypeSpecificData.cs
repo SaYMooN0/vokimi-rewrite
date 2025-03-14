@@ -4,11 +4,12 @@ using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
 
 namespace SharedKernel.Common.general_test_questions.answer_type_specific_data;
+
 public abstract partial class GeneralTestAnswerTypeSpecificData : ValueObject
 {
-    [JsonIgnore]
-    public abstract GeneralTestAnswersType MatchingEnumType { get; }
+    [JsonIgnore] public abstract GeneralTestAnswersType MatchingEnumType { get; }
     public abstract Dictionary<string, string> ToDictionary();
+
     public static ErrOr<GeneralTestAnswerTypeSpecificData> CreateFromDictionary(
         GeneralTestAnswersType type,
         Dictionary<string, string> dictionary
@@ -24,16 +25,15 @@ public abstract partial class GeneralTestAnswerTypeSpecificData : ValueObject
 
         GeneralTestAnswersType.ColorOnly => ColorOnly.CreateFromDictionary(dictionary)
             .Match(ErrOr<GeneralTestAnswerTypeSpecificData>.Success, err => err),
-
+       
         GeneralTestAnswersType.ColorAndText => ColorAndText.CreateFromDictionary(dictionary)
             .Match(ErrOr<GeneralTestAnswerTypeSpecificData>.Success, err => err),
-
+        
         GeneralTestAnswersType.AudioOnly => AudioOnly.CreateFromDictionary(dictionary)
             .Match(ErrOr<GeneralTestAnswerTypeSpecificData>.Success, err => err),
-
+        
         GeneralTestAnswersType.AudioAndText => AudioAndText.CreateFromDictionary(dictionary)
             .Match(ErrOr<GeneralTestAnswerTypeSpecificData>.Success, err => err),
-
         _ => throw new ArgumentException($"Unsupported answer type {type} in the {nameof(CreateFromDictionary)}")
     };
 }

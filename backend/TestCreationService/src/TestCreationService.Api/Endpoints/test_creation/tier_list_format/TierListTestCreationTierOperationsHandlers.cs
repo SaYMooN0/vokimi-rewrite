@@ -4,16 +4,16 @@ using TestCreationService.Api.Extensions;
 
 namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
 
-internal static class TierListTestCreationTiersHandlers
+internal static class TierListTestCreationTierOperationsHandlers
 {
-    internal static RouteGroupBuilder MapTierListTestCreationTiersHandlers(this RouteGroupBuilder group) {
+    internal static RouteGroupBuilder MapTierListTestCreationTierOperationsHandlers(this RouteGroupBuilder group) {
         group
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
 
-        group.MapPost("/createNew", CreateNewTier);
-        group.MapPost("/updateOrder", UpdateItemsOrder)
-            .WithRequestValidation<UpdateTierListTestTiersOrderRequest>();
+        group.MapPost("/update", UpdateTierListTestTier)
+            .WithRequestValidation<UpdateTierListTestTierRequest>();
+        group.MapDelete("/remove", RemoveTierFromTest);
 
 
         return group;

@@ -61,6 +61,12 @@ public class TestStylesSheetId : EntityId
 
     public static TestStylesSheetId CreateNew() => new(Guid.CreateVersion7());
 }
+public class TierListTestTierStylesId : EntityId
+{
+    public TierListTestTierStylesId(Guid value) : base(value) { }
+
+    public static TierListTestTierStylesId CreateNew() => new(Guid.CreateVersion7());
+}
 public class TestCommentId : EntityId
 {
     public TestCommentId(Guid value) : base(value) { }

@@ -24,6 +24,10 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Color not provided");
             }
 
+            return CreateNew(color);
+        }
+
+        public static ErrOr<ColorOnly> CreateNew(string color) {
             var parsedColor = HexColor.FromString(color);
             if (parsedColor.IsErr(out var colorErr)) {
                 return colorErr;

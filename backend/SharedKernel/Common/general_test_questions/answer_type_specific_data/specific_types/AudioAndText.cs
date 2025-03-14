@@ -9,37 +9,40 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
     {
         public string Audio { get; }
         public string Text { get; }
+
         private AudioAndText(string audio, string text) {
             Audio = audio;
             Text = text;
         }
 
         [JsonIgnore] public override GeneralTestAnswersType MatchingEnumType => GeneralTestAnswersType.AudioAndText;
-
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Audio;
             yield return Text;
         }
 
-        public override Dictionary<string, string> ToDictionary() => new() {
+        public override Dictionary<string, string> ToDictionary() => new Dictionary<string, string> {
             ["Text"] = Text,
             ["Audio"] = Audio,
         };
-
+        
         public static ErrOr<AudioAndText> CreateFromDictionary(Dictionary<string, string> dictionary) {
             if (!dictionary.TryGetValue("Text", out string text)) {
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Text not provided");
             }
 
+            if (!dictionary.TryGetValue("Audio", out string audio)) {
+                return Err.ErrFactory.InvalidData("Unable to create type specific data. Audio not provided");
+            }
+
+            return CreateNew(text, audio);
+        }
+        public static ErrOr<AudioAndText> CreateNew(string audio, string text) {
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectAnswerText(text, out int textLength)) {
                 return Err.ErrFactory.InvalidData(
                     $"Answer text must be between {GeneralTestAnswerTypeSpecificDataRules.AnswerMinLength} and {GeneralTestAnswerTypeSpecificDataRules.AnswerMaxLength} characters",
                     details: $"Current length: {textLength}"
                 );
-            }
-
-            if (!dictionary.TryGetValue("Audio", out string audio)) {
-                return Err.ErrFactory.InvalidData("Unable to create type specific data. Audio not provided");
             }
 
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectNonTextItem(audio, out int audioLength)) {

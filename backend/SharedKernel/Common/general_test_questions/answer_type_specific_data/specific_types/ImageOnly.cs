@@ -23,6 +23,10 @@ public abstract partial class GeneralTestAnswerTypeSpecificData
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Image not provided");
             }
 
+            return CreateNew(image);
+        }
+
+        public static ErrOr<ImageOnly> CreateNew(string image) {
             if (!GeneralTestAnswerTypeSpecificDataRules.IsStringCorrectNonTextItem(image, out int imageLength)) {
                 return Err.ErrFactory.InvalidData(
                     $"Image data must be non-empty and at most {GeneralTestAnswerTypeSpecificDataRules.NonTextDataMaxLength} characters",

@@ -63,25 +63,25 @@ public class GeneralFormatPublishedTestsDataTest1
 
     private static readonly TestAnswer Q3Answer1 = new TestAnswer(
         new(Guid.NewGuid()),
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#ff5733").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#ff5733").GetSuccess(),
         [Result4]
     );
 
     private static readonly TestAnswer Q3Answer2 = new TestAnswer(
         new(Guid.NewGuid()),
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#33ff57").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#33ff57").GetSuccess(),
         [Result5]
     );
 
     private static readonly TestAnswer Q4Answer1 = new TestAnswer(
         new(Guid.NewGuid()),
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#5733ff").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#5733ff").GetSuccess(),
         [Result1]
     );
 
     private static readonly TestAnswer Q4Answer2 = new TestAnswer(
         new(Guid.NewGuid()),
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#ff5733").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#ff5733").GetSuccess(),
         [Result2]
     );
 
