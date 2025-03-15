@@ -1,14 +1,12 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using MediatR;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.errors;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.questions;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.general_format.commands.questions;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general;
+namespace TestCreationService.Api.Endpoints.test_creation.general_format;
 
 internal static class GeneralTestCreationQuestionsHandlers
 {

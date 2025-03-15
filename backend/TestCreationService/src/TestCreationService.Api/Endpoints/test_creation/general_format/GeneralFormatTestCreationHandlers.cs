@@ -5,7 +5,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.general_format;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.general_format.commands;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general;
+namespace TestCreationService.Api.Endpoints.test_creation.general_format;
 
 internal static class GeneralFormatTestCreationHandlers
 {

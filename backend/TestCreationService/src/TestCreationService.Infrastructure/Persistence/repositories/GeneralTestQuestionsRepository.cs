@@ -17,6 +17,7 @@ internal class GeneralTestQuestionsRepository : IGeneralTestQuestionsRepository
 
     public async Task Add(GeneralTestQuestion question) {
         await _db.GeneralTestQuestions.AddAsync(question);
+        await _db.SaveChangesAsync();
     }
 
     public async Task DeleteById(GeneralTestQuestionId questionId) {

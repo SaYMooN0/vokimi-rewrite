@@ -2,6 +2,7 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
+using SharedKernel.Common.tests.tier_list_format;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
@@ -15,6 +16,7 @@ public class TierListFormatTest : BaseTest
     private ICollection<TierListTestItem> _items { get; set; }
     private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; set; }
     private ICollection<TierListTestTier> _tiers { get; set; }
+
     private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
     //time limit
     //public TierListTestFeedbackOption Feedback { get; private set; }
@@ -76,4 +78,27 @@ public class TierListFormatTest : BaseTest
     public ImmutableArray<(TierListTestItem, ushort)> ItemsWithOrder => _itemsOrderController
         .GetItemsWithOrders(_items)
         .ToImmutableArray();
+
+    public ErrOr<TierListTestTier> AddNewTier(string tierName) { }
+
+    public ErrOr<TierListTestItem> AddNewItem(
+        string newItemName,
+        string? newItemClarification,
+        TierListTestItemContentData newItemContent
+    ) {
+        var nameAlreadyExists = _items.Select(item => item.Name).Contains(newItemName);
+        if (nameAlreadyExists) {
+            return new Err("Item with this name already exists in this test");
+        }
+
+        ErrOr<TierListTestItem> creationRes = TierListTestItem.CreateNew(
+            newItemName, newItemClarification, newItemContent
+        );
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        _items.Add(creationRes.GetSuccess());
+        return creationRes.GetSuccess();
+    }
 }

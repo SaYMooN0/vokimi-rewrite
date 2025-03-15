@@ -9,12 +9,13 @@ public abstract partial class TierListTestItemContentData
     {
         public string Audio { get; }
         public string? Transcription { get; }
+
         private AudioOnly(string audio, string? transcription) {
             Audio = audio;
             Transcription = transcription;
         }
 
-        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.Audio;
+        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.AudioOnly;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Audio;
@@ -31,23 +32,21 @@ public abstract partial class TierListTestItemContentData
                 return Err.ErrFactory.InvalidData("Unable to create type specific data. Audio not provided");
             }
 
-            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectNonTextItem(audio, out int audioLen)) {
-                return Err.ErrFactory.InvalidData(
-                    $"Audio data must be non-empty and at most {TierListTestItemContentTypeSpecificDataRules.NonTextDataMaxLength} characters",
-                    details: $"Current length: {audioLen}"
-                );
+            if (
+                TierListTestItemRules
+                .CheckIdStringCorrectRequiredNonTextItemContent(audio, "Audio")
+                .IsErr(out var err)
+            ) {
+                return err;
             }
 
             dictionary.TryGetValue("Transcription", out string? transcription);
 
-
-            if (!TierListTestItemContentTypeSpecificDataRules
-                    .IsStringCorrectAudioTranscriptionItemContent(transcription, out int transcriptionLen)
-               ) {
-                return Err.ErrFactory.InvalidData(
-                    $"Audio transcription data must be shorter than {TierListTestItemContentTypeSpecificDataRules.NonTextDataMaxLength} characters",
-                    details: $"Current length: {transcriptionLen}"
-                );
+            if (
+                TierListTestItemRules
+                .CheckIfStringCorrectAudioTranscriptionItemContent(transcription).IsErr(out err)
+            ) {
+                return err;
             }
 
             return new AudioOnly(audio, transcription);

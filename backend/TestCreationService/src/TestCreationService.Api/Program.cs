@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using ApiShared;
 using TestCreationService.Api.Endpoints;
 using TestCreationService.Api.Endpoints.test_creation.formats_shared;
-using TestCreationService.Api.Endpoints.test_creation.general;
+using TestCreationService.Api.Endpoints.test_creation.general_format;
 using TestCreationService.Api.Endpoints.test_creation.tier_list_format;
 using TestCreationService.Application;
 using TestCreationService.Infrastructure;

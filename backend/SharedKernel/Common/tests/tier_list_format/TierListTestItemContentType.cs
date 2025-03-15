@@ -2,8 +2,9 @@
 
 public enum TierListTestItemContentType
 {
-    Text,
+    TextOnly,
     ImageAndText,
-    Color,
-    Audio
+    ColorOnly,
+    AudioOnly,
+    ImageOnly
 }

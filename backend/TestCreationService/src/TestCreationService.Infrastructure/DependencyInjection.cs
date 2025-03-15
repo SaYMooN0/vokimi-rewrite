@@ -30,26 +30,32 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddMessageBrokerIntegration(this IServiceCollection services,
+        IConfiguration configuration) {
         services.Configure<MessageBrokerSettings>(options => configuration.GetSection("MessageBroker").Bind(options));
         services.AddSingleton<IIntegrationEventsPublisher, IntegrationEventsPublisher>();
         services.AddHostedService<ConsumeIntegrationEventsBackgroundService>();
 
         return services;
     }
+
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         string dbConnectionString = configuration.GetConnectionString("TestCreationServiceDb")
-            ?? throw new Exception("Database connection string is not provided.");
+                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestCreationDbContext>(options => options.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
         services.AddScoped<IScoringFormatTestsRepository, ScoringFormatTestsRepository>();
+        services.AddScoped<ITierListFormatTestsRepository, TierListFormatTestsRepository>();
+
         services.AddScoped<IGeneralTestQuestionsRepository, GeneralTestQuestionsRepository>();
 
         return services;
     }
+
     private static IServiceCollection AddDateTimeService(this IServiceCollection services) {
         services.AddSingleton<IDateTimeProvider, UtcDateTimeProvider>();
         return services;

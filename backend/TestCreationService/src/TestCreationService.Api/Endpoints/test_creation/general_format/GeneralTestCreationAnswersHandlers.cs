@@ -1,13 +1,12 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using MediatR;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answers;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands.answers;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general;
+namespace TestCreationService.Api.Endpoints.test_creation.general_format;
 internal static class GeneralTestCreationAnswersHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationAnswersHandlers(this RouteGroupBuilder group) {
@@ -23,9 +22,8 @@ internal static class GeneralTestCreationAnswersHandlers
             .WithRequestValidation<UpdateGeneralTestAnswersOrderRequest>();
         return group;
     }
-    private async static Task<IResult> ListAnswers(
-       HttpContext httpContext,
-       ISender mediator
+    private static async Task<IResult> ListAnswers(
+       HttpContext httpContext, ISender mediator
     ) {
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
 
@@ -41,9 +39,8 @@ internal static class GeneralTestCreationAnswersHandlers
             })
         );
     }
-    private async static Task<IResult> AddAnswer(
-       HttpContext httpContext,
-       ISender mediator
+    private static async Task<IResult> AddAnswer(
+       HttpContext httpContext, ISender mediator
     ) {
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveGeneralTestAnswerRequest>();
@@ -61,9 +58,8 @@ internal static class GeneralTestCreationAnswersHandlers
         );
 
     }
-    private async static Task<IResult> UpdateAnswersOrder(
-       HttpContext httpContext,
-       ISender mediator
+    private static async Task<IResult> UpdateAnswersOrder(
+       HttpContext httpContext, ISender mediator
     ) {
         var request = httpContext.GetValidatedRequest<UpdateGeneralTestAnswersOrderRequest>();
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();

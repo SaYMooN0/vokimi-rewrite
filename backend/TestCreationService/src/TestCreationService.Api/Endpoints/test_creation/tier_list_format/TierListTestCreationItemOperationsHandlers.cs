@@ -1,6 +1,5 @@
 ﻿using ApiShared.extensions;
 using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.items;
-using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.tiers;
 using TestCreationService.Api.Extensions;
 
 namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
@@ -19,4 +18,5 @@ internal static class TierListTestCreationItemOperationsHandlers
 
         return group;
     }
+    
 }

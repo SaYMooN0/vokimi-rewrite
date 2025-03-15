@@ -11,7 +11,7 @@ public abstract partial class TierListTestItemContentData
         public HexColor Color { get; }
         private ColorOnly(HexColor color) => Color = color;
 
-        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.Color;
+        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.ColorOnly;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Color;

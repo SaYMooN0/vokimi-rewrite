@@ -14,6 +14,7 @@ public abstract partial class TierListTestItemContentData
             Image = image;
             Text = text;
         }
+
         [JsonIgnore]
         public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.ImageAndText;
 
@@ -32,22 +33,20 @@ public abstract partial class TierListTestItemContentData
                 return Err.ErrFactory.InvalidData("Unable to create item content. Text not provided");
             }
 
-            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectItemText(text, out int textLength)) {
-                return Err.ErrFactory.InvalidData(
-                    $"Answer text must be between {TierListTestItemContentTypeSpecificDataRules.ItemTextMinLength} and {TierListTestItemContentTypeSpecificDataRules.ItemTextMaxLength} characters",
-                    details: $"Current length: {textLength}"
-                );
+            if (TierListTestItemRules.CheckIfStringCorrectItemTextContent(text).IsErr(out var textErr)) {
+                return textErr;
             }
 
             if (!dictionary.TryGetValue("Image", out string image)) {
                 return Err.ErrFactory.InvalidData("Unable to create item content. Image not provided");
             }
 
-            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectNonTextItem(image, out int imageLength)) {
-                return Err.ErrFactory.InvalidData(
-                    $"Image data must be non-empty and at most {TierListTestItemContentTypeSpecificDataRules.NonTextDataMaxLength} characters",
-                    details: $"Current length: {imageLength}"
-                );
+            if (
+                TierListTestItemRules
+                .CheckIdStringCorrectRequiredNonTextItemContent(image, "Image")
+                .IsErr(out var err)
+            ) {
+                return err;
             }
 
             return new ImageAndText(image, text);

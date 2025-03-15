@@ -10,8 +10,7 @@ public abstract partial class TierListTestItemContentData
         public string Text { get; }
 
         private TextOnly(string text) => Text = text;
-        [JsonIgnore]
-        public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.Text;
+        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.TextOnly;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Text;
@@ -26,11 +25,8 @@ public abstract partial class TierListTestItemContentData
                 return Err.ErrFactory.InvalidData("Unable to create item content. Text not provided");
             }
 
-            if (!TierListTestItemContentTypeSpecificDataRules.IsStringCorrectItemText(text, out int textLength)) {
-                return Err.ErrFactory.InvalidData(
-                    $"Answer text must be between {TierListTestItemContentTypeSpecificDataRules.ItemTextMinLength} and {TierListTestItemContentTypeSpecificDataRules.ItemTextMaxLength} characters",
-                    details: $"Current length: {textLength}"
-                );
+            if (TierListTestItemRules.CheckIfStringCorrectItemTextContent(text).IsErr(out var err)) {
+                return err;
             }
 
             return new TextOnly(text);

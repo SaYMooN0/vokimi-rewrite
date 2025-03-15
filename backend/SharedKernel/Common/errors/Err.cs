@@ -97,5 +97,10 @@ public class Err
             "Unable to find the general format test question",
             details: $"Cannot find general format test question with id {questionId}"
         );
+
+        public static Err TierListTestNotFound(TestId testId) => ErrFactory.NotFound(
+            "Unable to find the tier list format test",
+            details: $"Cannot find tier list format test with id {testId}"
+        );
     }
 }
