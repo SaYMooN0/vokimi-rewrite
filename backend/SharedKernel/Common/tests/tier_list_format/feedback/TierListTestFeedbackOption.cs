@@ -2,13 +2,11 @@
 using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.tests.general_format;
+namespace SharedKernel.Common.tests.tier_list_format.feedback;
 
-public abstract class GeneralTestFeedbackOption : ValueObject
+public abstract class TierListTestFeedbackOption : ValueObject
 {
-    private GeneralTestFeedbackOption() { }
-
-    public sealed class Disabled : GeneralTestFeedbackOption
+    public sealed class Disabled : TierListTestFeedbackOption
     {
         public static Disabled Instance = new Disabled();
         private Disabled() { }
@@ -18,7 +16,7 @@ public abstract class GeneralTestFeedbackOption : ValueObject
         }
     }
 
-    public sealed class Enabled : GeneralTestFeedbackOption
+    public sealed class Enabled : TierListTestFeedbackOption
     {
         public AnonymityValues Anonymity { get; }
         public string AccompanyingText { get; }
@@ -36,11 +34,14 @@ public abstract class GeneralTestFeedbackOption : ValueObject
             ushort maxFeedbackLength
         ) {
             if (
-                GeneralTestFeedbackRules.CheckAccompanyingTextForErrs(accompanyingText).IsErr(out var err)
-                || GeneralTestFeedbackRules.CheckMaxFeedbackLengthForErrs(maxFeedbackLength).IsErr(out err)
+                TierListTestFeedbackRules.CheckAccompanyingTextForErrs(accompanyingText)
+                    .IsErr(out var err)
+                || TierListTestFeedbackRules.CheckMaxFeedbackLengthForErrs(maxFeedbackLength)
+                    .IsErr(out err)
             ) {
                 return err;
             }
+
             return new Enabled(anonymity, accompanyingText, maxFeedbackLength);
         }
 
@@ -50,4 +51,5 @@ public abstract class GeneralTestFeedbackOption : ValueObject
             yield return MaxFeedbackLength;
         }
     }
+
 }

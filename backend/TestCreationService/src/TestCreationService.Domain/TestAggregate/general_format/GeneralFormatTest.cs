@@ -21,15 +21,18 @@ public class GeneralFormatTest : BaseTest
 {
     private GeneralFormatTest() { }
     public override TestFormat Format => TestFormat.General;
-    protected EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
-    protected List<GeneralTestResult> _results { get; init; }
-
-    public ImmutableArray<GeneralTestResult> Results => _results
-        .OrderBy(r => r.Id)
-        .ToImmutableArray();
-
+    private EntitiesOrderController<GeneralTestQuestionId> _questionsList { get; set; }
+    private List<GeneralTestResult> _results { get; }
     public GeneralTestFeedbackOption Feedback { get; private set; }
 
+    private GeneralFormatTest(
+        AppUserId creatorId,
+        HashSet<AppUserId> editorIds,
+        TestMainInfo mainInfo
+    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
+        _questionsList = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
+        _results = [];
+    }
 
     public static ErrOr<GeneralFormatTest> CreateNew(
         AppUserId creatorId,
@@ -60,14 +63,9 @@ public class GeneralFormatTest : BaseTest
         return newTest;
     }
 
-    private GeneralFormatTest(
-        AppUserId creatorId,
-        HashSet<AppUserId> editorIds,
-        TestMainInfo mainInfo
-    ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
-        _questionsList = EntitiesOrderController<GeneralTestQuestionId>.Empty(isShuffled: false);
-        _results = [];
-    }
+    public ImmutableArray<GeneralTestResult> Results => _results
+        .OrderBy(r => r.Id)
+        .ToImmutableArray();
 
     public ErrOrNothing AddNewQuestion(GeneralTestAnswersType answersType) {
         if (_questionsList.Count >= GeneralFormatTestRules.MaxQuestionsCount) {
@@ -181,10 +179,7 @@ public class GeneralFormatTest : BaseTest
     }
 
     public ErrOrNothing UpdateResult(
-        GeneralTestResultId resultId,
-        string Name,
-        string Text,
-        string Image
+        GeneralTestResultId resultId, string Name, string Text, string Image
     ) {
         GeneralTestResult? result = _results.FirstOrDefault(r => r.Id == resultId);
         if (result is null) {
@@ -293,7 +288,10 @@ public class GeneralFormatTest : BaseTest
         }
     }
 
-    public ErrOrNothing Publish(IEnumerable<GeneralTestQuestion> questions, IDateTimeProvider dateTimeProvider) {
+    public ErrOrNothing Publish(
+        IEnumerable<GeneralTestQuestion> questions,
+        IDateTimeProvider dateTimeProvider
+    ) {
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
         }

@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain.value_object;
 using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.tests.tier_list_format;
+namespace SharedKernel.Common.tests.tier_list_format.items;
 
 public abstract partial class TierListTestItemContentData : ValueObject
 {

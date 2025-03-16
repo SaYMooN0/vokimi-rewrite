@@ -7,7 +7,7 @@ public static class GeneralTestQuestionRules
     public const int
         MinAnswersCount = 2,
         MaxAnswersCount = 60;
-    public const int
+    private const int
         MaxImagesForQuestionCount = 3,
         QuestionTextMinLength = 10,
         QuestionTextMaxLength = 500;

@@ -10,6 +10,7 @@ internal class GeneralTestFeedbackOptionConverter : ValueConverter<GeneralTestFe
         v => ToString(v),
         v => FromString(v)
     ) { }
+
     private static string ToString(GeneralTestFeedbackOption option) {
         return option switch {
             GeneralTestFeedbackOption.Disabled => "Disabled",
@@ -19,9 +20,11 @@ internal class GeneralTestFeedbackOptionConverter : ValueConverter<GeneralTestFe
     }
 
     private static GeneralTestFeedbackOption FromString(string value) {
-        if (value == "Disabled") { return GeneralTestFeedbackOption.Disabled.Instance; }
+        if (value == "Disabled") {
+            return GeneralTestFeedbackOption.Disabled.Instance;
+        }
 
         return JsonSerializer.Deserialize<GeneralTestFeedbackOption.Enabled>(value)
-                ?? throw new FormatException("Invalid format for TestFeedbackOption.");
+               ?? throw new FormatException("Invalid format for TestFeedbackOption");
     }
 }

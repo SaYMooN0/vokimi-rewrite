@@ -6,17 +6,18 @@ namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
 
 internal static class TierListTestCreationItemOperationsHandlers
 {
-    internal static RouteGroupBuilder MapTierListTestCreationItemOperationsHandlers(this RouteGroupBuilder group) {
+    internal static RouteGroupBuilder MapTierListTestCreationItemOperationsHandlers(
+        this RouteGroupBuilder group
+    ) {
         group
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
 
-        group.MapPost("/update", UpdateTierListTestItem)
-            .WithRequestValidation<UpdateTierListTestItemRequest>();
+        group.MapPost("/update", UpdateTestItem)
+            .WithRequestValidation<SaveItemForTierListTestRequest>();
         group.MapDelete("/remove", RemoveItemFromTest);
 
 
         return group;
     }
-    
 }

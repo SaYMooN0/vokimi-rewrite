@@ -3,6 +3,8 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.tier_list_format;
+using SharedKernel.Common.tests.tier_list_format.feedback;
+using SharedKernel.Common.tests.tier_list_format.items;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
@@ -14,12 +16,11 @@ public class TierListFormatTest : BaseTest
 {
     public override TestFormat Format => TestFormat.TierList;
     private ICollection<TierListTestItem> _items { get; set; }
-    private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; set; }
+    private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; }
     private ICollection<TierListTestTier> _tiers { get; set; }
-
-    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
+    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get;  }
+    public TierListTestFeedbackOption Feedback { get; private set; }
     //time limit
-    //public TierListTestFeedbackOption Feedback { get; private set; }
 
 
     public static ErrOr<TierListFormatTest> CreateNew(
@@ -79,13 +80,40 @@ public class TierListFormatTest : BaseTest
         .GetItemsWithOrders(_items)
         .ToImmutableArray();
 
-    public ErrOr<TierListTestTier> AddNewTier(string tierName) { }
+    public ErrOr<TierListTestTier> AddNewTier(string tierName) {
+        if (_tiers.Count >= TierListTestRules.TestMaxTiersCount) {
+            return new Err(
+                $"Cannot add more than {TierListTestRules.TestMaxTiersCount} tiers to the test",
+                details: $"Current tiers count is {_tiers.Count}"
+            );
+        }
+
+        var nameAlreadyExists = _tiers.Select(t => t.Name).Contains(tierName);
+        if (nameAlreadyExists) {
+            return new Err("Tier with this name already exists in this test");
+        }
+
+        var creationRes = TierListTestTier.CreateNew(tierName);
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        _tiers.Add(creationRes.GetSuccess());
+        return creationRes.GetSuccess();
+    }
 
     public ErrOr<TierListTestItem> AddNewItem(
         string newItemName,
         string? newItemClarification,
         TierListTestItemContentData newItemContent
     ) {
+        if (_items.Count >= TierListTestRules.TestMaxItemsCount) {
+            return new Err(
+                $"Cannot add more than {TierListTestRules.TestMaxItemsCount} items to the test",
+                details: $"Current items count is {_items.Count}"
+            );
+        }
+
         var nameAlreadyExists = _items.Select(item => item.Name).Contains(newItemName);
         if (nameAlreadyExists) {
             return new Err("Item with this name already exists in this test");
@@ -101,4 +129,28 @@ public class TierListFormatTest : BaseTest
         _items.Add(creationRes.GetSuccess());
         return creationRes.GetSuccess();
     }
+
+    public ErrOr<TierListTestItem> UpdateItem(
+        TierListTestItemId itemId,
+        string newName,
+        string? newClarification,
+        TierListTestItemContentData newContent
+    ) {
+        TierListTestItem? itemToUpdate = _items.FirstOrDefault(item => item.Id == itemId);
+        if (itemToUpdate is null) {
+            return Err.ErrFactory.NotFound(
+                "Cannot update item because it wasn't found in this test",
+                details: $"This test has no item with id {itemId} ");
+        }
+
+        var updateRes = itemToUpdate.Update(newName, newClarification, newContent);
+        if (updateRes.IsErr(out var err)) {
+            return err;
+        }
+
+        return itemToUpdate;
+    }
+
+    public void UpdateTestFeedback(TierListTestFeedbackOption testFeedback) =>
+        Feedback = testFeedback;
 }

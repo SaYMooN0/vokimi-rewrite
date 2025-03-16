@@ -7,31 +7,29 @@ using TestCreationService.Domain.TestAggregate.general_format;
 
 namespace TestCreationService.Application.Tests.general_format.commands;
 
-public record class UpdateGeneralTestFeedbackCommand(
-    TestId TestId,
-    GeneralTestFeedbackOption FeedbackOption
+public record class GetGeneralTestFeedbackOptionCommand(
+    TestId TestId
 ) : IRequest<ErrOr<GeneralTestFeedbackOption>>;
 
-public class UpdateGeneralTestFeedbackCommandHandler
-    : IRequestHandler<UpdateGeneralTestFeedbackCommand, ErrOr<GeneralTestFeedbackOption>>
+public class GetGeneralTestFeedbackOptionCommandHandler
+    : IRequestHandler<GetGeneralTestFeedbackOptionCommand, ErrOr<GeneralTestFeedbackOption>>
 {
     private readonly IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
-    public UpdateGeneralTestFeedbackCommandHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
+    public GetGeneralTestFeedbackOptionCommandHandler(
+        IGeneralFormatTestsRepository generalFormatTestsRepository
+    ) {
         _generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
     public async Task<ErrOr<GeneralTestFeedbackOption>> Handle(
-        UpdateGeneralTestFeedbackCommand request,
-        CancellationToken cancellationToken
+        GetGeneralTestFeedbackOptionCommand request, CancellationToken cancellationToken
     ) {
         GeneralFormatTest? test = await _generalFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
 
-        test.UpdateTestFeedback(request.FeedbackOption);
-        await _generalFormatTestsRepository.Update(test);
         return test.Feedback;
     }
 }

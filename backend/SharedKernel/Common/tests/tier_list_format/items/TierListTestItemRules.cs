@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.tests.tier_list_format;
+namespace SharedKernel.Common.tests.tier_list_format.items;
 
 public static class TierListTestItemRules
 {

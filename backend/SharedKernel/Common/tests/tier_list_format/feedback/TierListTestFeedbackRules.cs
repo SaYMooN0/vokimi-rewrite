@@ -1,12 +1,12 @@
 ﻿using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.tests.general_format;
+namespace SharedKernel.Common.tests.tier_list_format.feedback;
 
-public static class GeneralTestFeedbackRules
+public static class TierListTestFeedbackRules
 {
     private const int
-       MaxAccompanyingTextLength = 500,
-       MaxPossibleFeedbackLength = 500;
+        MaxAccompanyingTextLength = 500,
+        MaxPossibleFeedbackLength = 500;
     public static ErrOrNothing CheckAccompanyingTextForErrs(string str) {
         int len = string.IsNullOrWhiteSpace(str) ? 0 : str.Length;
         if (len == 0) {

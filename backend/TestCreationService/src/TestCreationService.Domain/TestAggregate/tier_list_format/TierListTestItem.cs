@@ -1,6 +1,7 @@
 ﻿using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.tier_list_format;
+using SharedKernel.Common.tests.tier_list_format.items;
 
 namespace TestCreationService.Domain.TestAggregate.tier_list_format;
 
@@ -16,11 +17,10 @@ public class TierListTestItem : Entity<TierListTestItemId>
         string name, string? clarification,
         TierListTestItemContentData content
     ) {
-        if (TierListTestItemRules.CheckIfStringCorrectItemName(name).IsErr(out var err)) {
-            return err;
-        }
-
-        if (TierListTestItemRules.CheckIfStringCorrectItemClarification(clarification).IsErr(out err)) {
+        if (
+            TierListTestItemRules.CheckIfStringCorrectItemName(name).IsErr(out var err)
+            || TierListTestItemRules.CheckIfStringCorrectItemClarification(clarification).IsErr(out err)
+        ) {
             return err;
         }
 
@@ -43,11 +43,11 @@ public class TierListTestItem : Entity<TierListTestItemId>
             );
         }
 
-        if (TierListTestItemRules.CheckIfStringCorrectItemName(newName).IsErr(out var err)) {
-            return err;
-        }
-
-        if (TierListTestItemRules.CheckIfStringCorrectItemClarification(newClarification).IsErr(out err)) {
+        if (
+            TierListTestItemRules.CheckIfStringCorrectItemName(newName).IsErr(out var err)
+            || TierListTestItemRules.CheckIfStringCorrectItemClarification(newClarification)
+                .IsErr(out err)
+        ) {
             return err;
         }
 

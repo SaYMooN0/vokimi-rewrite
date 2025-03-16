@@ -2,11 +2,11 @@
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.value_objects;
 
-namespace SharedKernel.Common.tests.tier_list_format;
+namespace SharedKernel.Common.tests.tier_list_format.items;
 
 public abstract partial class TierListTestItemContentData
 {
-    public sealed class ColorOnly : TierListTestItemContentData
+    public sealed class ColorOnly : items.TierListTestItemContentData
     {
         public HexColor Color { get; }
         private ColorOnly(HexColor color) => Color = color;

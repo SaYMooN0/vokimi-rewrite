@@ -32,4 +32,11 @@ public class TierListFormatTestsRepository : ITierListFormatTestsRepository
                 EF.Property<ICollection<TierListTestItem>>(t, "_items")
             )
             .FirstOrDefaultAsync(t => t.Id == testId);
+    
+    public async Task<TierListFormatTest?> GetWithTiersIncluded(TestId testId) =>
+        await _db.TierListFormatTests
+            .Include(t =>
+                EF.Property<ICollection<TierListTestTier>>(t, "_tiers")
+            )
+            .FirstOrDefaultAsync(t => t.Id == testId);
 }

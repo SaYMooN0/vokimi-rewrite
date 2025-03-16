@@ -7,31 +7,30 @@ using TestCreationService.Domain.TestAggregate.tier_list_format;
 
 namespace TestCreationService.Application.Tests.tier_list_format.commands;
 
-public record class UpdateTierListTestFeedbackCommand(
-    TestId TestId,
-    TierListTestFeedbackOption FeedbackOption
+
+public record class GetTierListTestFeedbackOptionCommand(
+    TestId TestId
 ) : IRequest<ErrOr<TierListTestFeedbackOption>>;
 
-public class UpdateTierListTestFeedbackCommandHandler
-    : IRequestHandler<UpdateTierListTestFeedbackCommand, ErrOr<TierListTestFeedbackOption>>
+public class GetTierListTestFeedbackOptionCommandHandler
+    : IRequestHandler<GetTierListTestFeedbackOptionCommand, ErrOr<TierListTestFeedbackOption>>
 {
     private readonly ITierListFormatTestsRepository _TierListFormatTestsRepository;
 
-    public UpdateTierListTestFeedbackCommandHandler(ITierListFormatTestsRepository TierListFormatTestsRepository) {
+    public GetTierListTestFeedbackOptionCommandHandler(
+        ITierListFormatTestsRepository TierListFormatTestsRepository
+    ) {
         _TierListFormatTestsRepository = TierListFormatTestsRepository;
     }
 
     public async Task<ErrOr<TierListTestFeedbackOption>> Handle(
-        UpdateTierListTestFeedbackCommand request,
-        CancellationToken cancellationToken
+        GetTierListTestFeedbackOptionCommand request, CancellationToken cancellationToken
     ) {
         TierListFormatTest? test = await _TierListFormatTestsRepository.GetById(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TestNotFound(request.TestId);
         }
 
-        test.UpdateTestFeedback(request.FeedbackOption);
-        await _TierListFormatTestsRepository.Update(test);
         return test.Feedback;
     }
 }

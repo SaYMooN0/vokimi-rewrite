@@ -9,4 +9,5 @@ public interface ITierListFormatTestsRepository
     public Task<TierListFormatTest?> GetById(TestId testId);
     public Task Update(TierListFormatTest test);
     public Task<TierListFormatTest?> GetWithItemsIncluded(TestId testId);
+    public Task<TierListFormatTest?> GetWithTiersIncluded(TestId testId);
 }

@@ -45,7 +45,8 @@ namespace TestCreationService.Api
             app.MapGroup("/testCreation/{testId}/tags").MapTestCreationTagsHandlers();
 
             //general format test
-            app.MapGroup("/testCreation/{testId}/general").MapGeneralFormatTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/general")
+                .MapGeneralFormatTestCreationHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions")
                 .MapGeneralTestCreationQuestionsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}")
@@ -60,7 +61,8 @@ namespace TestCreationService.Api
                 .MapGeneralTestCreationResultOperationHandlers();
 
             //tier list format test
-            app.MapGroup("/testCreation/{testId}/tierList").MapTierListFormatTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/tierList")
+                .MapTierListFormatTestCreationHandlers();
             app.MapGroup("/testCreation/{testId}/tierList/tiers")
                 .MapTierListTestCreationTiersHandlers();
             app.MapGroup("/testCreation/{testId}/tierList/tiers/{tierId}")

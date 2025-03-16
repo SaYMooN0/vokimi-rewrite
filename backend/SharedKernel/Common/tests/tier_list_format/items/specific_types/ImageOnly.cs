@@ -1,11 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using SharedKernel.Common.errors;
 
-namespace SharedKernel.Common.tests.tier_list_format;
+namespace SharedKernel.Common.tests.tier_list_format.items;
+
 
 public abstract partial class TierListTestItemContentData
 {
-    public sealed class ImageOnly : TierListTestItemContentData
+    public sealed class ImageOnly : items.TierListTestItemContentData
     {
         public string Image { get; }
 
