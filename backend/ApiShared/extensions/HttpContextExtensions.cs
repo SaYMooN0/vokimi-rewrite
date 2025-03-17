@@ -3,7 +3,6 @@ using System.Text;
 using ApiShared.interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Configs;

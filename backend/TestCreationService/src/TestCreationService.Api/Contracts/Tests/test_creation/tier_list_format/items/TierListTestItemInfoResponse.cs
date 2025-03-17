@@ -2,7 +2,7 @@
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.items;
 
-public record class TierListTestItemInfoResponse(
+internal record class TierListTestItemInfoResponse(
     string Id,
     string Name,
     string? Clarification,
@@ -10,5 +10,9 @@ public record class TierListTestItemInfoResponse(
 )
 {
     public static TierListTestItemInfoResponse FromItem(TierListTestItem item) => new(
+        item.Id.ToString(),
+        item.Name,
+        item.Clarification,
+        item.Content.ToDictionary()
     );
 }

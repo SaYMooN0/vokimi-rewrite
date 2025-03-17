@@ -39,10 +39,11 @@ public class TierListTestTier : Entity<TierListTestTierId>
         ) {
             return err;
         }
+
         Name = newName;
         Description = newDescription;
         MaxItemsCountLimit = newMaxItemsCountLimit;
-        Styles = newStyles;
+        Styles.Update(newStyles.BackgroundColor, newStyles.TextColor);
         return ErrOrNothing.Nothing;
     }
 }

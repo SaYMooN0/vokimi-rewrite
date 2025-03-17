@@ -12,7 +12,7 @@ public class TestStylesSheet : Entity<TestStylesSheetId>
     public HexColor ErrorsColor { get; private set; }
     public TestStylesButtons Buttons { get; private set; }
 
-    private static readonly HexColor _defaultAccentColor = HexColor.FromString("#796cfa").GetSuccess();
+    public static readonly HexColor DefaultAccentColor = HexColor.FromString("#796cfa").GetSuccess();
     private static readonly HexColor _defaultErrorsColor = HexColor.FromString("#e02926").GetSuccess();
 
     public TestStylesSheet(
@@ -32,7 +32,7 @@ public class TestStylesSheet : Entity<TestStylesSheetId>
     public static TestStylesSheet CreateNew(TestId testId) => new(
         TestStylesSheetId.CreateNew(),
         testId,
-        _defaultAccentColor,
+        DefaultAccentColor,
         _defaultErrorsColor,
         TestStylesButtons.Default
     );
@@ -44,16 +44,8 @@ public class TestStylesSheet : Entity<TestStylesSheetId>
     }
 
     public void SetToDefault() {
-        AccentColor = _defaultAccentColor;
+        AccentColor = DefaultAccentColor;
         ErrorsColor = _defaultErrorsColor;
         Buttons = TestStylesButtons.Default;
     }
-
-    // how test looks in the catalog
-    //---View test page
-    // how test cover looks like
-    // how underlying buttons buttons look like
-    //---Test taking page
-    //
-    //---View results page
 }

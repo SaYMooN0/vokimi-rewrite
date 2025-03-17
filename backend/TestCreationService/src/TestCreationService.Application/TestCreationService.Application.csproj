@@ -11,8 +11,4 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Tests\tier_list_format\commands\tiers\" />
-	</ItemGroup>
-
 </Project>

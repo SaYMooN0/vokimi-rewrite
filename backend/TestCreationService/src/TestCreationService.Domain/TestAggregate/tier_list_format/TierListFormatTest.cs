@@ -16,9 +16,9 @@ public class TierListFormatTest : BaseTest
 {
     public override TestFormat Format => TestFormat.TierList;
     private ICollection<TierListTestItem> _items { get; set; }
-    private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; }
+    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
     private ICollection<TierListTestTier> _tiers { get; set; }
-    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get;  }
+    private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; set; }
     public TierListTestFeedbackOption Feedback { get; private set; }
     //time limit
 
@@ -57,14 +57,16 @@ public class TierListFormatTest : BaseTest
         HashSet<AppUserId> editorIds,
         TestMainInfo mainInfo
     ) : base(TestId.CreateNew(), creatorId, editorIds, mainInfo) {
+        _items = [];
+        _itemsOrderController = EntitiesOrderController<TierListTestItemId>.Empty(isShuffled: false);
+
         TierListTestTier firstTier = TierListTestTier.CreateNew("Tier #1").GetSuccess();
         _tiers = [firstTier];
         _tiersOrderController = EntitiesOrderController<TierListTestTierId>.CreateNew(
             isShuffled: false, new() { { firstTier.Id, 1 } }
         ).GetSuccess();
 
-        _items = [];
-        _itemsOrderController = EntitiesOrderController<TierListTestItemId>.Empty(isShuffled: false);
+        Feedback = TierListTestFeedbackOption.Disabled.Instance;
     }
 
     public override void DeleteTest() {
@@ -98,8 +100,74 @@ public class TierListFormatTest : BaseTest
             return err;
         }
 
-        _tiers.Add(creationRes.GetSuccess());
-        return creationRes.GetSuccess();
+        var newTier = creationRes.GetSuccess();
+        _tiers.Add(newTier);
+        _tiersOrderController.AddToEnd(newTier.Id);
+        return newTier;
+    }
+
+    public ErrOr<TierListTestTier> UpdateTier(
+        TierListTestTierId tierId,
+        string newTierName,
+        string? newTierDescription,
+        ushort? newMaxItemsCountLimit,
+        TierListTestTierStyles newStyles
+    ) {
+        TierListTestTier? tierToUpdate = _tiers.FirstOrDefault(item => item.Id == tierId);
+        if (tierToUpdate is null) {
+            return Err.ErrFactory.NotFound(
+                "Cannot update tier because it wasn't found in this test",
+                details: $"This test has no tier with id {tierId} "
+            );
+        }
+
+        var updateRes = tierToUpdate.Update(
+            newTierName, newTierDescription, newMaxItemsCountLimit, newStyles
+        );
+        if (updateRes.IsErr(out var err)) {
+            return err;
+        }
+
+        return tierToUpdate;
+    }
+
+    public ErrOrNothing UpdateTiersOrder(EntitiesOrderController<TierListTestTierId> orderController) {
+        var tierIds = _tiersOrderController.EntityIds();
+        var providedIds = orderController.EntityIds().ToHashSet();
+
+        var extraIds = providedIds.Except(tierIds);
+        if (extraIds.Any()) {
+            return Err.ErrFactory.InvalidData(
+                "Invalid tiers order was provided. Some tiers do not exist in the test",
+                details: $"Extra tier Ids: {string.Join(", ", extraIds)}"
+            );
+        }
+
+        if (!tierIds.IsSubsetOf(providedIds)) {
+            var missingIds = tierIds.Except(providedIds);
+            return Err.ErrFactory.InvalidData(
+                "Invalid tiers order was provided. Not all tiers presented",
+                details: $"Missing tier Ids: {string.Join(", ", missingIds)}"
+            );
+        }
+
+        _tiersOrderController = orderController.Copy();
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing RemoveTier(TierListTestTierId tierId) {
+        var tier = _tiers.FirstOrDefault(q => q.Id == tierId);
+        if (tier is null) {
+            return Err.ErrFactory.NotFound(
+                message: "Cannot find the tier to remove",
+                details:
+                $"Tier list test with id {Id} has no tier with id {tierId}. Either it has already been removed or it was never in the test"
+            );
+        }
+
+        _tiers.Remove(tier);
+        _tiersOrderController.RemoveEntity(tier.Id);
+        return ErrOrNothing.Nothing;
     }
 
     public ErrOr<TierListTestItem> AddNewItem(
@@ -126,8 +194,10 @@ public class TierListFormatTest : BaseTest
             return err;
         }
 
-        _items.Add(creationRes.GetSuccess());
-        return creationRes.GetSuccess();
+        var newItem = creationRes.GetSuccess();
+        _items.Add(newItem);
+        _itemsOrderController.AddToEnd(newItem.Id);
+        return newItem;
     }
 
     public ErrOr<TierListTestItem> UpdateItem(
@@ -149,6 +219,47 @@ public class TierListFormatTest : BaseTest
         }
 
         return itemToUpdate;
+    }
+
+    public ErrOrNothing UpdateItemsOrder(
+        EntitiesOrderController<TierListTestItemId> orderController
+    ) {
+        var itemIds = _itemsOrderController.EntityIds();
+        var providedIds = orderController.EntityIds().ToHashSet();
+
+        var extraIds = providedIds.Except(itemIds);
+        if (extraIds.Any()) {
+            return Err.ErrFactory.InvalidData(
+                "Invalid items order was provided. Some items do not exist in the test",
+                details: $"Extra item Ids: {string.Join(", ", extraIds)}"
+            );
+        }
+
+        if (!itemIds.IsSubsetOf(providedIds)) {
+            var missingIds = itemIds.Except(providedIds);
+            return Err.ErrFactory.InvalidData(
+                "Invalid items order was provided. Not all items presented",
+                details: $"Missing item Ids: {string.Join(", ", missingIds)}"
+            );
+        }
+
+        _itemsOrderController = orderController.Copy();
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing RemoveItem(TierListTestItemId itemId) {
+        var item = _items.FirstOrDefault(q => q.Id == itemId);
+        if (item is null) {
+            return Err.ErrFactory.NotFound(
+                message: "Cannot find the item to remove",
+                details:
+                $"Tier list test with id {Id} has no item with id {itemId}. Either it has already been removed or it was never in the test"
+            );
+        }
+
+        _items.Remove(item);
+        _itemsOrderController.RemoveEntity(item.Id);
+        return ErrOrNothing.Nothing;
     }
 
     public void UpdateTestFeedback(TierListTestFeedbackOption testFeedback) =>

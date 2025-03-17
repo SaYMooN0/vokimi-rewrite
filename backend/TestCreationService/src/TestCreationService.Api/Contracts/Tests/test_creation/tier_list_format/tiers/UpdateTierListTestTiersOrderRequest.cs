@@ -8,7 +8,7 @@ namespace TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format
 internal class UpdateTierListTestTiersOrderRequest : IRequestWithValidationNeeded
 {
     public bool ShuffleAnswers { get; init; }
-    public Dictionary<string, int> ItemsOrder { get; init; }
+    public Dictionary<string, int> TiersOrder { get; init; } = [];
 
     public RequestValidationResult Validate() {
         if (CreateOrderController().IsErr(out var err)) {
@@ -19,17 +19,17 @@ internal class UpdateTierListTestTiersOrderRequest : IRequestWithValidationNeede
     }
 
     public ErrOr<EntitiesOrderController<TierListTestTierId>> CreateOrderController() {
-        if (ItemsOrder.Keys.Any(id => !Guid.TryParse(id, out var _))) {
+        if (TiersOrder.Keys.Any(id => !Guid.TryParse(id, out var _))) {
             return Err.ErrFactory.InvalidData("Tiers order values have invalid id format");
         }
 
-        if (ItemsOrder.Values.Any(order => order < 0 || order > ushort.MaxValue)) {
+        if (TiersOrder.Values.Any(order => order < 0 || order > ushort.MaxValue)) {
             return Err.ErrFactory.InvalidData("Tiers order values have invalid order value");
         }
 
         return EntitiesOrderController<TierListTestTierId>.CreateNew(
             ShuffleAnswers,
-            ItemsOrder.ToDictionary(
+            TiersOrder.ToDictionary(
                 kvp => new TierListTestTierId(new Guid(kvp.Key)),
                 kvp => (ushort)kvp.Value
             )

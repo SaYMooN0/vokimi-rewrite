@@ -8,7 +8,7 @@ namespace TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format
 internal class UpdateTierListTestItemsOrderRequest : IRequestWithValidationNeeded
 {
     public bool ShuffleAnswers { get; init; }
-    public Dictionary<string, int> ItemsOrder { get; init; }
+    public Dictionary<string, int> ItemsOrder { get; init; } = [];
 
     public RequestValidationResult Validate() {
         if (CreateOrderController().IsErr(out var err)) {

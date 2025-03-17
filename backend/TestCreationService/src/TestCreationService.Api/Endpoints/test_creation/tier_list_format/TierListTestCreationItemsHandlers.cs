@@ -15,7 +15,7 @@ internal static class TierListTestCreationItemsHandlers
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
 
-        group.MapPost("/saveNew", SaveNewItemForTierListTest)
+        group.MapPost("/saveNew", SaveNewItem)
             .WithRequestValidation<SaveItemForTierListTestRequest>();
         group.MapPost("/updateOrder", UpdateTestItemsOrder)
             .WithRequestValidation<UpdateTierListTestItemsOrderRequest>();
@@ -23,7 +23,7 @@ internal static class TierListTestCreationItemsHandlers
         return group;
     }
 
-    private static async Task<IResult> SaveNewItemForTierListTest(
+    private static async Task<IResult> SaveNewItem(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
@@ -48,5 +48,11 @@ internal static class TierListTestCreationItemsHandlers
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateTierListTestItemsOrderRequest>();
+        var orderController = request.CreateOrderController().GetSuccess();
+
+        UpdateTierListTestItemsOrderCommand command = new(testId, orderController);
+        var result = await mediator.Send(command);
+
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 }

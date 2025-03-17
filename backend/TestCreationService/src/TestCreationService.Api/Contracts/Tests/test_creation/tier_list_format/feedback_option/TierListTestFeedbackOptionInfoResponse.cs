@@ -3,7 +3,7 @@ using SharedKernel.Common.tests.tier_list_format.feedback;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.feedback_option;
 
-public record class TierListTestFeedbackOptionInfoResponse(
+internal record class TierListTestFeedbackOptionInfoResponse(
     bool EnableTestFeedback,
     AnonymityValues? FeedbackAnonymity,
     string? AccompanyingText,

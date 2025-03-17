@@ -5,7 +5,7 @@ using SharedKernel.Common.tests.tier_list_format.feedback;
 
 namespace TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.feedback_option;
 
-public class UpdateTierListTestFeedbackOptionRequest : IRequestWithValidationNeeded
+internal class UpdateTierListTestFeedbackOptionRequest : IRequestWithValidationNeeded
 {
     public bool EnableTestFeedback { get; init; } = false;
     public AnonymityValues? FeedbackAnonymity { get; init; } = null;

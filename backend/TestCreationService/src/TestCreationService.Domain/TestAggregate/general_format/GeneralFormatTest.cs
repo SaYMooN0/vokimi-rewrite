@@ -95,7 +95,9 @@ public class GeneralFormatTest : BaseTest
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing UpdateQuestionsOrder(EntitiesOrderController<GeneralTestQuestionId> orderController) {
+    public ErrOrNothing UpdateQuestionsOrder(
+        EntitiesOrderController<GeneralTestQuestionId> orderController
+    ) {
         var questionIds = _questionsList.EntityIds();
         var providedIds = orderController.EntityIds().ToHashSet();
 
