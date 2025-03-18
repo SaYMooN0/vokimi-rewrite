@@ -6,7 +6,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answe
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands.answers;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general_format;
+namespace TestCreationService.Api.Endpoints.general_format.answers;
 internal static class GeneralTestCreationAnswerOperationsHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationAnswerOperationsHandlers(this RouteGroupBuilder group) {
@@ -22,9 +22,8 @@ internal static class GeneralTestCreationAnswerOperationsHandlers
 
         return group;
     }
-    private async static Task<IResult> UpdateAnswer(
-       HttpContext httpContext,
-       ISender mediator
+    private static async Task<IResult> UpdateAnswer(
+       HttpContext httpContext, ISender mediator
     ) {
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
         GeneralTestAnswerId answerId = httpContext.GetGeneralTestAnswerIdFromRoute();
@@ -43,9 +42,8 @@ internal static class GeneralTestCreationAnswerOperationsHandlers
             () => Results.Ok()
         );
     }
-    private async static Task<IResult> RemoveAnswer(
-       HttpContext httpContext,
-       ISender mediator
+    private static async Task<IResult> RemoveAnswer(
+       HttpContext httpContext, ISender mediator
     ) {
         GeneralTestQuestionId questionId = httpContext.GetGeneralTestQuestionIdFromRoute();
         GeneralTestAnswerId answerId = httpContext.GetGeneralTestAnswerIdFromRoute();

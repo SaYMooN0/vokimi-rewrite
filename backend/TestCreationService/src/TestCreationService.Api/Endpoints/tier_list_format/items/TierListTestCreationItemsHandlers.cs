@@ -5,37 +5,32 @@ using SharedKernel.Common.domain.entity;
 using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.items;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.tier_list_format.commands.items;
-using TestCreationService.Domain.TestAggregate.tier_list_format;
 
-namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
+namespace TestCreationService.Api.Endpoints.tier_list_format.items;
 
-internal static class TierListTestCreationItemOperationsHandlers
+internal static class TierListTestCreationItemsHandlers
 {
-    internal static RouteGroupBuilder MapTierListTestCreationItemOperationsHandlers(
-        this RouteGroupBuilder group
-    ) {
+    internal static RouteGroupBuilder MapTierListTestCreationItemsHandlers(this RouteGroupBuilder group) {
         group
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
 
-        group.MapPost("/update", UpdateTestItem)
+        group.MapPost("/saveNew", SaveNewItem)
             .WithRequestValidation<SaveItemForTierListTestRequest>();
-        group.MapDelete("/remove", RemoveItemFromTest);
-
+        group.MapPost("/updateOrder", UpdateTestItemsOrder)
+            .WithRequestValidation<UpdateTierListTestItemsOrderRequest>();
 
         return group;
     }
 
-    private static async Task<IResult> UpdateTestItem(
+    private static async Task<IResult> SaveNewItem(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        TierListTestItemId itemId = httpContext.GetItemIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveItemForTierListTestRequest>();
 
-        UpdateTierListTestItemCommand command = new(
+        SaveNewItemForTierListTestCommand command = new(
             testId,
-            itemId,
             request.ItemName,
             request.ItemClarification,
             request.ParsedItemContentData().GetSuccess()
@@ -47,13 +42,15 @@ internal static class TierListTestCreationItemOperationsHandlers
             })
         );
     }
-    private static async Task<IResult> RemoveItemFromTest(
+
+    private static async Task<IResult> UpdateTestItemsOrder(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        TierListTestItemId itemId = httpContext.GetItemIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateTierListTestItemsOrderRequest>();
+        var orderController = request.CreateOrderController().GetSuccess();
 
-        RemoveTierListTestItemCommand command = new(testId, itemId);
+        UpdateTierListTestItemsOrderCommand command = new(testId, orderController);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());

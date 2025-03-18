@@ -11,7 +11,7 @@ public record RemoveTierListTestItemCommand(
     TierListTestItemId ItemId
 ) : IRequest<ErrOrNothing>;
 
-public class RemoveTierListTestItemCommandHandler
+internal class RemoveTierListTestItemCommandHandler
     : IRequestHandler<RemoveTierListTestItemCommand, ErrOrNothing>
 {
     private readonly ITierListFormatTestsRepository _tierListFormatRepository;

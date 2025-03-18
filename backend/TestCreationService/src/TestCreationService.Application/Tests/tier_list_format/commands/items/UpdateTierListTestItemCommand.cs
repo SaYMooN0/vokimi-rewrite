@@ -16,7 +16,7 @@ public record UpdateTierListTestItemCommand(
     TierListTestItemContentData NewItemContent
 ) : IRequest<ErrOr<TierListTestItem>>;
 
-public class UpdateTierListTestItemCommandHandler
+internal class UpdateTierListTestItemCommandHandler
     : IRequestHandler<UpdateTierListTestItemCommand, ErrOr<TierListTestItem>>
 {
     private readonly ITierListFormatTestsRepository _tierListFormatRepository;
@@ -35,14 +35,14 @@ public class UpdateTierListTestItemCommandHandler
             return Err.ErrPresets.TierListTestNotFound(request.TestId);
         }
 
-        ErrOr<TierListTestItem> addingRes = test.UpdateItem(
+        ErrOr<TierListTestItem> updateRes = test.UpdateItem(
             request.ItemId, request.NewName, request.NewClarification, request.NewItemContent
         );
-        if (addingRes.IsErr(out var err)) {
+        if (updateRes.IsErr(out var err)) {
             return err;
         }
 
         await _tierListFormatRepository.Update(test);
-        return addingRes.GetSuccess();
+        return updateRes.GetSuccess();
     }
 }

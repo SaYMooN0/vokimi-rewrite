@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SharedKernel.Common.domain;
+﻿using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using TestCreationService.Application.Common.interfaces.repositories;
@@ -26,7 +26,13 @@ internal class GeneralTestQuestionsRepository : IGeneralTestQuestionsRepository
             .ExecuteDeleteAsync();
     }
 
-    public async Task<ErrOr<IEnumerable<GeneralTestQuestion>>> GetAllWithId(IEnumerable<GeneralTestQuestionId> ids) {
+    public async Task<ImmutableArray<GeneralTestQuestion>> GetWithAnswersByIds(HashSet<GeneralTestQuestionId> ids) =>
+        (await _db.GeneralTestQuestions
+            .Where(q => ids.Contains(q.Id))
+            .Include(q => EF.Property<List<GeneralTestQuestion>>(q, "_answers"))
+            .ToArrayAsync()
+        ).ToImmutableArray();
+    public async Task<ErrOr<List<GeneralTestQuestion>>> GetAllWithIdWithoutAnswers(IEnumerable<GeneralTestQuestionId> ids) {
         List<GeneralTestQuestion> result = new(ids.Count());
         foreach (var id in ids) {
             GeneralTestQuestion? q = await _db.GeneralTestQuestions.FindAsync(id);
@@ -38,9 +44,8 @@ internal class GeneralTestQuestionsRepository : IGeneralTestQuestionsRepository
         return result;
     }
 
-    public async Task<GeneralTestQuestion?> GetById(GeneralTestQuestionId id) {
-        return await _db.GeneralTestQuestions.FindAsync(id);
-    }
+    public async Task<GeneralTestQuestion?> GetById(GeneralTestQuestionId id) =>
+        await _db.GeneralTestQuestions.FindAsync(id);
 
     public async Task<GeneralTestQuestion?> GetWithAnswers(GeneralTestQuestionId id) =>
         await _db.GeneralTestQuestions

@@ -31,7 +31,7 @@ internal class ListGeneralTestQuestionsCommandHandler
         if (test is null) {
             return Err.ErrPresets.GeneralTestNotFound(request.TestId);
         }
-        var questionsFetchRes = await _generalTestQuestionsRepository.GetAllWithId(test.GetTestQuestionIds());
+        var questionsFetchRes = await _generalTestQuestionsRepository.GetAllWithIdWithoutAnswers(test.GetTestQuestionIds());
         if (questionsFetchRes.IsErr(out var err)) {
             return err;
         }

@@ -1,9 +1,14 @@
 using System.Text.Json.Serialization;
 using ApiShared;
 using TestCreationService.Api.Endpoints;
-using TestCreationService.Api.Endpoints.test_creation.formats_shared;
-using TestCreationService.Api.Endpoints.test_creation.general_format;
-using TestCreationService.Api.Endpoints.test_creation.tier_list_format;
+using TestCreationService.Api.Endpoints.formats_shared;
+using TestCreationService.Api.Endpoints.general_format;
+using TestCreationService.Api.Endpoints.general_format.answers;
+using TestCreationService.Api.Endpoints.general_format.questions;
+using TestCreationService.Api.Endpoints.general_format.results;
+using TestCreationService.Api.Endpoints.tier_list_format;
+using TestCreationService.Api.Endpoints.tier_list_format.items;
+using TestCreationService.Api.Endpoints.tier_list_format.tiers;
 using TestCreationService.Application;
 using TestCreationService.Infrastructure;
 
@@ -47,6 +52,8 @@ namespace TestCreationService.Api
             //general format test
             app.MapGroup("/testCreation/{testId}/general")
                 .MapGeneralFormatTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/general/p")
+                .MapGeneralTestPublishingHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions")
                 .MapGeneralTestCreationQuestionsHandlers();
             app.MapGroup("/testCreation/{testId}/general/questions/{questionId}")
@@ -63,6 +70,8 @@ namespace TestCreationService.Api
             //tier list format test
             app.MapGroup("/testCreation/{testId}/tierList")
                 .MapTierListFormatTestCreationHandlers();
+            app.MapGroup("/testCreation/{testId}/tierList/p")
+                .MapTierListTestPublishingHandlers();
             app.MapGroup("/testCreation/{testId}/tierList/tiers")
                 .MapTierListTestCreationTiersHandlers();
             app.MapGroup("/testCreation/{testId}/tierList/tiers/{tierId}")
@@ -71,9 +80,6 @@ namespace TestCreationService.Api
                 .MapTierListTestCreationItemsHandlers();
             app.MapGroup("/testCreation/{testId}/tierList/items/{itemId}")
                 .MapTierListTestCreationItemOperationsHandlers();
-
-
-            app.MapGroup("/testCreation/{testId}/publishing").MapTestPublishingHandlers();
         }
     }
 }

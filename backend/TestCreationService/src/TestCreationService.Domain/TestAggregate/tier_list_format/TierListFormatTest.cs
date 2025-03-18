@@ -1,14 +1,17 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.tier_list_format;
 using SharedKernel.Common.tests.tier_list_format.feedback;
 using SharedKernel.Common.tests.tier_list_format.items;
+using SharedKernel.IntegrationEvents.test_publishing;
 using TestCreationService.Domain.Common;
 using TestCreationService.Domain.Rules;
 using TestCreationService.Domain.TestAggregate.formats_shared;
 using TestCreationService.Domain.TestAggregate.formats_shared.events;
+using TestCreationService.Domain.TestAggregate.tier_list_format.events;
 
 namespace TestCreationService.Domain.TestAggregate.tier_list_format;
 
@@ -264,4 +267,100 @@ public class TierListFormatTest : BaseTest
 
     public void UpdateTestFeedback(TierListTestFeedbackOption testFeedback) =>
         Feedback = testFeedback;
+
+    public TestPublishingProblem[] CheckForPublishingProblems() => [
+        .. _mainInfo.CheckForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Main Info")),
+        .. CheckTiersForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Tiers")),
+        .. CheckItemsForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Items")),
+        .. _tags.CheckForPublishingProblems()
+            .Select(e => TestPublishingProblem.FromErr(e, "Tags")),
+    ];
+
+    private IEnumerable<Err> CheckTiersForPublishingProblems() {
+        if (_tiers.Count() != _tiersOrderController.Count) {
+            yield return new Err(
+                "Tiers were not loaded correctly. Try again later. If it doesn't help try adding or removing one tier"
+            );
+            yield break;
+        }
+
+        int tiersCount = _tiers.Count();
+        if (tiersCount > TierListTestRules.TestMaxTiersCount) {
+            yield return new Err(
+                $"Tier list format test cannot have more than {TierListTestRules.TestMaxTiersCount} tiers. Test has {tiersCount} tiers"
+            );
+            if (tiersCount > TierListTestRules.TestMaxTiersCount * 2) {
+                yield break;
+            }
+        }
+
+        if (tiersCount < TierListTestRules.TestMinTiersCount) {
+            yield return new Err(
+                $"Tier list format test must have at least {TierListTestRules.TestMinTiersCount} tiers. Test has {tiersCount} tiers"
+            );
+        }
+    }
+
+    private IEnumerable<Err> CheckItemsForPublishingProblems() {
+        if (_items.Count() != _itemsOrderController.Count) {
+            yield return new Err(
+                "Items were not loaded correctly. Try again later. If it doesn't help try adding or removing one item"
+            );
+            yield break;
+        }
+
+        int itemsCount = _items.Count();
+        if (itemsCount > TierListTestRules.TestMaxItemsCount) {
+            yield return new Err(
+                $"Tier list format test cannot have more than {TierListTestRules.TestMaxItemsCount} items. Test has {itemsCount} items"
+            );
+            if (itemsCount > TierListTestRules.TestMaxItemsCount * 2) {
+                yield break;
+            }
+        }
+
+        if (itemsCount < TierListTestRules.TestMinItemsCount) {
+            yield return new Err(
+                $"Tier list format test must have at least {TierListTestRules.TestMinItemsCount} items. Test has {itemsCount} items"
+            );
+        }
+    }
+
+    public ErrOrNothing Publish(IDateTimeProvider dateTimeProvider) {
+        if (CheckForPublishingProblems().Any()) {
+            return new Err("Cannot publish test. Test has publishing problems");
+        }
+
+        TestPublishedInteractionsAccessSettingsDto interactionsAccessSettingsDto = new(
+            _interactionsAccessSettings.TestAccess,
+            _interactionsAccessSettings.AllowRatings,
+            _interactionsAccessSettings.AllowComments,
+            _interactionsAccessSettings.AllowTestTakenPosts,
+            _interactionsAccessSettings.AllowTagsSuggestions
+        );
+        TierListTestPublishedEvent e = new(
+            Id, CreatorId, EditorIds.ToArray(), _mainInfo.Name, _mainInfo.CoverImg, _mainInfo.Description,
+            _mainInfo.Language,
+            dateTimeProvider.Now,
+            interactionsAccessSettingsDto,
+            new(_styles.Id, _styles.AccentColor, _styles.ErrorsColor, _styles.Buttons),
+            _tags.GetTags().ToArray(),
+            Feedback,
+            _tiersOrderController
+                .GetItemsWithOrders(_tiers)
+                .Select(i => i.Entity.ToTestPublishedDto(i.Order))
+                .ToArray(),
+            _tiersOrderController.IsShuffled,
+            _itemsOrderController
+                .GetItemsWithOrders(_items)
+                .Select(i => i.Entity.ToTestPublishedDto(i.Order))
+                .ToArray(),
+            _itemsOrderController.IsShuffled
+            
+        );
+        return ErrOrNothing.Nothing;
+    }
 }

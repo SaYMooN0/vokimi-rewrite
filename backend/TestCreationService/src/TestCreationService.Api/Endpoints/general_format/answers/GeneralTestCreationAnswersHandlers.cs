@@ -6,7 +6,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.general_format.answe
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands.answers;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general_format;
+namespace TestCreationService.Api.Endpoints.general_format.answers;
 internal static class GeneralTestCreationAnswersHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestCreationAnswersHandlers(this RouteGroupBuilder group) {

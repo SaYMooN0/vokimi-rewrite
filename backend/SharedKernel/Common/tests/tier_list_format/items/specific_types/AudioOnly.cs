@@ -5,7 +5,7 @@ namespace SharedKernel.Common.tests.tier_list_format.items;
 
 public abstract partial class TierListTestItemContentData
 {
-    public sealed class AudioOnly : items.TierListTestItemContentData
+    public sealed class AudioOnly : TierListTestItemContentData
     {
         public string Audio { get; }
         public string? Transcription { get; }

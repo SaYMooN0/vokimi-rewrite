@@ -10,12 +10,12 @@ namespace TestCreationService.Application.Tests.tier_list_format.commands.items;
 
 public record class SaveNewItemForTierListTestCommand(
     TestId TestId,
-    string Name,
-    string? Clarification,
+    string ItemName,
+    string? ItemClarification,
     TierListTestItemContentData ItemContent
 ) : IRequest<ErrOr<TierListTestItem>>;
 
-public class SaveNewItemForTierListTestCommandHandler
+internal class SaveNewItemForTierListTestCommandHandler
     : IRequestHandler<SaveNewItemForTierListTestCommand, ErrOr<TierListTestItem>>
 {
     private readonly ITierListFormatTestsRepository _tierListFormatRepository;
@@ -35,7 +35,7 @@ public class SaveNewItemForTierListTestCommandHandler
         }
 
         ErrOr<TierListTestItem> addingRes = test.AddNewItem(
-            request.Name, request.Clarification, request.ItemContent
+            request.ItemName, request.ItemClarification, request.ItemContent
         );
         if (addingRes.IsErr(out var err)) {
             return err;

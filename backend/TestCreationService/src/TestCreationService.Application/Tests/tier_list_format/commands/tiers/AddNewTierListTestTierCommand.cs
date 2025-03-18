@@ -6,36 +6,36 @@ using TestCreationService.Domain.TestAggregate.tier_list_format;
 
 namespace TestCreationService.Application.Tests.tier_list_format.commands.tiers;
 
-public record RemoveTierListTestTierCommand(
+public record class AddNewTierListTestTierCommand(
     TestId TestId,
-    TierListTestTierId TierId
-) : IRequest<ErrOrNothing>;
+    string TierName
+) : IRequest<ErrOr<TierListTestTier>>;
 
-internal class RemoveTierListTestTierCommandHandler
-    : IRequestHandler<RemoveTierListTestTierCommand, ErrOrNothing>
+internal class AddNewTierListTestTierCommandHandler
+    : IRequestHandler<AddNewTierListTestTierCommand, ErrOr<TierListTestTier>>
 {
     private readonly ITierListFormatTestsRepository _tierListFormatRepository;
 
-    public RemoveTierListTestTierCommandHandler(
+    public AddNewTierListTestTierCommandHandler(
         ITierListFormatTestsRepository tierListFormatRepository
     ) {
         _tierListFormatRepository = tierListFormatRepository;
     }
 
-    public async Task<ErrOrNothing> Handle(
-        RemoveTierListTestTierCommand request, CancellationToken cancellationToken
+    public async Task<ErrOr<TierListTestTier>> Handle(
+        AddNewTierListTestTierCommand request, CancellationToken cancellationToken
     ) {
         TierListFormatTest? test = await _tierListFormatRepository.GetWithTiersIncluded(request.TestId);
         if (test is null) {
             return Err.ErrPresets.TierListTestNotFound(request.TestId);
         }
 
-        var removeRes = test.RemoveTier(request.TierId);
-        if (removeRes.IsErr(out var err)) {
+        ErrOr<TierListTestTier> addingRes = test.AddNewTier(request.TierName);
+        if (addingRes.IsErr(out var err)) {
             return err;
         }
 
         await _tierListFormatRepository.Update(test);
-        return ErrOrNothing.Nothing;
+        return addingRes.GetSuccess();
     }
 }

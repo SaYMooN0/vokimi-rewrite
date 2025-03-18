@@ -4,10 +4,9 @@ using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.tiers;
 using TestCreationService.Api.Extensions;
-using TestCreationService.Application.Tests.tier_list_format.commands.items;
 using TestCreationService.Application.Tests.tier_list_format.commands.tiers;
 
-namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
+namespace TestCreationService.Api.Endpoints.tier_list_format.tiers;
 
 internal static class TierListTestCreationTierOperationsHandlers
 {
@@ -23,6 +22,7 @@ internal static class TierListTestCreationTierOperationsHandlers
 
         return group;
     }
+
     private static async Task<IResult> UpdateTier(
         HttpContext httpContext, ISender mediator
     ) {
@@ -31,9 +31,8 @@ internal static class TierListTestCreationTierOperationsHandlers
         var request = httpContext.GetValidatedRequest<UpdateTierListTestTierRequest>();
 
         UpdateTierListTestTierCommand command = new(
-            testId,
-            itemId,
-            request.Name,
+            testId, itemId, request.Name, request.Description, request.MaxItemsCountLimit,
+            request.Styles.ParseToTierStyles().GetSuccess()
         );
         var result = await mediator.Send(command);
 
@@ -42,15 +41,16 @@ internal static class TierListTestCreationTierOperationsHandlers
             })
         );
     }
+
     private static async Task<IResult> RemoveTierFromTest(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
-        TierListTestTierId itemId = httpContext.GetTierIdFromRoute();
+        TierListTestTierId tierId = httpContext.GetTierIdFromRoute();
 
         RemoveTierListTestTierCommand command = new(testId, tierId);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
-}   
+}

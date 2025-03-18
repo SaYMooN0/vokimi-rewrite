@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.general_test_questions;
@@ -203,7 +202,7 @@ public class GeneralFormatTest : BaseTest
         return result.Update(Name, Text, Image);
     }
 
-    public List<TestPublishingProblem> CheckForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) => [
+    public TestPublishingProblem[] CheckForPublishingProblems(ImmutableArray<GeneralTestQuestion> questions) => [
         .. _mainInfo.CheckForPublishingProblems()
             .Select(e => TestPublishingProblem.FromErr(e, "Main Info")),
         .. CheckQuestionsForPublishingProblems(questions)
@@ -214,12 +213,10 @@ public class GeneralFormatTest : BaseTest
             .Select(e => TestPublishingProblem.FromErr(e, "Tags")),
     ];
 
-    private IEnumerable<Err> CheckQuestionsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
-        if (questions is null) {
+    private IEnumerable<Err> CheckQuestionsForPublishingProblems(ImmutableArray<GeneralTestQuestion> questions) {
+        if (questions.Count() != _questionsList.Count) {
             yield return new Err(
-                "Questions were not loaded",
-                details: "Try again later. If it doesn't help try adding or removing one question",
-                source: ErrorSource.Server
+                "Questions were not loaded correctly. Try again later. If it doesn't help try adding or removing one question"
             );
             yield break;
         }
@@ -254,7 +251,7 @@ public class GeneralFormatTest : BaseTest
         }
     }
 
-    private IEnumerable<Err> CheckResultsForPublishingProblems(IEnumerable<GeneralTestQuestion> questions) {
+    private IEnumerable<Err> CheckResultsForPublishingProblems(ImmutableArray<GeneralTestQuestion> questions) {
         if (_results is null) {
             yield return new Err(
                 "Results were not loaded",
@@ -280,8 +277,8 @@ public class GeneralFormatTest : BaseTest
             );
         }
 
-        var resultIdsAnswersLeadTo =
-            questions is null ? [] : questions.SelectMany(q => q.GetIdsOfResultsAnswersLeadTo()).ToHashSet();
+        var resultIdsAnswersLeadTo = questions.SelectMany(
+            q => q.GetIdsOfResultsAnswersLeadTo()).ToHashSet();
         foreach (var result in _results) {
             if (!resultIdsAnswersLeadTo.Contains(result.Id)) {
                 yield return new Err(
@@ -291,8 +288,7 @@ public class GeneralFormatTest : BaseTest
     }
 
     public ErrOrNothing Publish(
-        IEnumerable<GeneralTestQuestion> questions,
-        IDateTimeProvider dateTimeProvider
+        ImmutableArray<GeneralTestQuestion> questions, IDateTimeProvider dateTimeProvider
     ) {
         if (CheckForPublishingProblems(questions).Any()) {
             return new Err("Cannot publish test. Test has publishing problems");
@@ -320,6 +316,7 @@ public class GeneralFormatTest : BaseTest
             _questionsList.IsShuffled,
             _results.Select(r => new GeneralTestPublishedResultDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
         );
+        _domainEvents.Add(e);
         return ErrOrNothing.Nothing;
     }
 

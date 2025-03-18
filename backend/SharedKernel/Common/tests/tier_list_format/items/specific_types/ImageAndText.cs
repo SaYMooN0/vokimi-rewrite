@@ -5,7 +5,7 @@ namespace SharedKernel.Common.tests.tier_list_format.items;
 
 public abstract partial class TierListTestItemContentData
 {
-    public sealed class ImageAndText : items.TierListTestItemContentData
+    public sealed class ImageAndText : TierListTestItemContentData
     {
         public string Image { get; }
         public string Text { get; }

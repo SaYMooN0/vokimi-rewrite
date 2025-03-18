@@ -7,7 +7,7 @@ using TestCreationService.Api.Extensions;
 using TestCreationService.Application.GeneralTestQuestions.commands;
 using TestCreationService.Application.Tests.general_format.commands.questions;
 
-namespace TestCreationService.Api.Endpoints.test_creation.general_format;
+namespace TestCreationService.Api.Endpoints.general_format.questions;
 
 internal static class GeneralTestCreationQuestionOperationsHandlers
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.common_enums;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
@@ -10,7 +9,7 @@ namespace SharedKernel.IntegrationEvents.test_publishing;
 
 public record GeneralTestPublishedIntegrationEvent(
     TestId TestId,
-    AppUserId CreatorIds,
+    AppUserId CreatorId,
     ImmutableArray<AppUserId> EditorIds,
     string Name,
     string CoverImage,
@@ -24,8 +23,10 @@ public record GeneralTestPublishedIntegrationEvent(
     GeneralTestPublishedQuestionDto[] Questions,
     bool ShuffleQuestions,
     GeneralTestPublishedResultDto[] Results
-) : BaseTestPublishedIntegrationEvent(TestId, CreatorIds, EditorIds, Name, CoverImage, Description, Language,
-    PublicationDate, InteractionsAccessSettings, Styles, Tags);
+) : BaseTestPublishedIntegrationEvent(
+    TestId, CreatorId, EditorIds, Name, CoverImage, Description, Language,
+    PublicationDate, InteractionsAccessSettings, Styles, Tags
+);
 
 public record GeneralTestPublishedResultDto(
     GeneralTestResultId Id,

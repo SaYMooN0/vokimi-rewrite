@@ -6,7 +6,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.tie
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.tier_list_format.commands.tiers;
 
-namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
+namespace TestCreationService.Api.Endpoints.tier_list_format.tiers;
 
 internal static class TierListTestCreationTiersHandlers
 {
@@ -15,24 +15,22 @@ internal static class TierListTestCreationTiersHandlers
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
 
-        group.MapPost("/createNew", CreateNewTier);
-        group.MapPost("/updateOrder", UpdateItemsOrder)
+        group.MapPost("/createNew", AddNewTier)
+            .WithRequestValidation<AddNewTierListTestTierRequest>();
+        group.MapPost("/updateOrder", UpdateTiersOrder)
             .WithRequestValidation<UpdateTierListTestTiersOrderRequest>();
 
 
         return group;
     }
-    private static async Task<IResult> CreateNewTier(
+
+    private static async Task<IResult> AddNewTier(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();
+        var request = httpContext.GetValidatedRequest<AddNewTierListTestTierRequest>();
 
-         command = new(
-            testId,
-            request.ItemName,
-            request.ItemClarification,
-            request.ParsedItemContentData().GetSuccess()
-        );
+        AddNewTierListTestTierCommand command = new(testId, request.TierName);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(result, (newTier) => Results.Json(new {
@@ -41,7 +39,7 @@ internal static class TierListTestCreationTiersHandlers
         );
     }
 
-    private static async Task<IResult> UpdateTestItemsOrder(
+    private static async Task<IResult> UpdateTiersOrder(
         HttpContext httpContext, ISender mediator
     ) {
         TestId testId = httpContext.GetTestIdFromRoute();

@@ -1,15 +1,15 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using MediatR;
-using TestCreationService.Api.Contracts.Tests.test_creation.tier_list_format.feedback_option;
+using TestCreationService.Api.Contracts.Tests.test_creation.general_format.feedback_option;
 using TestCreationService.Api.Extensions;
-using TestCreationService.Application.Tests.tier_list_format.commands;
+using TestCreationService.Application.Tests.general_format.commands;
 
-namespace TestCreationService.Api.Endpoints.test_creation.tier_list_format;
+namespace TestCreationService.Api.Endpoints.general_format;
 
-internal static class TierListFormatTestCreationHandlers
+internal static class GeneralFormatTestCreationHandlers
 {
-    internal static RouteGroupBuilder MapTierListFormatTestCreationHandlers(this RouteGroupBuilder group) {
+    internal static RouteGroupBuilder MapGeneralFormatTestCreationHandlers(this RouteGroupBuilder group) {
         group
             .GroupAuthenticationRequired()
             .GroupTestEditPermissionRequired();
@@ -17,36 +17,35 @@ internal static class TierListFormatTestCreationHandlers
         group.MapGet("/feedbackOptionInfo", GetTestFeedbackOption);
         group
             .MapPost("/updateFeedbackOption", UpdateTestFeedbackOption)
-            .WithRequestValidation<UpdateTierListTestFeedbackOptionRequest>();
+            .WithRequestValidation<UpdateGeneralTestFeedbackOptionRequest>();
+        
         return group;
     }
-
     private static async Task<IResult> GetTestFeedbackOption(
         HttpContext httpContext, ISender mediator
     ) {
         var testId = httpContext.GetTestIdFromRoute();
 
-        GetTierListTestFeedbackOptionCommand command = new(testId);
+        GetGeneralTestFeedbackOptionCommand command = new(testId);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(result, (option) => Results.Json(new {
-                feedback = TierListTestFeedbackOptionInfoResponse.FromFeedbackOption(option)
+                feedback = GeneralTestFeedbackOptionInfoResponse.FromFeedbackOption(option)
             })
         );
     }
-
     private static async Task<IResult> UpdateTestFeedbackOption(
         HttpContext httpContext, ISender mediator
     ) {
-        var request = httpContext.GetValidatedRequest<UpdateTierListTestFeedbackOptionRequest>();
+        var request = httpContext.GetValidatedRequest<UpdateGeneralTestFeedbackOptionRequest>();
         var testId = httpContext.GetTestIdFromRoute();
         var feedbackOption = request.CreateFeedbackOption().GetSuccess();
 
-        UpdateTierListTestFeedbackCommand command = new(testId, feedbackOption);
+        UpdateGeneralTestFeedbackCommand command = new(testId, feedbackOption);
         var result = await mediator.Send(command);
 
         return CustomResults.FromErrOr(result, (option) => Results.Json(new {
-                feedback = TierListTestFeedbackOptionInfoResponse.FromFeedbackOption(option)
+                feedback = GeneralTestFeedbackOptionInfoResponse.FromFeedbackOption(option)
             })
         );
     }

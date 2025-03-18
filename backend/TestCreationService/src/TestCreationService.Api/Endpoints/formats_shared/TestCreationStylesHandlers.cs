@@ -5,7 +5,7 @@ using TestCreationService.Api.Contracts.Tests.test_creation.formats_shared;
 using TestCreationService.Api.Extensions;
 using TestCreationService.Application.Tests.formats_shared.commands.styles;
 
-namespace TestCreationService.Api.Endpoints.test_creation.formats_shared;
+namespace TestCreationService.Api.Endpoints.formats_shared;
 internal static class TestCreationStylesHandlers
 {
     internal static RouteGroupBuilder MapTestCreationStylesHandlers(this RouteGroupBuilder group) {
