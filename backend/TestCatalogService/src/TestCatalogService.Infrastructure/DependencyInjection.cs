@@ -44,13 +44,14 @@ public static class DependencyInjection
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         string dbConnectionString = configuration.GetConnectionString("TestCatalogServiceDb")
-                                   ?? throw new Exception("Database connection string is not provided.");
+                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestCatalogDbContext>(options => options.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
 
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
+        services.AddScoped<ITierListFormatTestsRepository, TierListFormatTestsRepository>();
 
         services.AddScoped<ITestTagsRepository, TestTagsRepository>();
         services.AddScoped<ITestCommentsRepository, TestCommentsRepository>();

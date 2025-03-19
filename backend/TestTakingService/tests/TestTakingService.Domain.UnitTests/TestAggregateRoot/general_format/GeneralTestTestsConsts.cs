@@ -42,14 +42,14 @@ public static class GeneralTestTestsConsts
         "Mathematician", "You have a logical mind and are always solving complex problems.", "mathematician.png"
     );
 
-    public static GeneralTestAnswerId Q1Answer1Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q1Answer2Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q2Answer1Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q2Answer2Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q3Answer1Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q3Answer2Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q4Answer1Id = new GeneralTestAnswerId(Guid.NewGuid());
-    public static GeneralTestAnswerId Q4Answer2Id = new GeneralTestAnswerId(Guid.NewGuid());
+    public readonly static GeneralTestAnswerId Q1Answer1Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q1Answer2Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q2Answer1Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q2Answer2Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q3Answer1Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q3Answer2Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q4Answer1Id = GeneralTestAnswerId.CreateNew();
+    public readonly static GeneralTestAnswerId Q4Answer2Id = GeneralTestAnswerId.CreateNew();
 
     public static readonly GeneralTestAnswer Q1Answer1 = new GeneralTestAnswer(
         Q1Answer1Id,
@@ -77,25 +77,25 @@ public static class GeneralTestTestsConsts
 
     public static readonly GeneralTestAnswer Q3Answer1 = new GeneralTestAnswer(
         Q3Answer1Id,
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#ff5733").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#ff5733").GetSuccess(),
         [Result4]
     );
 
     public static readonly GeneralTestAnswer Q3Answer2 = new GeneralTestAnswer(
         Q3Answer2Id,
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#33ff57").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#33ff57").GetSuccess(),
         [Result5]
     );
 
     public static readonly GeneralTestAnswer Q4Answer1 = new GeneralTestAnswer(
         Q4Answer1Id,
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#5733ff").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#5733ff").GetSuccess(),
         [Result1]
     );
 
     public static readonly GeneralTestAnswer Q4Answer2 = new GeneralTestAnswer(
         Q4Answer2Id,
-        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew(HexColor.FromString("#ff5733").GetSuccess()).GetSuccess(),
+        GeneralTestAnswerTypeSpecificData.ColorOnly.CreateNew("#ff5733").GetSuccess(),
         [Result2]
     );
 

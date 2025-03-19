@@ -3,36 +3,31 @@ using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
-using SharedKernel.Common.tests.general_format;
+using SharedKernel.Common.tests.tier_list_format.feedback;
 using TestManagingService.Domain.TestAggregate.formats_shared;
-using TestManagingService.Domain.TestAggregate.general_format.events;
 
-namespace TestManagingService.Domain.TestAggregate.general_format;
+namespace TestManagingService.Domain.TestAggregate.tier_list_format;
 
-public class GeneralFormatTest : BaseTest
+public class TierListFormatTest: BaseTest
 {
-    private GeneralFormatTest() { }
-    public override TestFormat Format => TestFormat.General;
-    public GeneralTestFeedbackOption FeedbackOption { get; private set; }
-
-    public GeneralFormatTest(
+    public override TestFormat Format => TestFormat.TierList;
+    public TierListTestFeedbackOption FeedbackOption { get; private set; }   
+    public TierListFormatTest(
         TestId testId,
         AppUserId creatorId,
         ImmutableArray<AppUserId> editorIds,
         DateTime publicationDate,
         TestInteractionsAccessSettings interactionsAccessSettings,
-        GeneralTestFeedbackOption feedbackOption
+        TierListTestFeedbackOption feedbackOption
     ) : base(testId, creatorId, editorIds, publicationDate, interactionsAccessSettings) {
         FeedbackOption = feedbackOption;
     }
-
-
     public ErrOrNothing SetFeedbackOptionEnabled(
         AnonymityValues anonymity,
         string accompanyingText,
         ushort maxFeedbackLength
     ) {
-        var creationRes = GeneralTestFeedbackOption.Enabled.CreateNew(
+        var creationRes = TierListTestFeedbackOption.Enabled.CreateNew(
             anonymity, accompanyingText, maxFeedbackLength
         );
         if (creationRes.IsErr(out var err)) {
@@ -40,15 +35,15 @@ public class GeneralFormatTest : BaseTest
         }
 
         FeedbackOption = creationRes.GetSuccess();
-        _domainEvents.Add(new GeneralTestFeedbackOptionUpdatedEvent(
+        _domainEvents.Add(new TierListTestFeedbackOptionUpdatedEvent(
             Id, FeedbackOption
         ));
         return ErrOrNothing.Nothing;
     }
 
     public void SetFeedbackOptionDisabled() {
-        FeedbackOption = GeneralTestFeedbackOption.Disabled.Instance;
-        _domainEvents.Add(new GeneralTestFeedbackOptionUpdatedEvent(
+        FeedbackOption = TierListTestFeedbackOption.Disabled.Instance;
+        _domainEvents.Add(new TierListTestFeedbackOptionUpdatedEvent(
             Id, FeedbackOption
         ));
     }

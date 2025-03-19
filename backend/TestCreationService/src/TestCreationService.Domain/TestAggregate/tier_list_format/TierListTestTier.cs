@@ -1,6 +1,7 @@
 ﻿using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.tier_list_format;
+using SharedKernel.IntegrationEvents.test_publishing;
 using TestCreationService.Domain.Rules;
 
 namespace TestCreationService.Domain.TestAggregate.tier_list_format;
@@ -46,4 +47,16 @@ public class TierListTestTier : Entity<TierListTestTierId>
         Styles.Update(newStyles.BackgroundColor, newStyles.TextColor);
         return ErrOrNothing.Nothing;
     }
+
+    public TierListTestPublishedTierDto ToTestPublishedDto(ushort order) => new(
+        Id,
+        order,
+        Name: Name,
+        Description: Description,
+        MaxItemsCountLimit: MaxItemsCountLimit,
+        new TierListTestPublishedTierStylesDto(
+            BackgroundColor: Styles.BackgroundColor,
+            TextColor: Styles.TextColor
+        )
+    );
 }

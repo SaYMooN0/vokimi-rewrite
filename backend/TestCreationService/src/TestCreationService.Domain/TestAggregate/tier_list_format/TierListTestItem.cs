@@ -2,6 +2,7 @@
 using SharedKernel.Common.errors;
 using SharedKernel.Common.tests.tier_list_format;
 using SharedKernel.Common.tests.tier_list_format.items;
+using SharedKernel.IntegrationEvents.test_publishing;
 
 namespace TestCreationService.Domain.TestAggregate.tier_list_format;
 
@@ -56,4 +57,12 @@ public class TierListTestItem : Entity<TierListTestItemId>
         this.Content = newContent;
         return ErrOrNothing.Nothing;
     }
+
+    public TierListTestPublishedItemDto ToTestPublishedDto(ushort order) => new(
+        Id,
+        order,
+        Name: Name,
+        Clarification: Clarification,
+        Content: Content
+    );
 }

@@ -4,14 +4,16 @@ using SharedKernel.IntegrationEvents.test_managing.feedback_option_updated;
 using SharedKernel.IntegrationEvents.test_managing.tags;
 using TestManagingService.Domain.TestAggregate.formats_shared.events;
 using TestManagingService.Domain.TestAggregate.general_format.events;
+using TestManagingService.Domain.TestAggregate.tier_list_format.events;
 using TestManagingService.Infrastructure.IntegrationEvents.integration_events_publisher;
 
 namespace TestManagingService.Infrastructure.IntegrationEvents;
 
 internal class DomainToIntegrationEventsHandler :
     INotificationHandler<TagsChangedEvent>,
+    INotificationHandler<TestInteractionsAccessSettingsUpdatedEvent>,
     INotificationHandler<GeneralTestFeedbackOptionUpdatedEvent>,
-    INotificationHandler<TestInteractionsAccessSettingsUpdatedEvent>
+    INotificationHandler<TierListTestFeedbackOptionUpdatedEvent>
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
@@ -24,14 +26,6 @@ internal class DomainToIntegrationEventsHandler :
         var integrationEvent = new PublishedTestTagsChangedIntegrationEvent(
             notification.TestId,
             notification.NewTags.Select(t => t.Value).ToArray()
-        );
-        await _integrationEventsPublisher.PublishEvent(integrationEvent);
-    }
-
-    public async Task Handle(GeneralTestFeedbackOptionUpdatedEvent notification, CancellationToken cancellationToken) {
-        var integrationEvent = new GeneralTestFeedbackOptionUpdatedIntegrationEvent(
-            notification.TestId,
-            notification.NewFeedbackOption
         );
         await _integrationEventsPublisher.PublishEvent(integrationEvent);
     }
@@ -49,4 +43,16 @@ internal class DomainToIntegrationEventsHandler :
         );
         await _integrationEventsPublisher.PublishEvent(integrationEvent);
     }
+
+    public async Task Handle(GeneralTestFeedbackOptionUpdatedEvent notification, CancellationToken cancellationToken) =>
+        await _integrationEventsPublisher.PublishEvent(new GeneralTestFeedbackOptionUpdatedIntegrationEvent(
+            notification.TestId,
+            notification.NewFeedbackOption
+        ));
+    public async Task Handle(TierListTestFeedbackOptionUpdatedEvent notification, CancellationToken cancellationToken) =>
+        await _integrationEventsPublisher.PublishEvent(new TierListTestFeedbackOptionUpdatedIntegrationEvent(
+            notification.TestId,
+            notification.NewFeedbackOption
+        ));
+
 }

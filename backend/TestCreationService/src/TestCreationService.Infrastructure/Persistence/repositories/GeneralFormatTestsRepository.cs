@@ -12,11 +12,13 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
 {
     private readonly TestCreationDbContext _db;
 
-    public GeneralFormatTestsRepository(TestCreationDbContext db) { _db = db; }
+    public GeneralFormatTestsRepository(TestCreationDbContext db) {
+        _db = db;
+    }
+
     public async Task AddNew(GeneralFormatTest test) {
         await _db.GeneralFormatTests.AddAsync(test);
         await _db.SaveChangesAsync();
-
     }
 
     public async Task Delete(TestId testId) {
@@ -29,13 +31,12 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         return await _db.GeneralFormatTests.FindAsync(testId);
     }
 
-    public async Task<GeneralFormatTest?> GetWithEverything(TestId testId) {
-        return await _db.GeneralFormatTests
+    public async Task<GeneralFormatTest?> GetWithEverything(TestId testId) =>
+        await _db.GeneralFormatTests
             .Include(t => EF.Property<TestStylesSheet>(t, "_styles"))
             .Include(t => EF.Property<TestTagsList>(t, "_tags"))
             .Include(t => EF.Property<List<GeneralTestResult>>(t, "_results"))
             .FirstOrDefaultAsync(t => t.Id == testId);
-    }
 
     public async Task<GeneralFormatTest?> GetWithResults(TestId testId) {
         return await _db.GeneralFormatTests
@@ -47,5 +48,4 @@ internal class GeneralFormatTestsRepository : IGeneralFormatTestsRepository
         _db.GeneralFormatTests.Update(test);
         await _db.SaveChangesAsync();
     }
-
 }

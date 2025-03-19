@@ -3,24 +3,23 @@ using MediatR;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.IntegrationEvents.test_publishing;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
-using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.integration_events;
 
-internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandler<GeneralTestPublishedIntegrationEvent>
+internal class TierListTestPublishedIntegrationEventHandler : INotificationHandler<TierListTestPublishedIntegrationEvent>
 {
-    private IGeneralFormatTestsRepository _generalFormatTestsRepository;
+    private ITierListFormatTestsRepository _TierListFormatTestsRepository;
 
-    public GeneralTestPublishedIntegrationEventHandler(IGeneralFormatTestsRepository generalFormatTestsRepository) {
-        _generalFormatTestsRepository = generalFormatTestsRepository;
+    public TierListTestPublishedIntegrationEventHandler(ITierListFormatTestsRepository TierListFormatTestsRepository) {
+        _TierListFormatTestsRepository = TierListFormatTestsRepository;
     }
 
-    public async Task Handle(GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
+    public async Task Handle(TierListTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
         var results = CreateResultsFromNotification(notification);
         var questions = CreateQuestionsFromNotification(notification, results);
         var styles = CreateStyleFromNotification(notification);
 
-        GeneralFormatTest test = new GeneralFormatTest(
+        TierListFormatTest test = new TierListFormatTest(
             notification.TestId,
             notification.CreatorId,
             notification.EditorIds.ToImmutableHashSet(),
@@ -31,29 +30,29 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
             results,
             notification.FeedbackOption
         );
-        await _generalFormatTestsRepository.Add(test);
+        await _TierListFormatTestsRepository.Add(test);
     }
 
-    private GeneralTestResult[] CreateResultsFromNotification(
-        GeneralTestPublishedIntegrationEvent notification
-    ) => notification.Results.Select(r => new GeneralTestResult(
+    private TierListTestResult[] CreateResultsFromNotification(
+        TierListTestPublishedIntegrationEvent notification
+    ) => notification.Results.Select(r => new TierListTestResult(
         r.Id,
         r.Name,
         r.Text,
         r.Image
     )).ToArray();
 
-    private GeneralTestQuestion[] CreateQuestionsFromNotification(
-        GeneralTestPublishedIntegrationEvent notification,
-        GeneralTestResult[] allResults
-    ) => notification.Questions.Select(q => new GeneralTestQuestion(
+    private TierListTestQuestion[] CreateQuestionsFromNotification(
+        TierListTestPublishedIntegrationEvent notification,
+        TierListTestResult[] allResults
+    ) => notification.Questions.Select(q => new TierListTestQuestion(
         q.Id,
         q.Order,
         q.Text,
         q.Images.ToArray(),
         q.AnswersType,
         q.Answers.Select(a =>
-            new GeneralTestAnswer(
+            new TierListTestAnswer(
                 a.Id,
                 a.TypeSpecificData,
                 allResults.Where(r => a.RelatedResultsIds.Contains(r.Id)).ToArray()
@@ -64,7 +63,7 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         q.TimeLimitOption
     )).ToArray();
 
-    private TestStylesSheet CreateStyleFromNotification(GeneralTestPublishedIntegrationEvent notification) => new(
+    private TestStylesSheet CreateStyleFromNotification(TierListTestPublishedIntegrationEvent notification) => new(
         notification.Styles.Id,
         notification.TestId,
         notification.Styles.AccentColor,

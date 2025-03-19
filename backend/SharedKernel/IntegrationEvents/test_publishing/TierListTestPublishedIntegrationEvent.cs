@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.tests.tier_list_format;
 using SharedKernel.Common.tests.tier_list_format.feedback;
 using SharedKernel.Common.tests.tier_list_format.items;
 using SharedKernel.Common.tests.value_objects;

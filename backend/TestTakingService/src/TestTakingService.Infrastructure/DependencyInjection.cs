@@ -31,7 +31,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMediatR(this IServiceCollection services) {
         services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
-        
+
         return services;
     }
 
@@ -48,14 +48,15 @@ public static class DependencyInjection
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
         string dbConnectionString = configuration.GetConnectionString("TestTakingServiceDb")
-                                   ?? throw new Exception("Database connection string is not provided.");
+                                    ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TestTakingDbContext>(options => options.UseNpgsql(dbConnectionString));
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
-        
+
         services.AddScoped<IBaseTestsRepository, BaseTestsRepository>();
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
-        
+        services.AddScoped<ITierListFormatTestsRepository, TierListFormatTestsRepository>();
+
         services.AddScoped<IBaseTestTakenRecordsRepository, BaseTestTakenRecordsRepository>();
         services.AddScoped<IGeneralTestTakenRecordsRepository, GeneralTestTakenRecordsRepository>();
 
