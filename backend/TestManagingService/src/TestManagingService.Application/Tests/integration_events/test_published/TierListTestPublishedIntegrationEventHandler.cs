@@ -1,5 +1,6 @@
 ﻿using SharedKernel.IntegrationEvents.test_publishing;
 using TestManagingService.Application.Common.interfaces.repositories.tests;
+using TestManagingService.Domain.TestAggregate.tier_list_format;
 
 namespace TestManagingService.Application.Tests.integration_events.test_published;
 
@@ -12,8 +13,10 @@ internal class TierListTestPublishedIntegrationEventHandler
         _tierListFormatTestsRepository = tierListFormatTestsRepository;
     }
 
-    public async Task Handle(TierListTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
-        TL creationRes = new(
+    public override async Task Handle(
+        TierListTestPublishedIntegrationEvent notification, CancellationToken cancellationToken
+    ) {
+        TierListFormatTest newTest = new(
             notification.TestId,
             notification.CreatorId,
             notification.EditorIds,
@@ -21,6 +24,6 @@ internal class TierListTestPublishedIntegrationEventHandler
             GetInteractionsAccessSettingsFromNotification(notification),
             notification.FeedbackOption
         );
-        await _generalFormatTestsRepository.Add(creationRes);
+        await _tierListFormatTestsRepository.Add(newTest);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TestManagingService.Domain.TestFeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate;
 
 namespace TestManagingService.Infrastructure.Persistence.configurations.entities_configurations.feedback_records;
 

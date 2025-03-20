@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories.feedback_records;
-using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.test_formats_shared;
 
 namespace TestManagingService.Infrastructure.Persistence.repositories.feedback_records;
 
@@ -76,13 +78,13 @@ file static class GeneralTestFeedbackRecordsQueryExtensions
     }
 
     private static IQueryable<GeneralTestFeedbackRecord> WithSorting(
-        this IQueryable<GeneralTestFeedbackRecord> query, GeneralTestFeedbackRecordsSortOption sorting
+        this IQueryable<GeneralTestFeedbackRecord> query, TestFeedbackRecordsSortOption sorting
     ) => sorting switch {
-        GeneralTestFeedbackRecordsSortOption.Randomized => query,
-        GeneralTestFeedbackRecordsSortOption.Newest => query.OrderByDescending(f => f.CreatedOn),
-        GeneralTestFeedbackRecordsSortOption.Oldest => query.OrderBy(f => f.CreatedOn),
-        GeneralTestFeedbackRecordsSortOption.Shortest => query.OrderBy(f => f.Text.Length),
-        GeneralTestFeedbackRecordsSortOption.Longest => query.OrderByDescending(f => f.Text.Length),
+        TestFeedbackRecordsSortOption.Randomized => query,
+        TestFeedbackRecordsSortOption.Newest => query.OrderByDescending(f => f.CreatedOn),
+        TestFeedbackRecordsSortOption.Oldest => query.OrderBy(f => f.CreatedOn),
+        TestFeedbackRecordsSortOption.Shortest => query.OrderBy(f => f.Text.Length),
+        TestFeedbackRecordsSortOption.Longest => query.OrderByDescending(f => f.Text.Length),
         _ => throw new ArgumentOutOfRangeException(nameof(sorting), sorting, "Unsupported sort option.")
     };
 }

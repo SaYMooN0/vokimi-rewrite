@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.aggregate_root;
 using TestManagingService.Domain.AppUserAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.tier_list_test;
 using TestManagingService.Domain.TestAggregate;
 using TestManagingService.Domain.TestAggregate.general_format;
-using TestManagingService.Domain.TestFeedbackRecordAggregate;
-using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.TestAggregate.tier_list_format;
 
 namespace TestManagingService.Infrastructure.Persistence;
 
@@ -20,10 +22,12 @@ public class TestManagingDbContext : DbContext
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
 
+    public DbSet<TierListFormatTest> TierListFormatTests { get; set; } = null!;
     //feedback records
     public DbSet<BaseTestFeedbackRecord> BaseTestFeedbackRecords { get; set; } = null!;
     public DbSet<GeneralTestFeedbackRecord> GeneralTestFeedbackRecords { get; set; } = null!;
-    
+    public DbSet<TierListTestFeedbackRecord> TierListTestFeedbackRecords { get; set; } = null!;
+
 
     public TestManagingDbContext(DbContextOptions<TestManagingDbContext> options, IPublisher publisher) :
         base(options) {

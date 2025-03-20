@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Domain.Common;
 
-namespace TestManagingService.Domain.TestFeedbackRecordAggregate;
+namespace TestManagingService.Domain.FeedbackRecordAggregate;
 
 public abstract class BaseTestFeedbackRecord : AggregateRoot<TestFeedbackRecordId>
 {

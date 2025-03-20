@@ -2,7 +2,9 @@ using ApiShared.interfaces;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
-using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.test_formats_shared;
 
 namespace TestManagingService.Api.Contracts.test_feedback.feedback_records;
 
@@ -15,8 +17,8 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
     public bool ShowAnonymous { get; init; } = true;
     public bool ShowNonAnonymous { get; init; } = true;
 
-    public GeneralTestFeedbackRecordsSortOption SortOption { get; init; } =
-        GeneralTestFeedbackRecordsSortOption.Randomized;
+    public TestFeedbackRecordsSortOption SortOption { get; init; } =
+        TestFeedbackRecordsSortOption.Randomized;
 
     public RequestValidationResult Validate() {
         ErrList errs = new();

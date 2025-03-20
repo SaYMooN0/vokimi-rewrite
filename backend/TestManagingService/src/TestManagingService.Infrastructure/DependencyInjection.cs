@@ -54,8 +54,8 @@ public static class DependencyInjection
         services.AddScoped<IGeneralFormatTestsRepository, GeneralFormatTestsRepository>();
         services.AddScoped<ITierListFormatTestsRepository, TierListFormatTestsRepository>();
 
-        services.AddScoped<IBaseTestFeedbackRecordsRepository, BaseTestFeedbackRecordsRepository>();
         services.AddScoped<IGeneralTestFeedbackRecordsRepository, GeneralTestFeedbackRecordsRepository>();
+        services.AddScoped<ITierListTestFeedbackRecordsRepository, TierListTestFeedbackRecordsRepository>();
 
         return services;
     }

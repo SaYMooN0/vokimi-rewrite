@@ -16,7 +16,7 @@ internal class GeneralTestPublishedIntegrationEventHandler :
     public override async Task Handle(
         GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken
     ) {
-        GeneralFormatTest creationRes = new(
+        GeneralFormatTest newTest = new(
             notification.TestId,
             notification.CreatorId,
             notification.EditorIds,
@@ -24,6 +24,6 @@ internal class GeneralTestPublishedIntegrationEventHandler :
             GetInteractionsAccessSettingsFromNotification(notification),
             notification.FeedbackOption
         );
-        await _generalFormatTestsRepository.Add(creationRes);
+        await _generalFormatTestsRepository.Add(newTest);
     }
 }

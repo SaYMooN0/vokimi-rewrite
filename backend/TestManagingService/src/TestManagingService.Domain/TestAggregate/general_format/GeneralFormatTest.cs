@@ -48,8 +48,6 @@ public class GeneralFormatTest : BaseTest
 
     public void SetFeedbackOptionDisabled() {
         FeedbackOption = GeneralTestFeedbackOption.Disabled.Instance;
-        _domainEvents.Add(new GeneralTestFeedbackOptionUpdatedEvent(
-            Id, FeedbackOption
-        ));
+        _domainEvents.Add(new GeneralTestFeedbackOptionUpdatedEvent(Id, FeedbackOption));
     }
 }

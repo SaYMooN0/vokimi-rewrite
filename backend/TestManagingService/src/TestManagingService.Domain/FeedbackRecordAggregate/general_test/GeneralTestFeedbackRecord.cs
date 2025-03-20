@@ -1,10 +1,8 @@
 ﻿using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using SharedKernel.Common.tests.general_format;
 using TestManagingService.Domain.Common;
 
-namespace TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+namespace TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
 public class GeneralTestFeedbackRecord : BaseTestFeedbackRecord
 {
@@ -13,28 +11,23 @@ public class GeneralTestFeedbackRecord : BaseTestFeedbackRecord
     public string Text { get; private init; }
 
     public static GeneralTestFeedbackRecord CreateNewAnonymous(
-        TestId testId,
-        IDateTimeProvider dateTimeProvider,
-        string text
+        TestId testId, DateTime createdOn, string text
     ) => new() {
         Id = TestFeedbackRecordId.CreateNew(),
         TestId = testId,
         UserId = null,
-        CreatedOn = dateTimeProvider.Now,
+        CreatedOn = createdOn,
         Text = text,
         WasLeftAnonymously = true
     };
 
     public static GeneralTestFeedbackRecord CreateNewNonAnonymous(
-        TestId testId,
-        AppUserId userId,
-        IDateTimeProvider dateTimeProvider,
-        string text
+        TestId testId, AppUserId userId, DateTime createdOn, string text
     ) => new() {
         Id = TestFeedbackRecordId.CreateNew(),
         TestId = testId,
         UserId = userId,
-        CreatedOn = dateTimeProvider.Now,
+        CreatedOn = createdOn,
         Text = text,
         WasLeftAnonymously = false
     };

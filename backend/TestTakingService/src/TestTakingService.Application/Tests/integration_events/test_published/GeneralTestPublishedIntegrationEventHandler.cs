@@ -1,13 +1,12 @@
 ﻿using System.Collections.Immutable;
-using MediatR;
-using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.IntegrationEvents.test_publishing;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Application.Tests.integration_events;
+namespace TestTakingService.Application.Tests.integration_events.test_published;
 
-internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandler<GeneralTestPublishedIntegrationEvent>
+internal class GeneralTestPublishedIntegrationEventHandler
+    : TestPublishedIntegrationEventHandler<GeneralTestPublishedIntegrationEvent>
 {
     private IGeneralFormatTestsRepository _generalFormatTestsRepository;
 
@@ -15,18 +14,17 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         _generalFormatTestsRepository = generalFormatTestsRepository;
     }
 
-    public async Task Handle(GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken) {
+    public override async Task Handle(
+        GeneralTestPublishedIntegrationEvent notification, CancellationToken cancellationToken
+    ) {
         var results = CreateResultsFromNotification(notification);
-        var questions = CreateQuestionsFromNotification(notification, results);
-        var styles = CreateStyleFromNotification(notification);
-
-        GeneralFormatTest test = new GeneralFormatTest(
+        GeneralFormatTest test = new(
             notification.TestId,
             notification.CreatorId,
             notification.EditorIds.ToImmutableHashSet(),
             notification.InteractionsAccessSettings.TestAccess,
-            styles,
-            questions,
+            CreateStyleFromNotification(notification),
+            CreateQuestionsFromNotification(notification, results),
             notification.ShuffleQuestions,
             results,
             notification.FeedbackOption
@@ -36,12 +34,9 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
 
     private GeneralTestResult[] CreateResultsFromNotification(
         GeneralTestPublishedIntegrationEvent notification
-    ) => notification.Results.Select(r => new GeneralTestResult(
-        r.Id,
-        r.Name,
-        r.Text,
-        r.Image
-    )).ToArray();
+    ) => notification.Results.Select(r =>
+        new GeneralTestResult(r.Id, r.Name, r.Text, r.Image)
+    ).ToArray();
 
     private GeneralTestQuestion[] CreateQuestionsFromNotification(
         GeneralTestPublishedIntegrationEvent notification,
@@ -63,12 +58,4 @@ internal class GeneralTestPublishedIntegrationEventHandler : INotificationHandle
         q.AnswersCountLimit,
         q.TimeLimitOption
     )).ToArray();
-
-    private TestStylesSheet CreateStyleFromNotification(GeneralTestPublishedIntegrationEvent notification) => new(
-        notification.Styles.Id,
-        notification.TestId,
-        notification.Styles.AccentColor,
-        notification.Styles.ErrorsColor,
-        notification.Styles.Buttons
-    );
 }

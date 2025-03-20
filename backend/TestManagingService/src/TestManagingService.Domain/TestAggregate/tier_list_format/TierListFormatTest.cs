@@ -5,13 +5,15 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.tier_list_format.feedback;
 using TestManagingService.Domain.TestAggregate.formats_shared;
+using TestManagingService.Domain.TestAggregate.tier_list_format.events;
 
 namespace TestManagingService.Domain.TestAggregate.tier_list_format;
 
-public class TierListFormatTest: BaseTest
+public class TierListFormatTest : BaseTest
 {
     public override TestFormat Format => TestFormat.TierList;
-    public TierListTestFeedbackOption FeedbackOption { get; private set; }   
+    public TierListTestFeedbackOption FeedbackOption { get; private set; }
+
     public TierListFormatTest(
         TestId testId,
         AppUserId creatorId,
@@ -22,6 +24,7 @@ public class TierListFormatTest: BaseTest
     ) : base(testId, creatorId, editorIds, publicationDate, interactionsAccessSettings) {
         FeedbackOption = feedbackOption;
     }
+
     public ErrOrNothing SetFeedbackOptionEnabled(
         AnonymityValues anonymity,
         string accompanyingText,
@@ -43,8 +46,6 @@ public class TierListFormatTest: BaseTest
 
     public void SetFeedbackOptionDisabled() {
         FeedbackOption = TierListTestFeedbackOption.Disabled.Instance;
-        _domainEvents.Add(new TierListTestFeedbackOptionUpdatedEvent(
-            Id, FeedbackOption
-        ));
+        _domainEvents.Add(new TierListTestFeedbackOptionUpdatedEvent(Id, FeedbackOption));
     }
 }

@@ -11,7 +11,7 @@ using TestTakingService.Application.Tests.general_format.commands;
 
 namespace TestTakingService.Api.Endpoints;
 
-public static class GeneralTestTakingHandlers
+internal static class GeneralTestTakingHandlers
 {
     internal static RouteGroupBuilder MapGeneralTestTakingHandlers(this RouteGroupBuilder group) {
         group

@@ -39,5 +39,7 @@ public class Program
 
     private static void MapHandlers(WebApplication app) {
         app.MapGroup("/{testId}/general/").MapGeneralTestTakingHandlers();
+        
+        app.MapGroup("/{testId}/tierList/").MapTierListTakingHandlers();
     }
 }

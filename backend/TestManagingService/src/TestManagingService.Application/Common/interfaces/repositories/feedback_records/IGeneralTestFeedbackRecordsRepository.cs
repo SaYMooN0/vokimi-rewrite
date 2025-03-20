@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.domain.entity;
-using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
 namespace TestManagingService.Application.Common.interfaces.repositories.feedback_records;
 

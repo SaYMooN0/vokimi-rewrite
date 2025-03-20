@@ -1,4 +1,4 @@
-using TestManagingService.Domain.TestFeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
 namespace TestManagingService.Api.Contracts.test_feedback.feedback_records;
 

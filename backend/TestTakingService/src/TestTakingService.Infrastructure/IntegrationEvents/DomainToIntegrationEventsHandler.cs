@@ -5,8 +5,9 @@ using TestTakingService.Infrastructure.IntegrationEvents.integration_events_publ
 
 namespace TestTakingService.Infrastructure.IntegrationEvents;
 
-internal class DomainToIntegrationEventsHandler
-    : INotificationHandler<FeedbackForGeneralTestLeftEvent>
+internal class DomainToIntegrationEventsHandler :
+    INotificationHandler<FeedbackForGeneralTestLeftEvent>,
+    INotificationHandler<FeedbackForTierListTestLeftEvent>
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
@@ -15,14 +16,21 @@ internal class DomainToIntegrationEventsHandler
         _integrationEventsPublisher = integrationEventsPublisher;
     }
 
-    public async Task Handle(FeedbackForGeneralTestLeftEvent notification, CancellationToken cancellationToken) {
-        FeedbackForGeneralTestLeftIntegrationEvent integrationEvent = new(
+    public async Task Handle(FeedbackForGeneralTestLeftEvent notification, CancellationToken cancellationToken) =>
+        await _integrationEventsPublisher.PublishEvent(new FeedbackForGeneralTestLeftIntegrationEvent(
             notification.TestId,
             notification.AuthorId,
             notification.CreatedOn,
             notification.Text,
             notification.WasLeftAnonymously
-        );
-        await _integrationEventsPublisher.PublishEvent(integrationEvent);
-    }
+        ));
+
+    public async Task Handle(FeedbackForTierListTestLeftEvent notification, CancellationToken cancellationToken) =>
+        await _integrationEventsPublisher.PublishEvent(new FeedbackForTierListTestLeftIntegrationEvent(
+            notification.TestId,
+            notification.AuthorId,
+            notification.CreatedOn,
+            notification.Text,
+            notification.WasLeftAnonymously
+        ));
 }

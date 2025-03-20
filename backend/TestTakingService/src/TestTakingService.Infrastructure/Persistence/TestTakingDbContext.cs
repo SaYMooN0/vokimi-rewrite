@@ -6,6 +6,7 @@ using SharedKernel.Common.domain.aggregate_root;
 using TestTakingService.Domain.AppUserAggregate;
 using TestTakingService.Domain.TestAggregate;
 using TestTakingService.Domain.TestAggregate.general_format;
+using TestTakingService.Domain.TestAggregate.tier_list_format;
 using TestTakingService.Domain.TestTakenRecordAggregate;
 using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
@@ -21,6 +22,8 @@ public class TestTakingDbContext : DbContext
     public DbSet<BaseTest> BaseTests { get; set; } = null!;
 
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
+
+    public DbSet<TierListFormatTest> TierListFormatTests { get; set; }
 
     //test taken records
     public DbSet<BaseTestTakenRecord> BaseTestTakenRecords { get; set; } = null!;
