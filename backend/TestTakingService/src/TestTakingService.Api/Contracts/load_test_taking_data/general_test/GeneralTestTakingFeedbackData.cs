@@ -1,7 +1,7 @@
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.tests.general_format;
 
-namespace TestTakingService.Api.Contracts.general_format_test.load_test_taking_data;
+namespace TestTakingService.Api.Contracts.load_test_taking_data.general_test;
 
 public record class GeneralTestTakingFeedbackData(
     bool IsEnabled,

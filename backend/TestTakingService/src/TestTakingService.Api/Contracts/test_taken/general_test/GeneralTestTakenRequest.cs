@@ -1,25 +1,26 @@
 using ApiShared.interfaces;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Api.Contracts.test_taken.test_formats_shared;
+using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 
-namespace TestTakingService.Api.Contracts.general_format_test.test_taken;
+namespace TestTakingService.Api.Contracts.test_taken.general_test;
 
-internal record class GeneralTestTakenRequest(
-    GeneralTestTakenRequestQuestionInfo[] Questions,
-    GeneralTestTakenFeedbackData? Feedback,
-    DateTime StartDateTime,
-    DateTime EndDateTime
-) : IRequestWithValidationNeeded
+internal class GeneralTestTakenRequest : TestTakenRequest
 {
+    public GeneralTestTakenRequestQuestionInfo[] Questions { get; init; } = [];
+    public GeneralTestTakenFeedbackData? Feedback { get; init; }
+    public override DateTime StartDateTime { get; init; }
+    public override DateTime EndDateTime { get; init; }
+
+
     private const int _maxQuestionsCount = 100;
 
-    public RequestValidationResult Validate() {
-        if (Questions is null || !Questions.Any()) {
+    public override RequestValidationResult Validate() {
+        if (Questions.Length == 0) {
             return new ErrList(Err.ErrFactory.InvalidData(
-                "Info about question is not provided")
-            );
+                "Info about questions is not provided"
+            ));
         }
 
         if (Questions.Length > _maxQuestionsCount) {
@@ -38,19 +39,19 @@ internal record class GeneralTestTakenRequest(
             errs.Add(Err.ErrFactory.InvalidData("Seems like feedback should be provided, but its text is empty"));
         }
 
-        if (StartDateTime >= EndDateTime) {
-            errs.Add(Err.ErrFactory.InvalidData("Start date must be before end date"));
-        }
+        errs.AddPossibleErr(base.ValidateStartAndEndDateTine());
 
         return errs;
     }
 
-    public Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> ParsedQuestionInfo => Questions.ToDictionary(
-        q => new GeneralTestQuestionId(Guid.Parse(q.QuestionId)),
-        q => new GeneralTestTakenQuestionData(
-            q.ChosenAnswerIds.Select(a => new GeneralTestAnswerId(new(a))).ToHashSet(),
-            q.TimeSpentOnQuestion
-        ));
+    public Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> ParsedQuestionInfo =>
+        Questions.ToDictionary(
+            q => new GeneralTestQuestionId(Guid.Parse(q.QuestionId)),
+            q => new GeneralTestTakenQuestionData(
+                q.ChosenAnswerIds.Select(a => new GeneralTestAnswerId(new(a))).ToHashSet(),
+                q.TimeSpentOnQuestion
+            )
+        );
 }
 
 internal record class GeneralTestTakenRequestQuestionInfo(

@@ -1,6 +1,6 @@
 using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Api.Contracts.general_format_test.test_taken;
+namespace TestTakingService.Api.Contracts.test_taken.general_test;
 
 public record class GeneralTestTakenReceivedResultResponse(
     string ReceivedResId

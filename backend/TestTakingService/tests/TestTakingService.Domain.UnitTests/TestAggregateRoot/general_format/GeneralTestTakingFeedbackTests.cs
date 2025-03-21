@@ -2,7 +2,7 @@
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
-using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 
 namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
 

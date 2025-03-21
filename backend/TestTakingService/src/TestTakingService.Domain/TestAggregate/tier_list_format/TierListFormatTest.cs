@@ -1,9 +1,12 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
+using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.tier_list_format.feedback;
+using TestTakingService.Domain.Common.test_taken_data.tier_list_format_test;
 
 namespace TestTakingService.Domain.TestAggregate.tier_list_format;
 
@@ -41,9 +44,17 @@ public class TierListFormatTest : BaseTest
         FeedbackOption = newFeedbackOption;
     }
 
-    // public ErrOr<> TestTaken() {
-    //     _domainEvents.Add(new FeedbackForTierListTestLeftEvent(
-    //         Id, testTakerId, testTakingEnd, feedback.FeedbackText, feedback.LeftAnonymously
-    //     ));
-    // }
+    public ErrOr<Dictionary<TierListTestTierId, TierListTestTakenTierData>> TestTaken(
+        AppUserId? requestTestTakerId,
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers,
+        DateTime testTakingStart,
+        DateTime testTakingEnd,
+        TierListTestTakenFeedbackData? feedbackData,
+        IDateTimeProvider dateTimeProvider
+    ) {
+        
+        //     _domainEvents.Add(new FeedbackForTierListTestLeftEvent(
+        //         Id, testTakerId, testTakingEnd, feedback.FeedbackText, feedback.LeftAnonymously
+        //     ));
+    }
 }

@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.domain.entity;
-using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 
 namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
 

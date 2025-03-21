@@ -1,6 +1,6 @@
 using SharedKernel.Common.tests.formats_shared.test_styles;
 
-namespace TestTakingService.Api.Contracts.load_test_taking_data_shared;
+namespace TestTakingService.Api.Contracts.test_taken.test_formats_shared;
 
 public record class TestTakingStylesData(
     string AccentColor,

@@ -17,4 +17,9 @@
     <ProjectReference Include="..\TestTakingService.Infrastructure\TestTakingService.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\load_test_taking_data\tier_list_test\" />
+    <Folder Include="Contracts\load_test_taking_data_shared\" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ using SharedKernel.Common.tests.formats_shared.interaction_access_settings;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.general_format;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 using TestTakingService.Domain.TestAggregate.general_format.helpers;
 using TestTakingService.Domain.TestFeedbackRecordAggregate.events;
 using TestTakingService.Domain.TestTakenRecordAggregate.events;

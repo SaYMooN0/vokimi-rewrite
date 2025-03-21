@@ -1,7 +1,6 @@
 ﻿using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestTakingService.Domain.Common;
-using TestTakingService.Domain.Common.general_test_taken_data;
 
 namespace TestTakingService.Domain.TestTakenRecordAggregate.events;
 

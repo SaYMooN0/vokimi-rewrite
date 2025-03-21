@@ -4,7 +4,7 @@ using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
-using TestTakingService.Domain.Common.general_test_taken_data;
+using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Application.Tests.general_format.commands;
