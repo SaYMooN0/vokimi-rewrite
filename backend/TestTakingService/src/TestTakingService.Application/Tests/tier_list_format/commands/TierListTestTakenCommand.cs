@@ -6,7 +6,6 @@ using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.Common.test_taken_data.tier_list_format_test;
 using TestTakingService.Domain.TestAggregate.tier_list_format;
 
-
 namespace TestTakingService.Application.Tests.tier_list_format.commands;
 
 public record class TierListTestTakenCommand(

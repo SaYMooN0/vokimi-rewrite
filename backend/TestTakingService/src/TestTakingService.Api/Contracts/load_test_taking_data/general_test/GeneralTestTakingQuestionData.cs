@@ -3,7 +3,7 @@ using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Api.Contracts.load_test_taking_data.general_test;
 
-public record class GeneralTestTakingQuestionData(
+internal record class GeneralTestTakingQuestionData(
     string Id,
     ushort OrderInTest,
     string Text,

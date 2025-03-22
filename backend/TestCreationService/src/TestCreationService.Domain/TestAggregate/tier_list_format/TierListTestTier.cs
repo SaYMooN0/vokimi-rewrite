@@ -12,7 +12,7 @@ public class TierListTestTier : Entity<TierListTestTierId>
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public ushort? MaxItemsCountLimit { get; private set; } //if null => disabled
-    public TierListTestTierStyles Styles { get; private set; }
+    public TierListTestTierStyles Styles { get; private init; }
 
     public static ErrOr<TierListTestTier> CreateNew(string name) {
         if (TierListTestTiersRules.CheckIfStringCorrectTierName(name).IsErr(out var err)) {

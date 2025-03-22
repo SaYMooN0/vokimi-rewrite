@@ -3,7 +3,7 @@ using SharedKernel.Common.tests.general_format;
 
 namespace TestTakingService.Api.Contracts.load_test_taking_data.general_test;
 
-public record class GeneralTestTakingFeedbackData(
+internal record class GeneralTestTakingFeedbackData(
     bool IsEnabled,
     AnonymityValues? Anonymity,
     string? AccompanyingText,

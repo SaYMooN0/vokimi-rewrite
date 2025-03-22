@@ -10,12 +10,13 @@ public class TierListTestTierStyles : Entity<TierListTestTierStylesId>
     public HexColor BackgroundColor { get; private set; }
     public HexColor TextColor { get; private set; }
 
-    public TierListTestTierStyles(HexColor backgroundColor, HexColor textColor) {
-        BackgroundColor = backgroundColor;
-        TextColor = textColor;
-    }
+    public static TierListTestTierStyles CreateNew(HexColor backgroundColor, HexColor textColor) => new() {
+        Id = TierListTestTierStylesId.CreateNew(),
+        BackgroundColor = backgroundColor,
+        TextColor = textColor
+    };
 
-    public static TierListTestTierStyles Default() => new(
+    public static TierListTestTierStyles Default() => TierListTestTierStyles.CreateNew(
         backgroundColor: TestStylesSheet.DefaultAccentColor,
         textColor: HexColor.FromString("#ffffff").GetSuccess()
     );

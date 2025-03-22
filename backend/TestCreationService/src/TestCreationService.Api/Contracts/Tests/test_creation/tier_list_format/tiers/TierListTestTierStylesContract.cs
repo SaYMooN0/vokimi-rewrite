@@ -20,7 +20,7 @@ internal class TierListTestTierStylesContract
             return Err.ErrFactory.InvalidData("Styles text color is not a valid hex color");
         }
 
-        return new TierListTestTierStyles(
+        return TierListTestTierStyles.CreateNew(
             backgroundColor: backColor.GetSuccess(),
             textColor: textColor.GetSuccess()
         );

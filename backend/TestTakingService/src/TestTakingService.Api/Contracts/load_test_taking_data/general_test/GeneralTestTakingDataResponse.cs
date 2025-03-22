@@ -1,9 +1,9 @@
-using TestTakingService.Api.Contracts.test_taken.test_formats_shared;
+using TestTakingService.Api.Contracts.load_test_taking_data.test_formats_shared;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Api.Contracts.load_test_taking_data.general_test;
 
-public record class GeneralTestTakingDataResponse(
+internal record class GeneralTestTakingDataResponse(
     GeneralTestTakingQuestionData[] Questions,
     GeneralTestTakingFeedbackData Feedback,
     TestTakingStylesData Styles

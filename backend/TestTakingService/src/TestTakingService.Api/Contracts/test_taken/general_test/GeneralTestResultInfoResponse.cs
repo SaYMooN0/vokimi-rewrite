@@ -2,7 +2,7 @@
 
 namespace TestTakingService.Api.Contracts.test_taken.general_test;
 
-public record class GeneralTestResultInfoResponse(
+internal record class GeneralTestResultInfoResponse(
     string Id,
     string Name,
     string Text,

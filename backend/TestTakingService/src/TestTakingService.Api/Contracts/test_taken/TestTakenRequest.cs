@@ -1,7 +1,7 @@
 ﻿using ApiShared.interfaces;
 using SharedKernel.Common.errors;
 
-namespace TestTakingService.Api.Contracts.test_taken.test_formats_shared;
+namespace TestTakingService.Api.Contracts.test_taken;
 
 public abstract class TestTakenRequest : IRequestWithValidationNeeded
 {

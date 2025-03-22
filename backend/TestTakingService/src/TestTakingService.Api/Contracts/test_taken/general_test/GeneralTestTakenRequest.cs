@@ -1,7 +1,6 @@
 using ApiShared.interfaces;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.errors;
-using TestTakingService.Api.Contracts.test_taken.test_formats_shared;
 using TestTakingService.Domain.Common.test_taken_data.general_format_test;
 
 namespace TestTakingService.Api.Contracts.test_taken.general_test;
@@ -25,11 +24,12 @@ internal class GeneralTestTakenRequest : TestTakenRequest
 
         if (Questions.Length > _maxQuestionsCount) {
             return new ErrList(Err.ErrFactory.InvalidData(
-                "Too many question info provided")
-            );
+                "Too many question info provided"
+            ));
         }
 
         ErrList errs = new();
+        errs.AddPossibleErr(base.ValidateStartAndEndDateTine());
 
         foreach (var q in Questions) {
             errs.AddPossibleErr(q.CheckForErr());
@@ -39,7 +39,6 @@ internal class GeneralTestTakenRequest : TestTakenRequest
             errs.Add(Err.ErrFactory.InvalidData("Seems like feedback should be provided, but its text is empty"));
         }
 
-        errs.AddPossibleErr(base.ValidateStartAndEndDateTine());
 
         return errs;
     }
