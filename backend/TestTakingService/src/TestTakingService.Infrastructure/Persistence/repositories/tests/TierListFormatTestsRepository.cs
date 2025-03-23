@@ -1,4 +1,5 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using Microsoft.EntityFrameworkCore;
+using SharedKernel.Common.domain.entity;
 using TestTakingService.Application.Common.interfaces.repositories.tests;
 using TestTakingService.Domain.TestAggregate.tier_list_format;
 
@@ -24,4 +25,10 @@ public class TierListFormatTestsRepository : ITierListFormatTestsRepository
 
     public async Task<TierListFormatTest?> GetById(TestId testId) =>
         await _db.TierListFormatTests.FindAsync(testId);
+
+    public async Task<TierListFormatTest?> GetWithItemsAndTiers(TestId testId) =>
+        await _db.TierListFormatTests
+            .Include(t => t.Tiers)
+            .Include(q => q.Items)
+            .FirstOrDefaultAsync(q => q.Id== testId);
 }

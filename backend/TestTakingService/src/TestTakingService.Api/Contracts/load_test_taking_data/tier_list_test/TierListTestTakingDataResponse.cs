@@ -9,5 +9,9 @@ internal record class TierListTestTakingDataResponse(
     TestTakingStylesData Styles
 )
 {
-    public static TierListTestTakingDataResponse FromTest(TierListFormatTest test) => new();
+    public static TierListTestTakingDataResponse FromTest(TierListFormatTest test) => new(
+        test.Tiers.Select(TierListTestTakingTierData.FromTier).ToArray(),
+        test.Items.Select(TierListTestTakingItemData.FromItem).ToArray(),
+        TestTakingStylesData.FromStyles(test.Styles)
+    );
 }

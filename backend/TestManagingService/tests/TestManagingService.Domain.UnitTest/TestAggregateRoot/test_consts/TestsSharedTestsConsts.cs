@@ -2,6 +2,7 @@ using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.interfaces;
+using SharedKernel.Common.tests.general_format;
 using SharedKernel.Common.tests.value_objects;
 using TestManagingService.Domain.TestAggregate;
 using TestManagingService.Domain.TestAggregate.formats_shared;
@@ -29,11 +30,12 @@ public static class TestsSharedTestsConsts
         TestTagId[]? tagSuggestions = null,
         TestTagId[]? bannedTags = null
     ) {
-        BaseTest test = GeneralFormatTest.CreateNew(
+        BaseTest test = new GeneralFormatTest(
             TestId.CreateNew(),
             TestCreator, [],
-            DateTime.Now.AddYears(-1).AddDays(-1),
-            customInteractionsAccessSettings ?? DefaultInteractionsAccessSettings
+            DateTimeProviderInstance.Now.AddYears(-1).AddDays(-1),
+            customInteractionsAccessSettings ?? DefaultInteractionsAccessSettings,
+            GeneralTestFeedbackOption.Disabled.Instance
         );
         if (testTags is not null) {
             var result = test.UpdateTags(testTags.ToHashSet());

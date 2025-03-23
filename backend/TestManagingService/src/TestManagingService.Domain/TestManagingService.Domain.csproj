@@ -9,4 +9,7 @@
         <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj"/>
         <ProjectReference Include="..\..\..\SharedUserRelationsContext\SharedUserRelationsContext.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="FeedbackRecordAggregate\test_formats_shared\" />
+    </ItemGroup>
 </Project>

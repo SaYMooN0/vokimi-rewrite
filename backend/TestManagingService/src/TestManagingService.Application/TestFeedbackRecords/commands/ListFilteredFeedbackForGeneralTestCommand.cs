@@ -2,13 +2,14 @@ using System.Collections.Immutable;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories.feedback_records;
+using TestManagingService.Domain.FeedbackRecordAggregate.filters;
 using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
 namespace TestManagingService.Application.TestFeedbackRecords.commands;
 
 public record ListFilteredFeedbackForGeneralTestCommand(
     TestId TestId,
-    GeneralTestFeedbackRecordsFilter Filter
+    GeneralTestFeedbackRecordsQueryFilter QueryFilter
 ) : IRequest<GeneralTestFeedbackRecord[]>;
 
 internal class ListFilteredFeedbackForGeneralTestCommandHandler
@@ -26,5 +27,5 @@ internal class ListFilteredFeedbackForGeneralTestCommandHandler
     public Task<GeneralTestFeedbackRecord[]> Handle(
         ListFilteredFeedbackForGeneralTestCommand request,
         CancellationToken cancellationToken
-    ) => _generalTestFeedbackRecordsRepository.ListFilteredForTestAsNoTracking(request.TestId, request.Filter);
+    ) => _generalTestFeedbackRecordsRepository.ListFilteredForTestAsNoTracking(request.TestId, request.QueryFilter);
 }

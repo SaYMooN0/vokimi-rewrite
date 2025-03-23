@@ -14,5 +14,10 @@ internal record class TierListTestTakingItemData(
 {
     public static TierListTestTakingItemData FromItem(TierListTestItem item) => new(
         item.Id.ToString(),
+        item.OrderInTest,
+        item.Name,
+        item.Clarification,
+        item.Content.ToDictionary(),
+        item.Content.MatchingEnumType
     );
 }

@@ -2,8 +2,8 @@
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories.feedback_records;
 using TestManagingService.Domain.FeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate.filters;
 using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
-using TestManagingService.Domain.FeedbackRecordAggregate.test_formats_shared;
 
 namespace TestManagingService.Infrastructure.Persistence.repositories.feedback_records;
 
@@ -20,40 +20,31 @@ public class GeneralTestFeedbackRecordsRepository : IGeneralTestFeedbackRecordsR
         await _db.SaveChangesAsync();
     }
 
-    public Task<GeneralTestFeedbackRecord[]> ListForTestAsNoTracking(TestId testId) => _db.GeneralTestFeedbackRecords
-        .AsNoTracking()
-        .Where(f => f.TestId == testId)
-        .ToArrayAsync();
+    public Task<GeneralTestFeedbackRecord[]> ListForTestAsNoTracking(TestId testId) =>
+        _db.GeneralTestFeedbackRecords
+            .AsNoTracking()
+            .Where(f => f.TestId == testId)
+            .ToArrayAsync();
 
     public Task<GeneralTestFeedbackRecord[]> ListFilteredForTestAsNoTracking(
-        TestId testId, GeneralTestFeedbackRecordsFilter filter
+        TestId testId, GeneralTestFeedbackRecordsQueryFilter filter
     ) => _db.GeneralTestFeedbackRecords
         .AsNoTracking()
         .Where(f => f.TestId == testId)
-        .WithFilterAndSorting(filter)
+        .WithAllFiltersAndSorting(filter)
         .ToArrayAsync();
 }
 
 file static class GeneralTestFeedbackRecordsQueryExtensions
 {
-    public static IQueryable<GeneralTestFeedbackRecord> WithFilterAndSorting(
-        this IQueryable<GeneralTestFeedbackRecord> query, GeneralTestFeedbackRecordsFilter filter
+    public static IQueryable<GeneralTestFeedbackRecord> WithAllFiltersAndSorting(
+        this IQueryable<GeneralTestFeedbackRecord> query, GeneralTestFeedbackRecordsQueryFilter filter
     ) => query
-        .WithDateFilter(filter.CreatedDateFrom, filter.CreatedDateTo)
+        .WithDateFilter(filter)
+        .WithVisibilityFilter(filter)
         .WithTextLengthFilter(filter.TextLengthFrom, filter.TextLengthTo)
-        .WithVisibilityFilter(filter.ShowAnonymous, filter.ShowNonAnonymous)
         .WithSorting(filter.SortOption);
 
-    private static IQueryable<GeneralTestFeedbackRecord> WithDateFilter(
-        this IQueryable<GeneralTestFeedbackRecord> query, DateTime? dateFrom, DateTime? dateTo
-    ) {
-        if (dateFrom.HasValue)
-            query = query.Where(f => f.CreatedOn >= dateFrom.Value);
-        if (dateTo.HasValue)
-            query = query.Where(f => f.CreatedOn <= dateTo.Value);
-
-        return query;
-    }
 
     private static IQueryable<GeneralTestFeedbackRecord> WithTextLengthFilter(
         this IQueryable<GeneralTestFeedbackRecord> query, ushort? textLengthFrom, ushort? textLengthTo
@@ -66,25 +57,14 @@ file static class GeneralTestFeedbackRecordsQueryExtensions
         return query;
     }
 
-    private static IQueryable<GeneralTestFeedbackRecord> WithVisibilityFilter(
-        this IQueryable<GeneralTestFeedbackRecord> query, bool showAnonymous, bool showNonAnonymous
-    ) {
-        if (!showAnonymous)
-            query = query.Where(f => !f.WasLeftAnonymously);
-        if (!showNonAnonymous)
-            query = query.Where(f => f.WasLeftAnonymously);
-
-        return query;
-    }
-
     private static IQueryable<GeneralTestFeedbackRecord> WithSorting(
-        this IQueryable<GeneralTestFeedbackRecord> query, TestFeedbackRecordsSortOption sorting
+        this IQueryable<GeneralTestFeedbackRecord> query, GeneralTestFeedbackRecordsSortOption sorting
     ) => sorting switch {
-        TestFeedbackRecordsSortOption.Randomized => query,
-        TestFeedbackRecordsSortOption.Newest => query.OrderByDescending(f => f.CreatedOn),
-        TestFeedbackRecordsSortOption.Oldest => query.OrderBy(f => f.CreatedOn),
-        TestFeedbackRecordsSortOption.Shortest => query.OrderBy(f => f.Text.Length),
-        TestFeedbackRecordsSortOption.Longest => query.OrderByDescending(f => f.Text.Length),
+        GeneralTestFeedbackRecordsSortOption.Randomized => query,
+        GeneralTestFeedbackRecordsSortOption.Newest => query.OrderByDescending(f => f.CreatedOn),
+        GeneralTestFeedbackRecordsSortOption.Oldest => query.OrderBy(f => f.CreatedOn),
+        GeneralTestFeedbackRecordsSortOption.Shortest => query.OrderBy(f => f.Text.Length),
+        GeneralTestFeedbackRecordsSortOption.Longest => query.OrderByDescending(f => f.Text.Length),
         _ => throw new ArgumentOutOfRangeException(nameof(sorting), sorting, "Unsupported sort option.")
     };
 }

@@ -23,7 +23,7 @@ public class TestTakingDbContext : DbContext
 
     public DbSet<GeneralFormatTest> GeneralFormatTests { get; set; } = null!;
 
-    public DbSet<TierListFormatTest> TierListFormatTests { get; set; }
+    public DbSet<TierListFormatTest> TierListFormatTests { get; set; } = null!;
 
     //test taken records
     public DbSet<BaseTestTakenRecord> BaseTestTakenRecords { get; set; } = null!;

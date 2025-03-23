@@ -10,4 +10,14 @@ public abstract class BaseTestFeedbackRecord : AggregateRoot<TestFeedbackRecordI
     public TestId TestId { get; protected init; }
     public AppUserId? UserId { get; protected init; }
     public DateTime CreatedOn { get; protected init; }
+    public bool WasLeftAnonymously => UserId is null;
+
+    protected BaseTestFeedbackRecord(
+        TestFeedbackRecordId id, TestId testId, AppUserId? userId, DateTime createdOn
+    ) {
+        Id = id;
+        TestId = testId;
+        UserId = userId;
+        CreatedOn = createdOn;
+    }
 }

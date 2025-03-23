@@ -3,12 +3,9 @@ using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Configs;
-using TestTakingService.Api.Contracts.load_test_taking_data.general_test;
 using TestTakingService.Api.Contracts.load_test_taking_data.tier_list_test;
-using TestTakingService.Api.Contracts.test_taken.general_test;
 using TestTakingService.Api.Contracts.test_taken.tier_list_test;
 using TestTakingService.Api.Extensions;
-using TestTakingService.Application.Tests.general_format.commands;
 using TestTakingService.Application.Tests.tier_list_format.commands;
 
 namespace TestTakingService.Api.Endpoints;
@@ -33,8 +30,7 @@ internal static class TierListTakingHandlers
         LoadTierListTestTakingDataCommand command = new(testId);
         var result = await mediator.Send(command);
 
-        return CustomResults.FromErrOr(
-            result,
+        return CustomResults.FromErrOr(result,
             (test) => Results.Json(TierListTestTakingDataResponse.FromTest(test))
         );
     }
@@ -60,7 +56,7 @@ internal static class TierListTakingHandlers
 
         return CustomResults.FromErrOr(result,
             (testTakingRes) => Results.Json(
-                new { TestTakingResult = GeneralTestTakenReceivedResultResponse.FromResult(receivedRes) }
+                new { TestTakingResult = new TierListTestTakenResponse(testTakingRes) }
             )
         );
     }

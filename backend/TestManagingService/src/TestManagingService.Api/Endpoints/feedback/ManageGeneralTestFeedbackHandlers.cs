@@ -26,7 +26,6 @@ internal static class ManageGeneralTestFeedbackHandlers
         group.MapPost("/enable", EnableFeedbackForGeneralTest)
             .WithRequestValidation<EnableGeneralTestFeedbackOptionRequest>();
 
-        //list left feedback + filter
         return group;
     }
 

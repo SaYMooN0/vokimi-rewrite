@@ -3,8 +3,8 @@ using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
 using TestManagingService.Domain.FeedbackRecordAggregate;
+using TestManagingService.Domain.FeedbackRecordAggregate.filters;
 using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
-using TestManagingService.Domain.FeedbackRecordAggregate.test_formats_shared;
 
 namespace TestManagingService.Api.Contracts.test_feedback.feedback_records;
 
@@ -17,8 +17,8 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
     public bool ShowAnonymous { get; init; } = true;
     public bool ShowNonAnonymous { get; init; } = true;
 
-    public TestFeedbackRecordsSortOption SortOption { get; init; } =
-        TestFeedbackRecordsSortOption.Randomized;
+    public GeneralTestFeedbackRecordsSortOption SortOption { get; init; } =
+        GeneralTestFeedbackRecordsSortOption.Randomized;
 
     public RequestValidationResult Validate() {
         ErrList errs = new();
@@ -57,7 +57,7 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
         return errs;
     }
 
-    public ErrOr<GeneralTestFeedbackRecordsFilter> GetParsedFilter(IDateTimeProvider dateTimeProvider) {
+    public ErrOr<GeneralTestFeedbackRecordsQueryFilter> GetParsedFilter(IDateTimeProvider dateTimeProvider) {
         if (CreationDateTo.HasValue && CreationDateTo > dateTimeProvider.Now) {
             return Err.ErrFactory.InvalidData("Creation Date To cannot be in the future.");
         }
@@ -76,7 +76,7 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
             );
         }
 
-        return new GeneralTestFeedbackRecordsFilter(
+        return new GeneralTestFeedbackRecordsQueryFilter(
             CreatedDateFrom: CreationDateFrom,
             CreatedDateTo: CreationDateTo,
             TextLengthFrom: MinTextLength.HasValue ? (ushort?)MinTextLength.Value : null,

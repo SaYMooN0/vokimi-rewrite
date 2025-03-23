@@ -23,7 +23,7 @@ public static class TestsSharedTestsConsts
         );
 
     public static BaseTest CreateBaseTest(TestInteractionsAccessSettings? customInteractionsAccessSettings = null) =>
-        GeneralFormatTest.CreateNew(
+        new GeneralFormatTest(
             TestId.CreateNew(),
             "Just test name",
             "coverImg.png",
@@ -32,12 +32,10 @@ public static class TestsSharedTestsConsts
             [],
             DateTime.Now.AddYears(-1).AddDays(-1),
             Language.Eng,
-            8,
-            8,
-            true,
+            [],
             customInteractionsAccessSettings ?? DefaultInteractionsAccessSettings,
-            []
-        ).GetSuccess();
+            8, 8, true
+        );
 
     public static IDateTimeProvider DateTimeProviderInstance = new UtcDateTimeProvider();
 }
