@@ -1,10 +1,9 @@
-﻿using SharedKernel.Common.domain;
-using SharedKernel.Common.domain.entity;
+﻿using SharedKernel.Common.domain.entity;
 using TestTakingService.Domain.Common;
 
 namespace TestTakingService.Domain.TestTakenRecordAggregate.events;
 
-public record class GeneralBaseTestTakenEvent(
+public record class GeneralTestTakenEvent(
     TestTakenRecordId TestTakenRecordId,
     TestId TestId,
     AppUserId? AppUserId,

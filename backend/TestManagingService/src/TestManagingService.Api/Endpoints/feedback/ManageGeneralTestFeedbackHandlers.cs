@@ -3,10 +3,11 @@ using ApiShared.extensions;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.interfaces;
-using TestManagingService.Api.Contracts.test_feedback.feedback_option;
-using TestManagingService.Api.Contracts.test_feedback.feedback_records;
+using TestManagingService.Api.Contracts.test_feedback.general_test_format.feedback_option;
+using TestManagingService.Api.Contracts.test_feedback.general_test_format.feedback_records;
 using TestManagingService.Api.Extensions;
 using TestManagingService.Application.TestFeedbackRecords.commands;
+using TestManagingService.Application.TestFeedbackRecords.commands.general_test_format;
 using TestManagingService.Application.Tests.general_format.feedback;
 
 namespace TestManagingService.Api.Endpoints.feedback;

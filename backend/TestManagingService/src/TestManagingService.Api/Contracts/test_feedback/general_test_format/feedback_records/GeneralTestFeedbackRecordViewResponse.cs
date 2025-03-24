@@ -1,6 +1,6 @@
 using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
-namespace TestManagingService.Api.Contracts.test_feedback.feedback_records;
+namespace TestManagingService.Api.Contracts.test_feedback.general_test_format.feedback_records;
 
 public record GeneralTestFeedbackRecordViewResponse(
     string Text,

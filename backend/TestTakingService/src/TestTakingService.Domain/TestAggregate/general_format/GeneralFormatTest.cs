@@ -128,7 +128,7 @@ public class GeneralFormatTest : BaseTest
 
         _testTakenRecordIds.Add(testTakenRecordId);
 
-        var testTakenEvent = new GeneralBaseTestTakenEvent(
+        var testTakenEvent = new GeneralTestTakenEvent(
             testTakenRecordId, Id, testTakerId,
             testTakingStart, testTakingEnd,
             receivedResId, testTakenQuestionDetails

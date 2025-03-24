@@ -1,4 +1,4 @@
-namespace TestManagingService.Domain.FeedbackRecordAggregate.filters;
+namespace TestManagingService.Domain.FeedbackRecordAggregate.sort_options;
 
 public enum GeneralTestFeedbackRecordsSortOption
 {

@@ -1,4 +1,6 @@
-﻿namespace TestManagingService.Domain.FeedbackRecordAggregate.filters;
+﻿using TestManagingService.Domain.FeedbackRecordAggregate.sort_options;
+
+namespace TestManagingService.Domain.FeedbackRecordAggregate.filters;
 
 public record class TierListTestFeedbackRecordsQueryFilter(
     DateTime? CreatedDateFrom,

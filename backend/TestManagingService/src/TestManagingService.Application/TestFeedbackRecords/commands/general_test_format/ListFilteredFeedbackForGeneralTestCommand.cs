@@ -1,11 +1,10 @@
-using System.Collections.Immutable;
 using MediatR;
 using SharedKernel.Common.domain.entity;
 using TestManagingService.Application.Common.interfaces.repositories.feedback_records;
 using TestManagingService.Domain.FeedbackRecordAggregate.filters;
 using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
 
-namespace TestManagingService.Application.TestFeedbackRecords.commands;
+namespace TestManagingService.Application.TestFeedbackRecords.commands.general_test_format;
 
 public record ListFilteredFeedbackForGeneralTestCommand(
     TestId TestId,

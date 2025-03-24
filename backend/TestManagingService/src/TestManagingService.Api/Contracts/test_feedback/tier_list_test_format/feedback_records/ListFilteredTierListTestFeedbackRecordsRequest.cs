@@ -1,14 +1,13 @@
 using ApiShared.interfaces;
 using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
-using SharedKernel.Common.tests.general_format;
-using TestManagingService.Domain.FeedbackRecordAggregate;
+using SharedKernel.Common.tests.tier_list_format.feedback;
 using TestManagingService.Domain.FeedbackRecordAggregate.filters;
-using TestManagingService.Domain.FeedbackRecordAggregate.general_test;
+using TestManagingService.Domain.FeedbackRecordAggregate.sort_options;
 
-namespace TestManagingService.Api.Contracts.test_feedback.feedback_records;
+namespace TestManagingService.Api.Contracts.test_feedback.tier_list_test_format.feedback_records;
 
-public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidationNeeded
+public class ListFilteredTierListTestFeedbackRecordsRequest : IRequestWithValidationNeeded
 {
     public DateTime? CreationDateFrom { get; init; } = null;
     public DateTime? CreationDateTo { get; init; } = null;
@@ -17,8 +16,8 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
     public bool ShowAnonymous { get; init; } = true;
     public bool ShowNonAnonymous { get; init; } = true;
 
-    public GeneralTestFeedbackRecordsSortOption SortOption { get; init; } =
-        GeneralTestFeedbackRecordsSortOption.Randomized;
+    public TierListTestFeedbackRecordsSortOption SortOption { get; init; } =
+        TierListTestFeedbackRecordsSortOption.Randomized;
 
     public RequestValidationResult Validate() {
         ErrList errs = new();
@@ -39,14 +38,14 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
             errs.Add(Err.ErrFactory.InvalidData("Minimum text length cannot be greater than maximum text length"));
         }
 
-        if (MaxTextLength.HasValue && MaxTextLength > GeneralTestFeedbackRules.MaxPossibleFeedbackLength) {
+        if (MaxTextLength.HasValue && MaxTextLength > TierListTestFeedbackRules.MaxPossibleFeedbackLength) {
             errs.Add(Err.ErrFactory.InvalidData(
-                $"Maximum text length cannot exceed {GeneralTestFeedbackRules.MaxPossibleFeedbackLength}"));
+                $"Maximum text length cannot exceed {TierListTestFeedbackRules.MaxPossibleFeedbackLength}"));
         }
 
-        if (MinTextLength.HasValue && MinTextLength > GeneralTestFeedbackRules.MaxPossibleFeedbackLength) {
+        if (MinTextLength.HasValue && MinTextLength > TierListTestFeedbackRules.MaxPossibleFeedbackLength) {
             errs.Add(Err.ErrFactory.InvalidData(
-                $"Minimum text length cannot exceed {GeneralTestFeedbackRules.MaxPossibleFeedbackLength}"));
+                $"Minimum text length cannot exceed {TierListTestFeedbackRules.MaxPossibleFeedbackLength}"));
         }
 
         if (!ShowAnonymous && !ShowNonAnonymous) {
@@ -57,7 +56,7 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
         return errs;
     }
 
-    public ErrOr<GeneralTestFeedbackRecordsQueryFilter> GetParsedFilter(IDateTimeProvider dateTimeProvider) {
+    public ErrOr<TierListTestFeedbackRecordsQueryFilter> GetParsedFilter(IDateTimeProvider dateTimeProvider) {
         if (CreationDateTo.HasValue && CreationDateTo > dateTimeProvider.Now) {
             return Err.ErrFactory.InvalidData("Creation Date To cannot be in the future.");
         }
@@ -76,7 +75,7 @@ public class ListFilteredGeneralTestFeedbackRecordsRequest : IRequestWithValidat
             );
         }
 
-        return new GeneralTestFeedbackRecordsQueryFilter(
+        return new TierListTestFeedbackRecordsQueryFilter(
             CreatedDateFrom: CreationDateFrom,
             CreatedDateTo: CreationDateTo,
             TextLengthFrom: MinTextLength.HasValue ? (ushort?)MinTextLength.Value : null,

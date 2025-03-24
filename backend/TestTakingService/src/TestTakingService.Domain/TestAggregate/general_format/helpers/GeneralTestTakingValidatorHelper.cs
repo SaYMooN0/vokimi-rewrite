@@ -147,7 +147,7 @@ internal static class GeneralTestTakingValidatorHelper
         }
 
         if (testStartTime > dateTimeProvider.Now) {
-            return new Err("Test couldn't start in a future");
+            return new Err("Test taking couldn't start in a future");
         }
 
         double totalTimeSpentOnQuestions = timeSpentOnQuestions.Sum(q => q.TotalSeconds);

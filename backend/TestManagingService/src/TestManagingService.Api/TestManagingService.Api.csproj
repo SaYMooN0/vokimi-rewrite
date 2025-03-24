@@ -15,4 +15,8 @@
       <ProjectReference Include="..\TestManagingService.Infrastructure\TestManagingService.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Contracts\test_feedback\general_test_format\" />
+    </ItemGroup>
+
 </Project>

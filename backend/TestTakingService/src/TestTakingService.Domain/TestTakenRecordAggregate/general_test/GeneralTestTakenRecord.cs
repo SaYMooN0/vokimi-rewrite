@@ -10,8 +10,8 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
 {
     private GeneralTestTakenRecord() { }
     public override TestFormat TestFormat => TestFormat.General;
-    public GeneralTestResultId ReceivedResultId { get; init; }
-    public IReadOnlyCollection<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; init; }
+    public GeneralTestResultId ReceivedResultId { get; private init; }
+    public IReadOnlyCollection<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; private init; }
 
     public static GeneralTestTakenRecord CreateNew(
         AppUserId? userId,

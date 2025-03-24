@@ -3,9 +3,9 @@ using TestTakingService.Application.Common.interfaces.repositories.test_taken_re
 using TestTakingService.Domain.TestTakenRecordAggregate.events;
 using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
 
-namespace TestTakingService.Application.TestTakenRecords.general_test.events;
+namespace TestTakingService.Application.TestTakenRecords.events;
 
-public class GeneralTestTakenEventHandler : INotificationHandler<GeneralBaseTestTakenEvent>
+public class GeneralTestTakenEventHandler : INotificationHandler<GeneralTestTakenEvent>
 {
     private readonly IGeneralTestTakenRecordsRepository _generalTestTakenRecordsRepository;
 
@@ -13,7 +13,7 @@ public class GeneralTestTakenEventHandler : INotificationHandler<GeneralBaseTest
         _generalTestTakenRecordsRepository = generalTestTakenRecordsRepository;
     }
 
-    public async Task Handle(GeneralBaseTestTakenEvent notification, CancellationToken cancellationToken) {
+    public async Task Handle(GeneralTestTakenEvent notification, CancellationToken cancellationToken) {
         GeneralTestTakenRecord record = GeneralTestTakenRecord.CreateNew(
             notification.AppUserId,
             notification.TestId,

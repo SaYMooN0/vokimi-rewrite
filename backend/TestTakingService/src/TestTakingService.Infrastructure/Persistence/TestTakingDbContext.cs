@@ -9,6 +9,7 @@ using TestTakingService.Domain.TestAggregate.general_format;
 using TestTakingService.Domain.TestAggregate.tier_list_format;
 using TestTakingService.Domain.TestTakenRecordAggregate;
 using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
+using TestTakingService.Domain.TestTakenRecordAggregate.tier_list_test;
 
 namespace TestTakingService.Infrastructure.Persistence;
 
@@ -29,6 +30,7 @@ public class TestTakingDbContext : DbContext
     public DbSet<BaseTestTakenRecord> BaseTestTakenRecords { get; set; } = null!;
 
     public DbSet<GeneralTestTakenRecord> GeneralTestTakenRecords { get; set; } = null!;
+    public DbSet<TierListTestTakenRecord> TierListTestTakenRecords { get; set; } = null!;
 
 
     public TestTakingDbContext(DbContextOptions<TestTakingDbContext> options, IPublisher publisher) : base(options) {

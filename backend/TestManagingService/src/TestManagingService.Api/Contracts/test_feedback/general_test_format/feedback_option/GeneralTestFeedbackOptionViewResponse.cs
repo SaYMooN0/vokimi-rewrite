@@ -1,7 +1,7 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.tests.general_format;
 
-namespace TestManagingService.Api.Contracts.test_feedback.feedback_option;
+namespace TestManagingService.Api.Contracts.test_feedback.general_test_format.feedback_option;
 
 public record class GeneralTestFeedbackOptionViewResponse(
     bool IsEnabled,
