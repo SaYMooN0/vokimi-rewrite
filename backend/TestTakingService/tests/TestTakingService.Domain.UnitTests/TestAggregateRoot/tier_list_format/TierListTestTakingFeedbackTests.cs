@@ -1,27 +1,28 @@
 ﻿using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.tests.general_format;
-using TestTakingService.Domain.Common.test_taken_data.general_format_test;
+using SharedKernel.Common.tests.tier_list_format.feedback;
+using TestTakingService.Domain.Common.test_taken_data.tier_list_format_test;
 
-namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
+namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.tier_list_format;
 
-public class GeneralTestTakingFeedbackTests
+public class TierListTestTakingFeedbackTests
 {
-    private static GeneralTestFeedbackOption BasicFeedbackOption => GeneralTestFeedbackOption.Enabled.CreateNew(
+    private static TierListTestFeedbackOption BasicFeedbackOption => TierListTestFeedbackOption.Enabled.CreateNew(
         AnonymityValues.Any, "text text text text text", 100
     ).GetSuccess();
 
     [Fact]
     public void TestTakenWithFeedbackLeft_WhenFeedbackDisabled_ShouldReturnErr() {
         // Arrange
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: GeneralTestFeedbackOption.Disabled.Instance);
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
-        GeneralTestTakenFeedbackData feedback = new("Great test!", LeftAnonymously: false);
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: TierListTestFeedbackOption.Disabled.Instance);
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
+        TierListTestTakenFeedbackData feedback = new("Great test!", LeftAnonymously: false);
 
         // Act
         var result = test.TestTaken(
             TestSharedTestsConsts.TestTakerId,
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,
@@ -36,14 +37,15 @@ public class GeneralTestTakingFeedbackTests
     [Fact]
     public void TestTakenWithNonAnonymousFeedbackLeft_WhenMissingTestTakerId_ShouldReturnErr() {
         // Arrange
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
-        GeneralTestTakenFeedbackData feedback = new("Nice work!", LeftAnonymously: false);
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
+        TierListTestTakenFeedbackData feedback = new("Nice work!", LeftAnonymously: false);
 
         // Act
         var result = test.TestTaken(
             null, // Missing test taker ID
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,
@@ -58,18 +60,19 @@ public class GeneralTestTakingFeedbackTests
     [Fact]
     public void TestTakenWithAnonymousFeedbackLeft_WhenTestAcceptNonAnonymousOnly_ShouldReturnErr() {
         // Arrange
-        var feedbackOption = GeneralTestFeedbackOption.Enabled.CreateNew(
+        var feedbackOption = TierListTestFeedbackOption.Enabled.CreateNew(
             AnonymityValues.NonAnonymousOnly, "text text text text text", 56
         ).GetSuccess();
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: feedbackOption);
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
-        GeneralTestTakenFeedbackData feedback =
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: feedbackOption);
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
+        TierListTestTakenFeedbackData feedback =
             new("Interesting test!", LeftAnonymously: true); // Feedback is anonymous
 
         // Act
         var result = test.TestTaken(
             TestSharedTestsConsts.TestTakerId,
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,
@@ -85,18 +88,19 @@ public class GeneralTestTakingFeedbackTests
     [Fact]
     public void TestTakenWithNonAnonymousFeedbackLeft_WhenTestAcceptAnonymousOnly_ShouldReturnErr() {
         // Arrange
-        var feedbackOption = GeneralTestFeedbackOption.Enabled.CreateNew(
+        var feedbackOption = TierListTestFeedbackOption.Enabled.CreateNew(
             AnonymityValues.AnonymousOnly, "text text text text text", 56
         ).GetSuccess(); // Feedback option is set to anonymous only
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: feedbackOption);
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
-        GeneralTestTakenFeedbackData feedback =
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: feedbackOption);
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
+        TierListTestTakenFeedbackData feedback =
             new("Interesting test!", LeftAnonymously: false); // Feedback is non-anonymous
 
         // Act
         var result = test.TestTaken(
             TestSharedTestsConsts.TestTakerId,
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,
@@ -112,14 +116,15 @@ public class GeneralTestTakingFeedbackTests
     [Fact]
     public void TestTakenWithFeedbackLeft_WithEmptyFeedback_ShouldReturnErr() {
         // Arrange
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
-        GeneralTestTakenFeedbackData feedback = new(string.Empty, false); // Empty feedback
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
+        TierListTestTakenFeedbackData feedback = new(string.Empty, false); // Empty feedback
 
         // Act
         var result = test.TestTaken(
             TestSharedTestsConsts.TestTakerId,
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,
@@ -134,16 +139,17 @@ public class GeneralTestTakingFeedbackTests
     [Fact]
     public void TestTakenWithFeedbackLeft_WithTooLongFeedback_ShouldReturnErr() {
         // Arrange
-        var test = GeneralTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
+        var test = TierListTestTestsConsts.CreateTest(feedbackOption: BasicFeedbackOption);
 
-        Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
+        Dictionary<TierListTestTierId, TierListTestTakenTierData> itemsInTiers = new();
+
         var longFeedbackText = new string('a', 150); // Too long feedback
-        GeneralTestTakenFeedbackData feedback = new(longFeedbackText, false);
+        TierListTestTakenFeedbackData feedback = new(longFeedbackText, false);
 
         // Act
         var result = test.TestTaken(
             TestSharedTestsConsts.TestTakerId,
-            questionsDataMap,
+            itemsInTiers,
             TestSharedTestsConsts.TestTakingStart,
             TestSharedTestsConsts.TestTakingEnd,
             feedback,

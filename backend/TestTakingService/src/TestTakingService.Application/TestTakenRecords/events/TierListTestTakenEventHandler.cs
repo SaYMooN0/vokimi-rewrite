@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Collections.Immutable;
+using MediatR;
 using TestTakingService.Application.Common.interfaces.repositories.test_taken_records;
 using TestTakingService.Domain.TestTakenRecordAggregate.events;
 using TestTakingService.Domain.TestTakenRecordAggregate.tier_list_test;
@@ -14,11 +15,16 @@ public class TierListTestTakenEventHandler : INotificationHandler<TierListTestTa
     }
 
     public async Task Handle(TierListTestTakenEvent notification, CancellationToken cancellationToken) {
-        TierListTestTakenRecord record = TierListTestTakenRecord.CreateNew(
+        TierListTestTakenRecord record = new(
+            notification.TestTakenRecordId,
             notification.AppUserId,
             notification.TestId,
             notification.TestTakingStart,
-            notification.TestTakingEnd
+            notification.TestTakingEnd,
+            notification.TestTakenQuestionDetails.Select(kvp => TierListTestTakenRecordTierDetails.CreateNew(
+                kvp.Key,
+                kvp.Value
+            )).ToImmutableArray()
         );
         await _tierListTestTakenRecordsRepository.Add(record);
     }

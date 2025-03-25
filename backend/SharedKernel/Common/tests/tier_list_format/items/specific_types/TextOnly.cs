@@ -9,8 +9,10 @@ public abstract partial class TierListTestItemContentData
     {
         public string Text { get; }
 
-        private TextOnly(string text) => Text = text;
-        [JsonIgnore] public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.TextOnly;
+        public TextOnly(string text) => Text = text;
+
+        [JsonIgnore]
+        public override TierListTestItemContentType MatchingEnumType => TierListTestItemContentType.TextOnly;
 
         public override IEnumerable<object> GetEqualityComponents() {
             yield return Text;

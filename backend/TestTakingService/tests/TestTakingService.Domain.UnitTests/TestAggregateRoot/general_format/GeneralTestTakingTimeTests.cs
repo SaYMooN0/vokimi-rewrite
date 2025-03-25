@@ -12,17 +12,17 @@ public class GeneralTestTakingTimeTests
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
         GeneralTestTakenFeedbackData feedback = new("Great test!", LeftAnonymously: false);
 
-        var startTime = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(10);
-        var endTime = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(5);
+        var startTime = TestSharedTestsConsts.DateTimeProviderInstance.Now.AddMinutes(10);
+        var endTime = TestSharedTestsConsts.DateTimeProviderInstance.Now.AddMinutes(5);
 
         // Act
         var result = test.TestTaken(
-            GeneralTestTestsConsts.TestTakerId,
+            TestSharedTestsConsts.TestTakerId,
             questionsDataMap,
-            startTime,
-            endTime,
+            testTakingStart: startTime,
+            testTakingEnd: endTime,
             feedback,
-            GeneralTestTestsConsts.DateTimeProviderInstance
+            TestSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -37,17 +37,17 @@ public class GeneralTestTakingTimeTests
         Dictionary<GeneralTestQuestionId, GeneralTestTakenQuestionData> questionsDataMap = new();
         GeneralTestTakenFeedbackData feedback = new("Great test!", LeftAnonymously: false);
 
-        DateTime startTime = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(5);
-        DateTime endTime = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(10);
+        DateTime startTime = TestSharedTestsConsts.DateTimeProviderInstance.Now.AddMinutes(5);
+        DateTime endTime = TestSharedTestsConsts.DateTimeProviderInstance.Now.AddMinutes(10);
 
         // Act
         var result = test.TestTaken(
-            GeneralTestTestsConsts.TestTakerId,
+            TestSharedTestsConsts.TestTakerId,
             questionsDataMap,
-            startTime,
-            endTime,
+            testTakingStart: startTime,
+            testTakingEnd: endTime,
             feedback,
-            GeneralTestTestsConsts.DateTimeProviderInstance
+            TestSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert
@@ -69,17 +69,17 @@ public class GeneralTestTakingTimeTests
             }
         };
 
-        var testTakingStart = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(-30); 
-        var testTakingEnd = GeneralTestTestsConsts.DateTimeProviderInstance.Now.AddMinutes(-5); 
+        var testTakingStart = TestSharedTestsConsts.DateTimeProviderInstance.Now.AddMinutes(-30); 
+        var testTakingEnd =testTakingStart.AddMinutes(5); 
 
         // Act
         var result = test.TestTaken(
-            GeneralTestTestsConsts.TestTakerId,
+            TestSharedTestsConsts.TestTakerId,
             questionsDataMap,
-            testTakingStart,
-            testTakingEnd,
+            testTakingStart: testTakingStart,
+            testTakingEnd: testTakingEnd,
             null,
-            GeneralTestTestsConsts.DateTimeProviderInstance
+            TestSharedTestsConsts.DateTimeProviderInstance
         );
 
         // Assert

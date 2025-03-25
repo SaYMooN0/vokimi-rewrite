@@ -1,13 +1,10 @@
 ﻿using System.Collections.Immutable;
-using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.general_test_questions;
 using SharedKernel.Common.general_test_questions.answer_type_specific_data;
-using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using SharedKernel.Common.tests.general_format;
-using SharedKernel.Common.tests.value_objects;
 using TestTakingService.Domain.TestAggregate.general_format;
 
 namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.general_format;
@@ -179,10 +176,4 @@ public static class GeneralTestTestsConsts
         results ?? AllResults,
         feedbackOption ?? GeneralTestFeedbackOption.Disabled.Instance
     );
-
-    public static readonly AppUserId TestTakerId = new(Guid.NewGuid());
-    public static DateTime TestTakingStart => DateTime.Now.AddHours(-1);
-    public static DateTime TestTakingEnd => DateTime.Now;
-
-    public static IDateTimeProvider DateTimeProviderInstance = new UtcDateTimeProvider();
 }

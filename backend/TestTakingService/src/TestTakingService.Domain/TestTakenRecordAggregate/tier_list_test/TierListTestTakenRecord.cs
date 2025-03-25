@@ -1,4 +1,5 @@
-﻿using SharedKernel.Common.domain.entity;
+﻿using System.Collections.Immutable;
+using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests;
 using TestTakingService.Domain.Common;
 
@@ -8,21 +9,23 @@ public class TierListTestTakenRecord : BaseTestTakenRecord
 {
     private TierListTestTakenRecord() { }
     public override TestFormat TestFormat => TestFormat.TierList;
+    public IReadOnlyCollection<TierListTestTakenRecordTierDetails> TierDetails { get; private init; }
 
-    public static TierListTestTakenRecord CreateNew(
+
+    public TierListTestTakenRecord(
+        TestTakenRecordId id,
         AppUserId? userId,
         TestId testId,
         DateTime testTakingStart,
-        DateTime testTakingEnd
+        DateTime testTakingEnd,
+        //general test taken record specific
+        ImmutableArray<TierListTestTakenRecordTierDetails> tierDetails
     ) {
-        TierListTestTakenRecord record = new() {
-            Id = TestTakenRecordId.CreateNew(),
-            UserId = userId,
-            TestId = testId,
-            TestTakingStart = testTakingStart,
-            TestTakingEnd = testTakingEnd
-        };
-
-        return record;
+        Id = id;
+        UserId = userId;
+        TestId = testId;
+        TestTakingStart = testTakingStart;
+        TestTakingEnd = testTakingEnd;
+        TierDetails = tierDetails;
     }
 }

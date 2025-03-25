@@ -100,10 +100,9 @@ public class GeneralFormatTest : BaseTest
 
         GeneralTestResult receivedRes = GetResultWithMaxPoints(resultsWithPoints);
 
-        var testTakenRecordId = TestTakenRecordId.CreateNew();
         CreateTestTakenEvent(
             testTakerId, testTakingStart, testTakingEnd,
-            testTakenRecordId, receivedRes.Id, testTakenQuestionDetails
+            receivedRes.Id, testTakenQuestionDetails
         );
         if (feedback is not null) {
             _domainEvents.Add(new FeedbackForGeneralTestLeftEvent(
@@ -118,10 +117,11 @@ public class GeneralFormatTest : BaseTest
         AppUserId? testTakerId,
         DateTime testTakingStart,
         DateTime testTakingEnd,
-        TestTakenRecordId testTakenRecordId,
         GeneralTestResultId receivedResId,
         Dictionary<GeneralTestQuestionId, GeneralTestTakenEventQuestionDetails> testTakenQuestionDetails
     ) {
+        var testTakenRecordId = TestTakenRecordId.CreateNew();
+
         if (testTakerId is not null) {
             _takenByUserIds.Add(testTakerId);
         }

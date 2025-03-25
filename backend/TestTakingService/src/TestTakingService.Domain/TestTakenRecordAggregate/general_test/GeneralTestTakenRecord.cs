@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using SharedKernel.Common.tests;
 using TestTakingService.Domain.Common;
@@ -10,28 +9,25 @@ public class GeneralTestTakenRecord : BaseTestTakenRecord
 {
     private GeneralTestTakenRecord() { }
     public override TestFormat TestFormat => TestFormat.General;
-    public GeneralTestResultId ReceivedResultId { get; private init; }
+    public GeneralTestResultId ReceivedResultId { get; }
     public IReadOnlyCollection<GeneralTestTakenRecordQuestionDetails> QuestionDetails { get; private init; }
 
-    public static GeneralTestTakenRecord CreateNew(
+    public GeneralTestTakenRecord(
+        TestTakenRecordId id,
         AppUserId? userId,
         TestId testId,
         DateTime testTakingStart,
         DateTime testTakingEnd,
-        //general record specific
+        //general test taken record specific
         GeneralTestResultId receivedResultId,
-        IEnumerable<GeneralTestTakenRecordQuestionDetails> questionDetails
+        ImmutableArray<GeneralTestTakenRecordQuestionDetails> questionDetails
     ) {
-        GeneralTestTakenRecord record = new() {
-            Id = TestTakenRecordId.CreateNew(),
-            UserId = userId,
-            TestId = testId,
-            TestTakingStart = testTakingStart,
-            TestTakingEnd = testTakingEnd,
-            ReceivedResultId = receivedResultId,
-            QuestionDetails = questionDetails.ToImmutableArray()
-        };
-
-        return record;
+        Id = id;
+        UserId = userId;
+        TestId = testId;
+        TestTakingStart = testTakingStart;
+        TestTakingEnd = testTakingEnd;
+        ReceivedResultId = receivedResultId;
+        QuestionDetails = questionDetails;
     }
 }

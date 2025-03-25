@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Collections.Immutable;
+using MediatR;
 using TestTakingService.Application.Common.interfaces.repositories.test_taken_records;
 using TestTakingService.Domain.TestTakenRecordAggregate.events;
 using TestTakingService.Domain.TestTakenRecordAggregate.general_test;
@@ -14,7 +15,8 @@ public class GeneralTestTakenEventHandler : INotificationHandler<GeneralTestTake
     }
 
     public async Task Handle(GeneralTestTakenEvent notification, CancellationToken cancellationToken) {
-        GeneralTestTakenRecord record = GeneralTestTakenRecord.CreateNew(
+        GeneralTestTakenRecord record = new(
+            notification.TestTakenRecordId,
             notification.AppUserId,
             notification.TestId,
             notification.TestTakingStart,
@@ -24,8 +26,9 @@ public class GeneralTestTakenEventHandler : INotificationHandler<GeneralTestTake
                 GeneralTestTakenRecordQuestionDetails.CreateNew(
                     idDet.Key,
                     idDet.Value.ChosenAnswerIds,
-                    idDet.Value.TimeOnQuestionSpent)
-            )
+                    idDet.Value.TimeOnQuestionSpent
+                )
+            ).ToImmutableArray()
         );
         await _generalTestTakenRecordsRepository.Add(record);
     }
