@@ -1,6 +1,7 @@
 using SharedKernel.Common;
 using SharedKernel.Common.common_enums;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.errors;
 using SharedKernel.Common.interfaces;
 using SharedKernel.Common.tests.general_format;
 using SharedKernel.Common.tests.value_objects;
@@ -48,21 +49,21 @@ public static class TestsSharedTestsConsts
             var result = test.AddTagSuggestions(
                 tagSuggestions.ToHashSet(), DateTimeProviderInstance
             );
-            if (result.IsErr()) {
-                throw new Exception($"Incorrect tags to add suggestion");
+            if (result.IsErr(out var err)) {
+                throw new Exception($"Incorrect tags to add suggestion, err: {err.ToString()}");
             }
         }
 
         if (bannedTags is not null) {
             var result = test.AddTagSuggestions(
-                tagSuggestions.ToHashSet(), DateTimeProviderInstance
+                bannedTags.ToHashSet(), DateTimeProviderInstance
             );
             if (result.IsErr()) {
                 throw new Exception($"Incorrect tags to add suggestion before banning");
             }
 
             result = test.DeclineAndBanTagSuggestions(
-                tagSuggestions.ToHashSet()
+                bannedTags.ToHashSet()
             );
             if (result.IsErr()) {
                 throw new Exception($"Incorrect tags to ban");

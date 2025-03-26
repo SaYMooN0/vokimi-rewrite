@@ -34,6 +34,6 @@ public class RequestValidationResult
     public static implicit operator RequestValidationResult(ErrList errList) =>
         new RequestValidationResult(errList);
 
-    public readonly static RequestValidationResult Success = new(new Success());
+    public static readonly RequestValidationResult Success = new(new Success());
 
 }

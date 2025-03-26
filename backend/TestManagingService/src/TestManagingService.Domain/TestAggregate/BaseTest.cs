@@ -42,6 +42,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _interactionsAccessSettings = interactionsAccessSettings;
         _feedbackRecords = [];
         _commentReports = [];
+        _tags = [];
         _tagSuggestions = [];
         TagsBannedFromSuggestion = [];
     }
@@ -172,13 +173,17 @@ public abstract class BaseTest : AggregateRoot<TestId>
             .Except(suggestionsToIncrement)
             .Select(t => TagSuggestionForTest.CreateNew(t, dateTimeProvider));
 
-        _tagSuggestions = _tagSuggestions.Union(suggestionsToAdd).ToImmutableArray();
+        _tagSuggestions = _tagSuggestions.Union(suggestionsToAdd).ToList();
         return ErrOrNothing.Nothing;
     }
 
     public ErrOrNothing AcceptTagSuggestions(HashSet<TestTagId> tagToAccept) {
         if (tagToAccept.Count > MaxSuggestionsCountToInteract) {
             return new Err($"Cannot accept more than {MaxSuggestionsCountToInteract} suggestions at once");
+        }
+
+        if (tagToAccept.Count == 0) {
+            return new Err("No tags specified for acceptance");
         }
 
         TagSuggestionForTest[] suggestionsToAccept = _tagSuggestions
@@ -206,7 +211,12 @@ public abstract class BaseTest : AggregateRoot<TestId>
             );
         }
 
-        UpdateTags(_tags.Union(tagToAccept).ToHashSet());
+        HashSet<TestTagId> newAllTestTags = _tags.Union(tagToAccept).ToHashSet();
+        var updateRes = UpdateTags(newAllTestTags);
+        if (updateRes.IsErr(out var err)) {
+            return err;
+        }
+
         foreach (var suggestion in suggestionsToAccept) {
             _tagSuggestions.Remove(suggestion);
         }

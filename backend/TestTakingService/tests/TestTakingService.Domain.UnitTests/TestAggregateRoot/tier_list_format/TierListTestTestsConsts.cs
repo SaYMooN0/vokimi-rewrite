@@ -21,18 +21,18 @@ public static class TierListTestTestsConsts
         TierAId,
         name: "Top Tier",
         description: "The best items",
-        maxItemsCountLimit: 3,
+        maxItemsCountLimit: null,
         styles: TierListTestTierStyles.Default(),
-        orderInTest: 1
+        orderInTest: 0
     );
 
     public static readonly TierListTestTier TierB = new(
         TierBId,
         name: "Low Tier",
         description: "Not so great",
-        maxItemsCountLimit: 3,
+        maxItemsCountLimit: null,
         styles: TierListTestTierStyles.Default(),
-        orderInTest: 2
+        orderInTest: 1
     );
 
     public static readonly TierListTestItemId Item1Id = new(Guid.NewGuid());

@@ -31,7 +31,8 @@ public class UpdateTagsForTestTests
     public void UpdateTags_WhenTagsAreUnchanged_ShouldReturnErr() {
         // Arrange
         var test = TestsSharedTestsConsts.CreateTest();
-        var initialTags = new HashSet<TestTagId> { new("Tag1"), new("Tag2") };
+        HashSet<TestTagId> initialTags = [ new("Tag1"), new("Tag2") ];
+
         test.UpdateTags(initialTags);
 
         // Act
@@ -46,7 +47,7 @@ public class UpdateTagsForTestTests
     public void UpdateTags_WhenTagsAreUpdated_ShouldReturnSuccessAndTriggerEvent() {
         // Arrange
         var test = TestsSharedTestsConsts.CreateTest();
-        var newTags = new HashSet<TestTagId> { new("Tag1"), new("Tag2") };
+        HashSet<TestTagId> newTags = [ new("Tag1"), new("Tag2") ];
 
         // Act
         var result = test.UpdateTags(newTags);

@@ -10,7 +10,7 @@ namespace TestManagingService.Domain.UnitTest.TestAggregateRoot.formats_shared.t
 public class AddTagSuggestionsForTestTests
 {
     [Fact]
-    public void AddTagSuggestions_WhenTagSuggestionsAreNotAllowed_ShouldReturnError() {
+    public void AddTagSuggestions_WhenTagSuggestionsAreNotAllowed_ShouldReturnErr() {
         // Arrange
         var test = TestsSharedTestsConsts.CreateTest(
             new TestInteractionsAccessSettings(
@@ -32,11 +32,11 @@ public class AddTagSuggestionsForTestTests
     }
 
     [Fact]
-    public void AddTagSuggestions_WhenTooManyTagsAreSuggested_ShouldReturnError() {
+    public void AddTagSuggestions_WhenTooManyTagsAreSuggested_ShouldReturnErr() {
         // Arrange
         var test = TestsSharedTestsConsts.CreateTest();
         var tooManyTags = Enumerable.Range(0, BaseTest.MaxSuggestionsCountToInteract + 1)
-            .Select(_ => new TestTagId(Guid.NewGuid().ToString()))
+            .Select(i => new TestTagId($"new_test_tag_{i}"))
             .ToHashSet();
 
         // Act
@@ -48,7 +48,7 @@ public class AddTagSuggestionsForTestTests
     }
 
     [Fact]
-    public void AddTagSuggestions_WhenAllTagsAreAlreadyAdded_ShouldReturnError() {
+    public void AddTagSuggestions_WhenAllTagsAreAlreadyAdded_ShouldReturnErr() {
         // Arrange
         var existingTags = new[] { new TestTagId("existing_tag_1"), new TestTagId("existing_tag_2") };
         var test = TestsSharedTestsConsts.CreateTest(testTags: existingTags);
@@ -64,7 +64,7 @@ public class AddTagSuggestionsForTestTests
     }
 
     [Fact]
-    public void AddTagSuggestions_WhenAllTagsAreAlreadyBanned_ShouldReturnError() {
+    public void AddTagSuggestions_WhenAllTagsAreAlreadyBanned_ShouldReturnErr() {
         // Arrange
         var bannedTags = new[] { new TestTagId("banned_tag_1"), new TestTagId("banned_tag_2") };
         var test = TestsSharedTestsConsts.CreateTest(bannedTags: bannedTags);
@@ -80,7 +80,7 @@ public class AddTagSuggestionsForTestTests
     }
 
     [Fact]
-    public void AddTagSuggestions_WhenAllTagsAreAlreadyAddedOrBanned_ShouldReturnError() {
+    public void AddTagSuggestions_WhenAllTagsAreAlreadyAddedOrBanned_ShouldReturnErr() {
         // Arrange
         var addedTags = new[] { new TestTagId("added_tag_1"), new TestTagId("added_tag_2") };
         var bannedTags = new[] { new TestTagId("banned_tag_1"), new TestTagId("banned_tag_2") };

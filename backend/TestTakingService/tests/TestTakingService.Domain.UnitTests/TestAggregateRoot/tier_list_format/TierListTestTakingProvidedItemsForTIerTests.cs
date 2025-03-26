@@ -1,5 +1,5 @@
 ﻿using SharedKernel.Common.domain.entity;
-using SharedKernel.Common.tests.tier_list_format.items;
+using SharedKernel.Common.tests.tier_list_format;
 using TestTakingService.Domain.Common.test_taken_data.tier_list_format_test;
 using TestTakingService.Domain.TestAggregate.tier_list_format;
 
@@ -7,18 +7,12 @@ namespace TestTakingService.Domain.UnitTests.TestAggregateRoot.tier_list_format;
 
 public class TierListTestTakingProvidedItemsForTIerTests
 {
-    private static readonly TierListTestItem itemNotInTest = new(
-        new TierListTestItemId(Guid.NewGuid()),
-        "Fake Item",
-        null,
-        new TierListTestItemContentData.TextOnly("Not in test"),
-        orderInTest: 1
-    );
-
     [Fact]
     public void TestTaken_WhenTierItemsDataIsMissingForOneOfTheTiers_ShouldReturnErr() {
         // Arrange
-        var test = TierListTestTestsConsts.CreateTest();
+        var test = TierListTestTestsConsts.CreateTest(
+            tiers: [TierListTestTestsConsts.TierA, TierListTestTestsConsts.TierB]
+        );
         var tierData = new TierListTestTakenTierData(1) {
             [TierListTestTestsConsts.Item1Id] = 0
         };
@@ -46,13 +40,23 @@ public class TierListTestTakingProvidedItemsForTIerTests
     [Fact]
     public void TestTaken_WhenTierItemCountExceedsMaxLimit_ShouldReturnErr() {
         // Arrange
-        var test = TierListTestTestsConsts.CreateTest();
+        TierListTestTier TierA = new(
+            TierListTestTestsConsts.TierAId,
+            name: "Top Tier",
+            description: "The best items",
+            maxItemsCountLimit: 1,
+            styles: TierListTestTierStyles.Default(),
+            orderInTest: 0
+        );
+        var test = TierListTestTestsConsts.CreateTest(
+            tiers: [TierA, TierListTestTestsConsts.TierB]
+        );
 
         var tierData = new TierListTestTakenTierData(4) {
             [TierListTestTestsConsts.Item1Id] = 0,
             [TierListTestTestsConsts.Item2Id] = 1,
             [TierListTestTestsConsts.Item3Id] = 2,
-            [TierListTestTestsConsts.Item4Id] = 3 // exceeds TierA's limit of 3
+            [TierListTestTestsConsts.Item4Id] = 3 // exceeds TierA's limit of 1
         };
 
         var itemsInTiers = new Dictionary<TierListTestTierId, TierListTestTakenTierData> {
@@ -78,15 +82,16 @@ public class TierListTestTakingProvidedItemsForTIerTests
     [Fact]
     public void TestTaken_WhenItemIsNotPartOfTheTest_ShouldReturnErr() {
         // Arrange
-        var test = TierListTestTestsConsts.CreateTest();
 
+        var test = TierListTestTestsConsts.CreateTest();
+        var idOfItemNotInTest = TierListTestItemId.CreateNew();
         var tierData = new TierListTestTakenTierData(1) {
-            [itemNotInTest.Id] = 0
+            [idOfItemNotInTest] = 0
         };
 
         var itemsInTiers = new Dictionary<TierListTestTierId, TierListTestTakenTierData> {
             [TierListTestTestsConsts.TierAId] = tierData,
-            [TierListTestTestsConsts.TierBId] = new TierListTestTakenTierData(0)
+            [TierListTestTestsConsts.TierBId] = new(0)
         };
 
         // Act
@@ -166,7 +171,14 @@ public class TierListTestTakingProvidedItemsForTIerTests
     [Fact]
     public void TestTaken_WhenTotalProvidedItemsCountDoesNotMatchTestItemsCount_ShouldReturnErr() {
         // Arrange
-        var test = TierListTestTestsConsts.CreateTest();
+        var test = TierListTestTestsConsts.CreateTest(
+            items: [
+                TierListTestTestsConsts.Item1,
+                TierListTestTestsConsts.Item2,
+                TierListTestTestsConsts.Item3,
+                TierListTestTestsConsts.Item4
+            ]
+        );
 
         var itemsInTiers = new Dictionary<TierListTestTierId, TierListTestTakenTierData> {
             [TierListTestTestsConsts.TierAId] = new() {

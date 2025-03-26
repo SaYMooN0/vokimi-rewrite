@@ -196,7 +196,7 @@ public class UpdatingTestRatingTest
         var result = await test.UpdateRating(
             _userIdToUpdateRating,
             5,
-            _userFollowingsRepository,
+            ,
             TestsSharedTestsConsts.DateTimeProviderInstance
         );
 
