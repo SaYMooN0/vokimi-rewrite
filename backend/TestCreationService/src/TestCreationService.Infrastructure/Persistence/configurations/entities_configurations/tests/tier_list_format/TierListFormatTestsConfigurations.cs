@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureConfigurationShared.Extensions.property_builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.Common;
@@ -14,6 +15,10 @@ internal class TierListFormatTestsConfigurations : IEntityTypeConfiguration<Tier
         builder.ToTable("TierListFormatTests");
         builder.HasBaseType<BaseTest>();
 
+        builder
+            .HasMany<TierListTestTier>("_tiers")
+            .WithOne()
+            .HasForeignKey("TestId");
         builder.OwnsOne<EntitiesOrderController<TierListTestTierId>>("_tiersOrderController",
             controller => {
                 controller
@@ -25,21 +30,25 @@ internal class TierListFormatTestsConfigurations : IEntityTypeConfiguration<Tier
                     .HasEntityIdsOrderDictionaryConversion();
             }
         );
+
+        builder
+            .HasMany<TierListTestItem>("_items")
+            .WithOne()
+            .HasForeignKey("TestId");
         builder.OwnsOne<EntitiesOrderController<TierListTestItemId>>("_itemsOrderController",
             controller => {
                 controller
                     .Property(p => p.IsShuffled)
                     .HasColumnName("ShuffleItems");
                 controller
-                    .Property<Dictionary<TierListTestTierId, ushort>>("_entityOrders")
+                    .Property<Dictionary<TierListTestItemId, ushort>>("_entityOrders")
                     .HasColumnName("ItemsOrder")
                     .HasEntityIdsOrderDictionaryConversion();
             }
         );
 
-        builder.HasMany<TierListTestItem>("_items")
-            .WithOne()
-            .HasForeignKey("TestId");
-        
+        builder
+            .Property(x => x.Feedback)
+            .HasTierListTestFeedbackOptionConverter();
     }
 }

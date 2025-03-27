@@ -7,9 +7,7 @@ using TestCreationService.Domain.Common;
 
 namespace TestCreationService.Domain.TestAggregate.formats_shared;
 
-public class TestInteractionsAccessSettings :
-    Entity<TestInteractionsAccessSettingsId>,
-    ITestInteractionsAccessSettings
+public class TestInteractionsAccessSettings : Entity<TestInteractionsAccessSettingsId>, ITestInteractionsAccessSettings
 {
     private TestInteractionsAccessSettings() { }
     public AccessLevel TestAccess { get; private set; }
@@ -24,7 +22,7 @@ public class TestInteractionsAccessSettings :
         AllowRatings = ResourceAvailabilitySetting.EnabledPublic,
         AllowComments = ResourceAvailabilitySetting.EnabledPublic,
         AllowTestTakenPosts = true,
-        AllowTagsSuggestions = true
+        AllowTagsSuggestions = true,
     };
 
     public ErrListOrNothing Update(

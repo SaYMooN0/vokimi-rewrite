@@ -1,4 +1,5 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
+using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.tests;
@@ -18,12 +19,7 @@ internal class TestInteractionsAccessSettingsConfigurations : IEntityTypeConfigu
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasEntityIdConversion();
-
-        builder
-            .HasOne<BaseTest>()
-            .WithOne("_interactionsAccessSettings")
-            .HasForeignKey("TestId");
-
+        
         builder
             .Property(s => s.AllowRatings)
             .HasResourceAvailabilitySettingConversion();

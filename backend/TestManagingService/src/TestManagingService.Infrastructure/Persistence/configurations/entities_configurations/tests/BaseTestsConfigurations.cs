@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using InfrastructureConfigurationShared.Extensions;
+using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TestManagingService.Domain.Common;

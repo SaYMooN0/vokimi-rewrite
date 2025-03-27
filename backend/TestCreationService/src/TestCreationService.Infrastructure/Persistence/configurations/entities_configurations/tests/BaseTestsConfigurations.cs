@@ -1,12 +1,10 @@
 ﻿using InfrastructureConfigurationShared.Extensions;
+using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
 using TestCreationService.Domain.TestAggregate;
 using TestCreationService.Domain.TestAggregate.formats_shared;
-using TestCreationService.Infrastructure.Persistence.configurations.extensions;
-using TestCreationService.Infrastructure.Persistence.configurations.value_converters;
 
 namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests;
 
@@ -38,5 +36,9 @@ internal class BaseTestsConfigurations : IEntityTypeConfiguration<BaseTest>
                 mi.Property(p => p.Language).HasColumnName("maininfo_Language");
             }
         );
+        builder
+            .HasOne<TestInteractionsAccessSettings>("_interactionsAccessSettings")
+            .WithOne()
+            .HasForeignKey<TestInteractionsAccessSettings>("TestId");
     }
 }

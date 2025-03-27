@@ -11,14 +11,16 @@ IConfiguration config = new ConfigurationBuilder()
 
 List<IDbContextSeeder> seeders = [];
 // AuthenticationServiceDbSeeder authenticationServiceDbSeeder = await InitAuthServiceDbSeeder();
+TestCreationServiceDbSeeder testCreationServiceDbSeeder = await InitTestCreationServiceDbSeeder();
 TestCatalogServiceDbSeeder testCatalogServiceDbSeeder = await InitTestCatalogServiceDbSeeder();
-TestTakingServiceDbSeeder testTakingServiceDbSeeder = await InitTestTakingServiceDbSeeder();
-TestManagingServiceDbSeeder testManagingServiceDbSeeder = await InitTestManagingServiceDbSeeder();
+// TestTakingServiceDbSeeder testTakingServiceDbSeeder = await InitTestTakingServiceDbSeeder();
+// TestManagingServiceDbSeeder testManagingServiceDbSeeder = await InitTestManagingServiceDbSeeder();
 
 //perform db actions
 try {
     // await authenticationServiceDbSeeder.ClearAndSeed();
-    // await testCatalogServiceDbSeeder.ClearAndSeed();
+    await testCreationServiceDbSeeder.ClearAndSeed();
+    await testCatalogServiceDbSeeder.ClearAndSeed();
     // await testTakingServiceDbSeeder.ClearAndSeed();
     // await testManagingServiceDbSeeder.ClearAndSeed();
 }
@@ -42,13 +44,14 @@ async Task<AuthenticationServiceDbSeeder> InitAuthServiceDbSeeder() {
     return seeder;
 }
 
-// async Task<TestCreationServiceDbSeeder> InitTestCreationServiceDbSeeder() {
-//     string connectionString = config.GetRequiredConnectionString("TestCreationServiceDb");
-//     TestCreationServiceDbSeeder seeder = new();
-//     await seeder.Initialize(connectionString);
-//     seeders.Add(seeder);
-//     return seeder;
-// }
+async Task<TestCreationServiceDbSeeder> InitTestCreationServiceDbSeeder() {
+    string connectionString = config.GetRequiredConnectionString("TestCreationServiceDb");
+    TestCreationServiceDbSeeder seeder = new();
+    await seeder.Initialize(connectionString);
+    seeders.Add(seeder);
+    return seeder;
+}
+
 async Task<TestTakingServiceDbSeeder> InitTestTakingServiceDbSeeder() {
     string connectionString = config.GetRequiredConnectionString("TestTakingServiceDb");
     TestTakingServiceDbSeeder seeder = new();

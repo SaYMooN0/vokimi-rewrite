@@ -1,12 +1,11 @@
 ﻿using System.Collections.Immutable;
 using InfrastructureConfigurationShared.ValueConverters;
 using InfrastructureConfigurationShared.ValueConverters.entity_id_related;
-using InfrastructureConfigurationShared.ValueConverters.general_format_test;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.domain;
 using SharedKernel.Common.domain.entity;
+using SharedKernel.Common.tests.value_objects;
 
-namespace InfrastructureConfigurationShared.Extensions;
+namespace InfrastructureConfigurationShared.Extensions.property_builder;
 
 public static class PropertyBuilderExtensions
 {
@@ -28,44 +27,14 @@ public static class PropertyBuilderExtensions
         );
         return builder;
     }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestFeedbackOptionConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder.HasConversion(new GeneralTestFeedbackOptionConverter());
-    }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestAnswerSpecificDataConversion<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestAnswerSpecificDataConverter())
-            .HasMaxLength(2040);
-    }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestQuestionTimeLimitOptionConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestQuestionTimeLimitOptionConverter())
-            .HasMaxLength(20);
-    }
-
-    public static PropertyBuilder<TProperty> HasGeneralTestQuestionAnswersCountLimitConverter<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
-        return builder
-            .HasConversion(new GeneralTestQuestionAnswersCountLimitConverter())
-            .HasMaxLength(20);
-    }
-
-    public static PropertyBuilder<TProperty> HasHexColorConversion<TProperty>(
-        this PropertyBuilder<TProperty> builder
-    ) where TProperty : class {
+    public static PropertyBuilder<HexColor> HasHexColorConversion(
+        this PropertyBuilder<HexColor> builder
+    ) {
         return builder
             .HasConversion(new HexColorConverter())
             .HasMaxLength(7);
     }
+
     public static PropertyBuilder<TProperty> HasResourceAvailabilitySettingConversion<TProperty>(
         this PropertyBuilder<TProperty> builder
     ) where TProperty : class {
@@ -73,6 +42,7 @@ public static class PropertyBuilderExtensions
             .HasConversion(new ResourceAvailabilitySettingConverter())
             .HasMaxLength(20);
     }
+
     public static PropertyBuilder<ImmutableArray<T>> HasEntityIdsImmutableArrayConversion<T>(
         this PropertyBuilder<ImmutableArray<T>> builder) where T : EntityId {
         builder.HasConversion(

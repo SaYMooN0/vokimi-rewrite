@@ -17,14 +17,13 @@ namespace TestCreationService.Domain.TestAggregate.tier_list_format;
 
 public class TierListFormatTest : BaseTest
 {
+    private TierListFormatTest(){}
     public override TestFormat Format => TestFormat.TierList;
-    private ICollection<TierListTestItem> _items { get; set; }
-    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
     private ICollection<TierListTestTier> _tiers { get; set; }
     private EntitiesOrderController<TierListTestTierId> _tiersOrderController { get; set; }
+    private ICollection<TierListTestItem> _items { get; set; }
+    private EntitiesOrderController<TierListTestItemId> _itemsOrderController { get; set; }
     public TierListTestFeedbackOption Feedback { get; private set; }
-    //time limit
-
 
     public static ErrOr<TierListFormatTest> CreateNew(
         AppUserId creatorId,
