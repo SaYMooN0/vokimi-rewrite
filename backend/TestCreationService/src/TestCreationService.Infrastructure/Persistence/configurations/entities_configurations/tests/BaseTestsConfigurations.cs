@@ -1,5 +1,4 @@
-﻿using InfrastructureConfigurationShared.Extensions;
-using InfrastructureConfigurationShared.Extensions.property_builder;
+﻿using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.domain.entity;

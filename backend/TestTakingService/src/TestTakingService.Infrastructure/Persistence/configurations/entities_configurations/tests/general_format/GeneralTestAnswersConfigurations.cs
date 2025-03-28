@@ -1,10 +1,9 @@
-﻿using InfrastructureConfigurationShared.Extensions;
-using InfrastructureConfigurationShared.Extensions.property_builder;
+﻿using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TestTakingService.Domain.TestAggregate.general_format;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format_test;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.general_format;
 
 internal class GeneralTestAnswersConfigurations : IEntityTypeConfiguration<GeneralTestAnswer>
 {

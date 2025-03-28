@@ -18,10 +18,10 @@ public class TierListFormatTest : BaseTest
 {
     private TierListFormatTest() { }
     public override TestFormat Format => TestFormat.TierList;
-    public IReadOnlyCollection<TierListTestTier> Tiers { get; init; }
-    private bool _shuffleTiers { get; }
     public IReadOnlyCollection<TierListTestItem> Items { get; init; }
     private bool _shuffleItems { get; }
+    public IReadOnlyCollection<TierListTestTier> Tiers { get; init; }
+    private bool _shuffleTiers { get; }
     public TierListTestFeedbackOption FeedbackOption { get; private set; }
 
     public TierListFormatTest(

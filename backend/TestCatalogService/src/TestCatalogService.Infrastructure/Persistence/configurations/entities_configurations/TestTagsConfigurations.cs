@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.Common.domain.entity;
 using TestCatalogService.Domain.TestTagAggregate;
+using  InfrastructureConfigurationShared.Extensions.property_builder;
 
 namespace TestCatalogService.Infrastructure.Persistence.configurations.entities_configurations;
 
@@ -13,9 +13,6 @@ internal class TestTagsConfigurations : IEntityTypeConfiguration<TestTag>
         builder
             .Property(x => x.Id)
             .ValueGeneratedNever()
-            .HasConversion(
-                id => id.Value,           
-                value => new TestTagId(value)  
-            );
+            .HasTestTagIdConversion();
     }
 }

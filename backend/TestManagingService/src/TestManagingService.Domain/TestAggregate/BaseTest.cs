@@ -26,7 +26,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
     protected ICollection<TestCommentReport> _commentReports { get; init; }
     private ImmutableHashSet<TestTagId> _tags { get; set; }
     private ICollection<TagSuggestionForTest> _tagSuggestions { get; set; }
-    private ImmutableHashSet<TestTagId> TagsBannedFromSuggestion { get; set; }
+    private ImmutableHashSet<TestTagId> _tagsBannedFromSuggestion { get; set; }
 
     protected BaseTest(
         TestId testId,
@@ -44,7 +44,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         _commentReports = [];
         _tags = [];
         _tagSuggestions = [];
-        TagsBannedFromSuggestion = [];
+        _tagsBannedFromSuggestion = [];
     }
 
     public ImmutableArray<TagSuggestionForTest> TagSuggestions => _tagSuggestions.ToImmutableArray();
@@ -145,7 +145,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
         }
 
         var alreadyAddedTags = suggestedTags.Intersect(_tags).ToArray();
-        var bannedTags = suggestedTags.Intersect(TagsBannedFromSuggestion).ToArray();
+        var bannedTags = suggestedTags.Intersect(_tagsBannedFromSuggestion).ToArray();
         if (alreadyAddedTags.Length + bannedTags.Length >= suggestedTags.Count) {
             return new Err(
                 "Cannot accept tag suggestions because every tag is either already in the test or banned from suggestion."
@@ -265,7 +265,7 @@ public abstract class BaseTest : AggregateRoot<TestId>
 
         foreach (var suggestion in suggestionsToRemove) {
             _tagSuggestions.Remove(suggestion);
-            TagsBannedFromSuggestion = TagsBannedFromSuggestion.Add(suggestion.Tag);
+            _tagsBannedFromSuggestion = _tagsBannedFromSuggestion.Add(suggestion.Tag);
         }
 
         return ErrOrNothing.Nothing;

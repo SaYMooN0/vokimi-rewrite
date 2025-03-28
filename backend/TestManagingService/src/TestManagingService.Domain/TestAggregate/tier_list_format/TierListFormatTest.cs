@@ -11,6 +11,7 @@ namespace TestManagingService.Domain.TestAggregate.tier_list_format;
 
 public class TierListFormatTest : BaseTest
 {
+    private TierListFormatTest() { }
     public override TestFormat Format => TestFormat.TierList;
     public TierListTestFeedbackOption FeedbackOption { get; private set; }
 

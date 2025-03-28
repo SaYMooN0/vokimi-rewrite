@@ -1,10 +1,11 @@
 ﻿using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedKernel.Common.tests.tier_list_format;
 using TestTakingService.Domain.TestAggregate.tier_list_format;
 
 namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.
-    tier_list_format_test;
+    tier_list_format;
 
 public class TierListTestTiersConfigurations : IEntityTypeConfiguration<TierListTestTier>
 {
@@ -16,15 +17,9 @@ public class TierListTestTiersConfigurations : IEntityTypeConfiguration<TierList
             .ValueGeneratedNever()
             .HasEntityIdConversion();
 
-        builder.OwnsOne(x => x.Styles,
-            s => {
-                s.Property(p => p.TextColor)
-                    .HasHexColorConversion()
-                    .HasColumnName("styles_TextColor");
-                s.Property(p => p.BackgroundColor)
-                    .HasHexColorConversion()
-                    .HasColumnName("styles_BackgroundColor");
-            }
-        );
+        builder
+            .HasOne(x => x.Styles)
+            .WithOne()
+            .HasForeignKey<TierListTestTierStyles>("TierId");
     }
 }

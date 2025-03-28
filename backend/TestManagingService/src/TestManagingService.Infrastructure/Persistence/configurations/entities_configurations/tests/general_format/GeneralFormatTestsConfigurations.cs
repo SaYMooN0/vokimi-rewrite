@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureConfigurationShared.Extensions.property_builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TestManagingService.Domain.TestAggregate;
 using TestManagingService.Domain.TestAggregate.general_format;
@@ -10,5 +11,9 @@ internal class GeneralFormatTestsConfigurations : IEntityTypeConfiguration<Gener
     public void Configure(EntityTypeBuilder<GeneralFormatTest> builder) {
         builder.ToTable("GeneralFormatTests");
         builder.HasBaseType<BaseTest>();
+
+        builder
+            .Property(x => x.FeedbackOption)
+            .HasGeneralTestFeedbackOptionConverter();
     }
 }

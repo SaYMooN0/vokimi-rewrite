@@ -1,4 +1,5 @@
 ﻿
+using System.Net.NetworkInformation;
 using InfrastructureConfigurationShared.Extensions;
 using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;

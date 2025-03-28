@@ -11,18 +11,18 @@ IConfiguration config = new ConfigurationBuilder()
 
 List<IDbContextSeeder> seeders = [];
 // AuthenticationServiceDbSeeder authenticationServiceDbSeeder = await InitAuthServiceDbSeeder();
-TestCreationServiceDbSeeder testCreationServiceDbSeeder = await InitTestCreationServiceDbSeeder();
-TestCatalogServiceDbSeeder testCatalogServiceDbSeeder = await InitTestCatalogServiceDbSeeder();
+// TestCreationServiceDbSeeder testCreationServiceDbSeeder = await InitTestCreationServiceDbSeeder();
+// TestCatalogServiceDbSeeder testCatalogServiceDbSeeder = await InitTestCatalogServiceDbSeeder();
 // TestTakingServiceDbSeeder testTakingServiceDbSeeder = await InitTestTakingServiceDbSeeder();
-// TestManagingServiceDbSeeder testManagingServiceDbSeeder = await InitTestManagingServiceDbSeeder();
+TestManagingServiceDbSeeder testManagingServiceDbSeeder = await InitTestManagingServiceDbSeeder();
 
 //perform db actions
 try {
     // await authenticationServiceDbSeeder.ClearAndSeed();
-    await testCreationServiceDbSeeder.ClearAndSeed();
-    await testCatalogServiceDbSeeder.ClearAndSeed();
+    // await testCreationServiceDbSeeder.ClearAndSeed();
+    // await testCatalogServiceDbSeeder.ClearAndSeed();
     // await testTakingServiceDbSeeder.ClearAndSeed();
-    // await testManagingServiceDbSeeder.ClearAndSeed();
+    await testManagingServiceDbSeeder.ClearAndSeed();
 }
 catch (DbContextSeederException exception) {
     Console.WriteLine($"No db seeders has been commited. Error during DB seeding: {exception.Message}");

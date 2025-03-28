@@ -14,6 +14,13 @@ public static class PropertyBuilderExtensions
         return builder.HasConversion(new EntityIdConverter<TId>());
     }
 
+    public static PropertyBuilder<TestTagId> HasTestTagIdConversion(this PropertyBuilder<TestTagId> builder) {
+        return builder.HasConversion(
+            id => id.Value,
+            value => new TestTagId(value)
+        );
+    }
+
     public static PropertyBuilder<TId?> HasNullableEntityIdConversion<TId>(this PropertyBuilder<TId?> builder)
         where TId : EntityId {
         return builder.HasConversion(new NullableEntityIdConverter<TId>());
@@ -27,6 +34,7 @@ public static class PropertyBuilderExtensions
         );
         return builder;
     }
+
     public static PropertyBuilder<HexColor> HasHexColorConversion(
         this PropertyBuilder<HexColor> builder
     ) {
@@ -48,6 +56,15 @@ public static class PropertyBuilderExtensions
         builder.HasConversion(
             new EntityIdsImmutableArrayConverter<T>(),
             new EntityIdsImmutableArrayComparer<T>()
+        );
+        return builder;
+    }
+
+    public static PropertyBuilder<ImmutableHashSet<TestTagId>> HasTestTagIdsImmutableHashSetConversion(
+        this PropertyBuilder<ImmutableHashSet<TestTagId>> builder
+    ) {
+        builder.HasConversion(
+            new TestTagIdsImmutableHashSetConverter()
         );
         return builder;
     }

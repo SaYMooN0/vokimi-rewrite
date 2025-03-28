@@ -5,7 +5,7 @@ using SharedKernel.Common.tests.tier_list_format.items;
 
 namespace InfrastructureConfigurationShared.ValueConverters.tier_list_format_test;
 
-internal class TierListTestItemContentDataConverter : ValueConverter<TierListTestItemContentData, string>
+internal class TierListTestItemContentDataConverter: ValueConverter<TierListTestItemContentData, string>
 {
     public TierListTestItemContentDataConverter() : base(
         (val) => ItemContentDataConverterToDbString(val),

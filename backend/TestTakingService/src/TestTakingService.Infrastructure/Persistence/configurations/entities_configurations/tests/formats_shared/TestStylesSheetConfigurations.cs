@@ -1,11 +1,10 @@
-using InfrastructureConfigurationShared.Extensions;
 using InfrastructureConfigurationShared.Extensions.property_builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.tests.formats_shared.test_styles;
 using TestTakingService.Domain.TestAggregate;
 
-namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.test_formats_shared;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.formats_shared;
 
 internal class TestStylesSheetConfigurations : IEntityTypeConfiguration<TestStylesSheet>
 {

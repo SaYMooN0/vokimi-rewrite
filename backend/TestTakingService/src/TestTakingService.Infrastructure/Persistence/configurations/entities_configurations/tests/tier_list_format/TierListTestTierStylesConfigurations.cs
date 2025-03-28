@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Common.tests.tier_list_format;
 
-namespace TestCreationService.Infrastructure.Persistence.configurations.entities_configurations.tests.tier_list_format;
+namespace TestTakingService.Infrastructure.Persistence.configurations.entities_configurations.tests.tier_list_format;
 
 public class TierListTestTierStylesConfigurations: IEntityTypeConfiguration<TierListTestTierStyles>
 {
