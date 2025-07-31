@@ -1,1 +1,1 @@
-c# microservices backend for the vokimi website
+c# microservices backend following Domain Driven Design for the vokimi website 
